@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.pin_code.PinCodeFragment">
+    tools:context=".features.pin_code.presentation.PinCodeFragment">
 
     <LinearLayout
         android:orientation="vertical"
@@ -73,6 +73,7 @@
 
     </LinearLayout>
     <Button
+        android:id="@+id/next_after_pin_code"
         android:layout_marginHorizontal="@dimen/layoutMarginHorizontalButton"
         android:layout_marginBottom="@dimen/layoutMarginBottomButton"
         android:layout_gravity="bottom"
