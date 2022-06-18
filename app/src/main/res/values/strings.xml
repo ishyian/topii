@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">TopiiChat</string>
+    <string name="signup_screen_title">SignUp</string>
+    <string name="signup_screen_splash">Splash</string>
+    <string name="validatePhone_screen">Validate Phone</string>
+    <string name="permission_screen">Permission</string>
+    <string name="terms_activity">Terms</string>
+    <string name="adelante_terms">Adelante</string>
+    <string name="siguiente_button">Siguiente</string>
+    <string name="title_permission">Activar permisos</string>
+    <string name="text_permissions">Permitir notificaciones y accesos a tus contactos te permite saber cuándo recibes un mensaje y te ayuda a encontrar a personas que conoces.\n\nTu lista de contactos está cifrada y solo tú tienes acceso. TOPII no tiene acceso a ella.</string>
+    <string name="valid_phone_title">Introduce tu número\nde teléfono</string>
+    <string name="title_otp">Código SMS</string>
+    <string name="subtitle_otp">Escribe el codigo recivido via SMS al +34900100106 para verificarlo.</string>
+    <string name="button_otp">Continuar</string>
+    <string name="phone_number">número de teléfono</string>
+    <string name="codigo">Reenviar código</string>
+    <string name="subtitle_pin">El PIN permite activar el bloqueo de registro de tu número y almacena tu cuenta de forma segura en TOPii , solo tú puedes acceder a tu cuenta. Saber más</string>
+    <string name="create">Crea tu PIN</string>
+    <string name="terms">Términos y política de privacidad</string>
+    <string name="error_pin">El PIN no coincide, vuelve a intentar</string>
+    <string name="error_otp">Upss codigo incorrecto , intentalo nuevamente</string>
+    <string name="onbording_text">Lleva la privacidad contigo Añade tu personalidad en todos tus mensajes.</string>
+    <string name="confirm_pin">Confirma tu PIN</string>
+    <string name="subtitle_confirm_pin">Introduce el PIN que acabas de crear.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

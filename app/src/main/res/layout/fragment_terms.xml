@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/whiteColor"
+    android:orientation="vertical"
+    tools:context=".features.terms.TermsFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".5">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_logo" />
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".35"
+        android:background="@drawable/bg_onboard"
+        android:elevation="2dp">
+
+        <FrameLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginTop="@dimen/margin_top_image"
+                        android:src="@drawable/ic_cloud_terms" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/otp_bottom_padding"
+                        android:layout_marginTop="@dimen/title_top_margin"
+                        android:fontFamily="@font/sfprodisplaybold"
+                        android:gravity="center"
+                        android:text="@string/onbording_text"
+                        android:textColor="@color/titleColor"
+                        android:textSize="@dimen/onbordSize" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/terms_url"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginBottom="@dimen/text_pin_padding"
+                        android:fontFamily="@font/sfprodisplaymedium"
+                        android:gravity="center"
+                        android:text="@string/terms"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_button"
+
+                        />
+
+                    <Button
+                        android:id="@+id/next_screen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginHorizontal="@dimen/layoutMarginHorizontalButton"
+                        android:layout_marginBottom="@dimen/layoutMarginBottomButton"
+                        android:background="@drawable/bg_button"
+                        android:fontFamily="@font/sfprodisplaybold"
+                        android:text="@string/adelante_terms"
+                        android:textAllCaps="false"
+                        android:textColor="@color/whiteColor"
+                        android:textSize="@dimen/text_button" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </FrameLayout>
+    </RelativeLayout>
+
+
+</LinearLayout>

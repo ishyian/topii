@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="layoutMarginHorizontalButton">76dp</dimen>
+    <dimen name="title__bottom_permission_padding">56dp</dimen>
+    <dimen name="otp_bottom_padding">36dp</dimen>
+    <dimen name="layoutMarginBottomButton">26dp</dimen>
+    <dimen name="text_permission_padding">56dp</dimen>
+    <dimen name="text_pin_padding">26dp</dimen>
+    <dimen name="text_pin_padding_bottom">6dp</dimen>
+    <dimen name="text_button">16sp</dimen>
+    <dimen name="titleSize">18sp</dimen>
+    <dimen name="onbordSize">23sp</dimen>
+    <dimen name="title_top_margin">16dp</dimen>
+    <dimen name="size_otp_text">40sp</dimen>
+    <dimen name="margin_top_image">20dp</dimen>
+</resources>

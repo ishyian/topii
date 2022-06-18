@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".features.otp.OtpFragment">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/title_top_margin"
+            android:layout_marginBottom="@dimen/title__bottom_permission_padding"
+            android:fontFamily="@font/sfprodisplaybold"
+            android:gravity="center"
+            android:text="@string/title_otp"
+            android:textColor="@color/titleColor"
+            android:textSize="@dimen/titleSize" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/otp_bottom_padding"
+            android:layout_marginTop="@dimen/title_top_margin"
+            android:layout_marginBottom="@dimen/layoutMarginBottomButton"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:gravity="start"
+            android:text="@string/subtitle_otp"
+            android:textColor="@color/titleColor"
+            android:textSize="@dimen/text_button" />
+
+        <com.chaos.view.PinView
+            android:id="@+id/firstPinView"
+            style="@style/PinWidget.PinView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:cursorVisible="true"
+            android:hint="d"
+            android:inputType="number"
+            android:layout_gravity="center"
+            android:textColor="@color/subtitle_otp"
+            android:textSize="@dimen/size_otp_text"
+            app:cursorColor="@color/subtitle_otp"
+            app:cursorWidth="2dp"
+            app:itemCount="4"
+            app:itemHeight="90dp"
+            app:itemRadius="10dp"
+            app:itemSpacing="30dp"
+            app:itemWidth="65dp"
+            app:lineColor="@color/border_pin"
+            app:lineWidth="1dp"
+            android:layout_marginBottom="@dimen/otp_bottom_padding"
+            app:viewType="rectangle">
+
+            <requestFocus />
+        </com.chaos.view.PinView>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingHorizontal="@dimen/layoutMarginBottomButton"
+            android:background="@drawable/bg_codigo"
+            android:fontFamily="@font/sfprodisplaybold"
+            android:text="@string/codigo"
+            android:textAllCaps="false"
+            android:textColor="@color/subtitle_otp"
+            android:textSize="@dimen/text_button" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/next_after_otp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="@dimen/text_permission_padding"
+        android:layout_marginBottom="@dimen/layoutMarginBottomButton"
+        android:background="@drawable/bg_button"
+        android:fontFamily="@font/sfprodisplaybold"
+        android:text="@string/button_otp"
+        android:textAllCaps="false"
+        android:textColor="@color/whiteColor"
+        android:textSize="@dimen/text_button" />
+
+</FrameLayout>

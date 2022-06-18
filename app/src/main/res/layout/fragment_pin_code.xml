@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".features.pin_code.PinCodeFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/create"
+            android:textColor="@color/titleColor"
+            android:fontFamily="@font/sfprodisplaybold"
+            android:textSize="@dimen/titleSize"
+            android:layout_marginBottom="@dimen/text_pin_padding_bottom"
+            android:layout_marginTop="@dimen/title_top_margin"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/text_pin_padding"
+            android:gravity="center"
+            android:text="@string/subtitle_confirm_pin"
+            android:textColor="@color/titleColor"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:textSize="@dimen/text_button"
+            android:layout_marginBottom="@dimen/title__bottom_permission_padding"
+
+            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <EditText
+                android:id="@+id/editText1"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginHorizontal="@dimen/text_pin_padding"
+                android:background="@drawable/rounded_border_edittext"
+                android:hint=""
+                android:inputType="textPassword"
+                android:paddingHorizontal="@dimen/text_pin_padding"
+                android:textAlignment="textStart" />
+
+            <ImageView
+                android:id="@+id/show_pass_btn"
+                android:layout_width="25dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="40dp"
+                android:src="@drawable/ic_password_not" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/text_pin_padding"
+            android:gravity="start"
+            android:text="@string/subtitle_pin"
+            android:textColor="@color/titleColor"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:textSize="@dimen/text_button"
+            android:layout_marginBottom="@dimen/title__bottom_permission_padding"
+            android:layout_marginTop="@dimen/title_top_margin"
+            />
+
+    </LinearLayout>
+    <Button
+        android:layout_marginHorizontal="@dimen/layoutMarginHorizontalButton"
+        android:layout_marginBottom="@dimen/layoutMarginBottomButton"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:textAllCaps="false"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_button"
+        android:text="@string/siguiente_button"
+        android:fontFamily="@font/sfprodisplaybold"
+        android:textColor="@color/whiteColor"
+        android:background="@drawable/bg_button"/>
+
+</FrameLayout>

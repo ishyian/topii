@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".features.valid_phone_number.ValidPhoneNumberFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/title_top_margin"
+            android:layout_marginBottom="@dimen/title__bottom_permission_padding"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:gravity="center"
+            android:text="@string/valid_phone_title"
+            android:textColor="@color/titleColor"
+            android:textSize="@dimen/titleSize" />
+
+        <com.fredporciuncula.phonemoji.PhonemojiTextInputLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_marginBottom="@dimen/layoutMarginBottomButton"
+            android:paddingHorizontal="@dimen/layoutMarginBottomButton">
+
+            <com.fredporciuncula.phonemoji.PhonemojiTextInputEditText
+                android:id="@+id/editext"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:background="@drawable/rounded_border_edittext"
+                android:hint=""
+                android:paddingHorizontal="@dimen/text_permission_padding"
+                app:phonemoji_initialRegionCode="ES" />
+
+        </com.fredporciuncula.phonemoji.PhonemojiTextInputLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/next_after_validate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="@dimen/layoutMarginHorizontalButton"
+        android:layout_marginBottom="@dimen/layoutMarginBottomButton"
+        android:background="@drawable/bg_button"
+        android:fontFamily="@font/sfprodisplaybold"
+        android:text="@string/adelante_terms"
+        android:textAllCaps="false"
+        android:textColor="@color/whiteColor"
+        android:textSize="@dimen/text_button" />
+
+</FrameLayout>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".features.activate_permission.PermissionFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/title_permission"
+            android:textColor="@color/titleColor"
+            android:fontFamily="@font/sfprodisplaybold"
+            android:textSize="@dimen/titleSize"
+            android:layout_marginBottom="@dimen/title__bottom_permission_padding"
+            android:layout_marginTop="@dimen/title_top_margin"
+        />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/layoutMarginBottomButton"
+            android:src="@drawable/ic_email_permission" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/layoutMarginBottomButton"
+            android:textAlignment="textStart"
+            android:text="@string/text_permissions"
+            android:textColor="@color/titleColor"
+            android:fontFamily="@font/sfprodisplayregular"
+            android:textSize="@dimen/text_button"
+            android:layout_marginBottom="@dimen/layoutMarginBottomButton"
+            android:layout_marginTop="@dimen/title_top_margin"
+            />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/next_after_permission"
+        android:layout_marginHorizontal="@dimen/layoutMarginHorizontalButton"
+        android:layout_marginBottom="@dimen/layoutMarginBottomButton"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:textAllCaps="false"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_button"
+        android:text="@string/adelante_terms"
+        android:fontFamily="@font/sfprodisplaybold"
+        android:textColor="@color/whiteColor"
+        android:background="@drawable/bg_button"/>
+
+</FrameLayout>
