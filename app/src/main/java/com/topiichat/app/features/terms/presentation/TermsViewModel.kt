@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
 import com.topiichat.app.core.extension.Constants
+import com.topiichat.app.core.navigation.Navigator
 import com.topiichat.app.core.platform.BaseViewModel
 
 class TermsViewModel : BaseViewModel(), ITermsViewModel {
@@ -29,6 +30,6 @@ class TermsViewModel : BaseViewModel(), ITermsViewModel {
     }
 
     override fun onClickNextScreen() {
-        _navigate.value = R.id.action_terms_to_permission
+        _navigate.setValue(Navigator(R.id.action_terms_to_permission))
     }
 }

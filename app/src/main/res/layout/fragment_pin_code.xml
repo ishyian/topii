@@ -9,17 +9,14 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
+
+        <include
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/create"
-            android:textColor="@color/titleColor"
-            android:fontFamily="@font/sfprodisplaybold"
-            android:textSize="@dimen/titleSize"
-            android:layout_marginBottom="@dimen/text_pin_padding_bottom"
-            android:layout_marginTop="@dimen/title_top_margin"
-            />
+            layout="@layout/part_toolbar"
+            android:layout_marginTop="@dimen/title_top_margin"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -2,6 +2,7 @@ package com.topiichat.app.features.activate_permission.presentation
 
 import android.view.View
 import com.topiichat.app.R
+import com.topiichat.app.core.navigation.Navigator
 import com.topiichat.app.core.platform.BaseViewModel
 
 class PermissionViewModel : BaseViewModel(), IPermissionViewModel {
@@ -11,10 +12,18 @@ class PermissionViewModel : BaseViewModel(), IPermissionViewModel {
             R.id.next_after_permission -> {
                 onClickNextAfterPermission()
             }
+            R.id.image_view_back -> {
+                onClickBack()
+            }
+            R.id.image_view_close -> {
+                onClickClose()
+            }
         }
     }
 
     override fun onClickNextAfterPermission() {
-        _navigate.value = R.id.action_permission_to_validPhoneNumber
+        _navigate.setValue(Navigator(
+            actionId = R.id.action_permission_to_validPhoneNumber
+        ))
     }
 }

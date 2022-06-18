@@ -5,17 +5,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.topiichat.app.core.exception.Failure
+import com.topiichat.app.core.navigation.Navigator
+
 /**
  * Base ViewModel class with default Failure handling.
  * @see ViewModel
  * @see Failure
  */
-abstract class BaseViewModel : ViewModel() {
+abstract class BaseViewModel : ViewModel(), IBaseViewModel {
 
     abstract fun onClick(view: View?)
 
-    protected val _navigate: MutableLiveData<Int> = MutableLiveData()
-    val navigate: LiveData<Int> = _navigate
+    protected val _navigate: SingleLiveData<Navigator> = SingleLiveData()
+    val navigate: LiveData<Navigator> = _navigate
 
     protected val _showLoader: MutableLiveData<Boolean> = MutableLiveData()
     val showLoader: LiveData<Boolean> = _showLoader
@@ -25,5 +27,15 @@ abstract class BaseViewModel : ViewModel() {
 
     protected fun handleFailure(failure: Failure) {
         _failure.value = failure
+    }
+
+    override fun onClickBack() {
+        _navigate.setValue(Navigator(
+            isBack = true
+        ))
+    }
+
+    override fun onClickClose() {
+        onClickBack()
     }
 }

@@ -14,16 +14,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <include
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/title_top_margin"
+            layout="@layout/part_toolbar"
             android:layout_marginBottom="@dimen/title__bottom_permission_padding"
-            android:fontFamily="@font/sfprodisplaybold"
-            android:gravity="center"
-            android:text="@string/title_otp"
-            android:textColor="@color/titleColor"
-            android:textSize="@dimen/titleSize" />
+            android:layout_marginTop="@dimen/title_top_margin"/>
 
         <TextView
             android:layout_width="match_parent"

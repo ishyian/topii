@@ -7,6 +7,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
+import com.topiichat.app.core.navigation.Navigator
 import com.topiichat.app.core.platform.BaseViewModel
 
 class PinCodeViewModel : BaseViewModel(), IPinCodeViewModel {
@@ -33,6 +34,12 @@ class PinCodeViewModel : BaseViewModel(), IPinCodeViewModel {
             R.id.next_after_pin_code -> {
                 onClickNextAfterPinCode()
             }
+            R.id.image_view_back -> {
+                onClickBack()
+            }
+            R.id.image_view_close -> {
+                onClickClose()
+            }
         }
     }
 
@@ -50,6 +57,10 @@ class PinCodeViewModel : BaseViewModel(), IPinCodeViewModel {
     }
 
     override fun onClickNextAfterPinCode() {
-        _navigate.value = R.id.action_pinCode_to_home
+        _navigate.setValue(Navigator(R.id.action_pinCode_to_home))
+    }
+
+    override fun onClickClose() {
+        _navigate.setValue(Navigator(R.id.action_pinCode_to_terms))
     }
 }

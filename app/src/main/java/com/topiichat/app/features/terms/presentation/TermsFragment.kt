@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.topiichat.app.core.navigation.Navigator
 import com.topiichat.app.core.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentTermsBinding
 
@@ -48,7 +49,7 @@ class TermsFragment : BaseFragment<FragmentTermsBinding>(), ITermsFragment {
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
 
-    override fun onNavigate(actionId: Int) {
-        currentActivity.navController.navigate(actionId)
+    override fun onNavigate(navigator: Navigator) {
+        navigator.navigate(currentActivity.navController)
     }
 }

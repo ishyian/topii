@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import com.topiichat.app.core.navigation.Navigator
 import com.topiichat.app.core.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentSplashBinding
 
@@ -38,7 +39,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(), ISplashFragment {
         progressBar.isVisible = isVisibleLoader
     }
 
-    override fun onNavigate(actionId: Int) {
-        currentActivity.navController.navigate(actionId)
+    override fun onNavigate(navigator: Navigator) {
+        navigator.navigate(currentActivity.navController)
     }
 }

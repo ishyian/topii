@@ -23,4 +23,10 @@ class AppActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         _navController = navHost.navController
     }
+
+    override fun onBackPressed() {
+        if (navController.currentDestination?.id == R.id.termsFragment) {
+            finish()
+        } else super.onBackPressed()
+    }
 }
