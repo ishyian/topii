@@ -1,14 +1,14 @@
 package com.topiichat.app.features.valid_phone_number.domain.usecases
 
-import com.topiichat.app.core.domain.UseCase
+import com.topiichat.app.core.domain.MockUseCase
 import com.topiichat.app.features.valid_phone_number.domain.model.ValidPhone
 import javax.inject.Inject
 
 class ValidPhoneNumberUseCase @Inject constructor(
 
-) : UseCase<ValidPhoneNumberUseCase.Params, ValidPhone>() {
+) : MockUseCase<ValidPhoneNumberUseCase.Params, ValidPhone>() {
 
-    override operator fun invoke(params: Params?): ValidPhone {
+    override suspend operator fun invoke(params: Params?): ValidPhone {
         return ValidPhone.Success(params?.phoneNumber ?: "")
     }
 

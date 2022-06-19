@@ -5,6 +5,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.squareup.moshi.Moshi
 import com.topiichat.app.BuildConfig
 import com.topiichat.app.core.data.ApiService
+import com.topiichat.app.core.data.MockApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,13 +28,15 @@ object NetworkModule {
         converterFactory: Converter.Factory,
         okHttpClient: OkHttpClient,
     ): ApiService {
-        return Retrofit.Builder()
-            .baseUrl("")
-            .addCallAdapterFactory(coroutineCallAdapterFactory)
-            .addConverterFactory(converterFactory)
-            .client(okHttpClient)
-            .build()
-            .create(ApiService::class.java)
+        return MockApiService()
+        //TODO mock service
+//        return Retrofit.Builder()
+//            .baseUrl("")
+//            .addCallAdapterFactory(coroutineCallAdapterFactory)
+//            .addConverterFactory(converterFactory)
+//            .client(okHttpClient)
+//            .build()
+//            .create(ApiService::class.java)
     }
 
     @Singleton

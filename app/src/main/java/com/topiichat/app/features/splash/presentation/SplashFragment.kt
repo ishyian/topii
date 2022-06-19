@@ -10,11 +10,14 @@ import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentSplashBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SplashFragment : BaseFragment<FragmentSplashBinding>(), ISplashFragment {
 
-    private val viewModel: SplashViewModel by viewModels()
+    @Inject
+    internal lateinit var factory: SplashViewModelFactory
+    private val viewModel: SplashViewModel by viewModels { factory }
 
     override val tagId: Int get() = TODO("Not yet implemented")
 
