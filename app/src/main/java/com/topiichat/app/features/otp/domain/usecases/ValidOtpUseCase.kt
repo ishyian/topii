@@ -2,8 +2,9 @@ package com.topiichat.app.features.otp.domain.usecases
 
 import com.topiichat.app.core.domain.UseCase
 import com.topiichat.app.features.otp.domain.model.ValidOtp
+import javax.inject.Inject
 
-class ValidOtpUseCase : UseCase<ValidOtpUseCase.Params, ValidOtp>() {
+class ValidOtpUseCase @Inject constructor() : UseCase<ValidOtpUseCase.Params, ValidOtp>() {
 
     override operator fun invoke(params: Params?): ValidOtp {
         return if (params?.pinCode == "1111") {

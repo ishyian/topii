@@ -15,11 +15,12 @@ import com.topiichat.app.features.otp.presentation.model.BtnSendSmsEnablingUi
 import com.topiichat.app.features.otp.presentation.model.TextSendSmsTimerUi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class OtpViewModel : BaseViewModel(), IOtpViewModel {
-
-    private val validPinCode = ValidOtpUseCase()
-    private val sendSms = SendSmsUseCase()
+class OtpViewModel @Inject constructor(
+    private val validPinCode: ValidOtpUseCase,
+    private val sendSms: SendSmsUseCase
+) : BaseViewModel(), IOtpViewModel {
 
     private val _colorPinView: MutableLiveData<Int> = MutableLiveData()
     val colorPinView: LiveData<Int> = _colorPinView

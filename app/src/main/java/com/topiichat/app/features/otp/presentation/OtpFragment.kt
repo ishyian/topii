@@ -13,10 +13,15 @@ import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentOtpBinding
 import com.topiichat.app.features.otp.presentation.model.BtnSendSmsEnablingUi
 import com.topiichat.app.features.otp.presentation.model.TextSendSmsTimerUi
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class OtpFragment : BaseFragment<FragmentOtpBinding>(), IOtpFragment {
 
-    private val viewModel: OtpViewModel by viewModels()
+    @Inject
+    internal lateinit var factory: OtpViewModelFactory
+    private val viewModel: OtpViewModel by viewModels { factory }
     private val argPhoneNumber get() = arguments?.getString(ARG_PHONE_NUMBER) ?: ""
 
     override val tagId: Int get() = TODO("Not yet implemented")

@@ -8,15 +8,15 @@ import com.topiichat.app.R
 import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.otp.presentation.OtpFragment
-import com.topiichat.app.features.pin_code.presentation.PinCodeFragment
-import com.topiichat.app.features.valid_phone_number.domain.ValidPhoneNumberUseCase
+import com.topiichat.app.features.valid_phone_number.domain.usecases.ValidPhoneNumberUseCase
 import com.topiichat.app.features.valid_phone_number.domain.model.ValidPhone
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ValidPhoneNumberViewModel : BaseViewModel(), IValidPhoneNumberViewModel {
-
-    private val validPhoneNumber: ValidPhoneNumberUseCase = ValidPhoneNumberUseCase()
+class ValidPhoneNumberViewModel @Inject constructor(
+    private val validPhoneNumber: ValidPhoneNumberUseCase
+) : BaseViewModel(), IValidPhoneNumberViewModel {
 
     private val _visibilityTextError: MutableLiveData<Boolean> = MutableLiveData()
     val visibilityTextError: LiveData<Boolean> = _visibilityTextError

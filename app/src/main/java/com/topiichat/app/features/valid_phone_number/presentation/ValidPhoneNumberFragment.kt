@@ -9,11 +9,16 @@ import androidx.fragment.app.viewModels
 import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentValidPhoneNumberBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ValidPhoneNumberFragment : BaseFragment<FragmentValidPhoneNumberBinding>(),
     IValidPhoneNumberFragment {
 
-    private val viewModel: ValidPhoneNumberViewModel by viewModels()
+    @Inject
+    internal lateinit var factory: ValidPhoneNumberViewModelFactory
+    private val viewModel: ValidPhoneNumberViewModel by viewModels { factory }
 
     override val tagId: Int get() = TODO("Not yet implemented")
 

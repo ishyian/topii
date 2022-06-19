@@ -9,7 +9,9 @@ import androidx.fragment.app.viewModels
 import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentSplashBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SplashFragment : BaseFragment<FragmentSplashBinding>(), ISplashFragment {
 
     private val viewModel: SplashViewModel by viewModels()
