@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import com.topiichat.app.core.navigation.Navigator
-import com.topiichat.app.core.platform.BaseFragment
+import com.topiichat.app.core.presentation.navigation.Navigator
+import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentSplashBinding
 
 class SplashFragment : BaseFragment<FragmentSplashBinding>(), ISplashFragment {

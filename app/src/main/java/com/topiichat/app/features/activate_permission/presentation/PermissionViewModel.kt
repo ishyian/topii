@@ -2,8 +2,8 @@ package com.topiichat.app.features.activate_permission.presentation
 
 import android.view.View
 import com.topiichat.app.R
-import com.topiichat.app.core.navigation.Navigator
-import com.topiichat.app.core.platform.BaseViewModel
+import com.topiichat.app.core.presentation.navigation.Navigator
+import com.topiichat.app.core.presentation.platform.BaseViewModel
 
 class PermissionViewModel : BaseViewModel(), IPermissionViewModel {
 

@@ -3,8 +3,8 @@ package com.topiichat.app.features.splash.presentation
 import android.view.View
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
-import com.topiichat.app.core.navigation.Navigator
-import com.topiichat.app.core.platform.BaseViewModel
+import com.topiichat.app.core.presentation.navigation.Navigator
+import com.topiichat.app.core.presentation.platform.BaseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

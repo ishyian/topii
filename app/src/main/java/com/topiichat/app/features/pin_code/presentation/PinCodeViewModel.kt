@@ -7,8 +7,8 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
-import com.topiichat.app.core.navigation.Navigator
-import com.topiichat.app.core.platform.BaseViewModel
+import com.topiichat.app.core.presentation.navigation.Navigator
+import com.topiichat.app.core.presentation.platform.BaseViewModel
 
 class PinCodeViewModel : BaseViewModel(), IPinCodeViewModel {
 
@@ -28,7 +28,7 @@ class PinCodeViewModel : BaseViewModel(), IPinCodeViewModel {
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.show_pass_btn -> {
+            R.id.btn_show_pass -> {
                 onClickShowPass()
             }
             R.id.next_after_pin_code -> {

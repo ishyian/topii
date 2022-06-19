@@ -1,11 +1,11 @@
-package com.topiichat.app.core.platform
+package com.topiichat.app.core.presentation.platform
 
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.topiichat.app.core.exception.Failure
-import com.topiichat.app.core.navigation.Navigator
+import com.topiichat.app.core.presentation.navigation.Navigator
 
 /**
  * Base ViewModel class with default Failure handling.
@@ -21,6 +21,9 @@ abstract class BaseViewModel : ViewModel(), IBaseViewModel {
 
     protected val _showLoader: MutableLiveData<Boolean> = MutableLiveData()
     val showLoader: LiveData<Boolean> = _showLoader
+
+    protected val _showMsgError: MutableLiveData<String> = MutableLiveData()
+    val showMsgError: LiveData<String> = _showMsgError
 
     private val _failure: MutableLiveData<Failure> = MutableLiveData()
     val failure: LiveData<Failure> = _failure

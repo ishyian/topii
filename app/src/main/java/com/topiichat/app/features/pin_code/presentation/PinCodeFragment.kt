@@ -6,9 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.topiichat.app.R
-import com.topiichat.app.core.navigation.Navigator
-import com.topiichat.app.core.platform.BaseFragment
+import com.topiichat.app.core.presentation.navigation.Navigator
+import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentPinCodeBinding
 
 class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment {
@@ -30,10 +29,10 @@ class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment
     ): Unit = with(binding) {
         initObservers()
         setupClickListener(
-            showPassBtn, nextAfterPinCode, toolbar.imageViewBack, toolbar.imageViewClose
+            btnShowPass, nextAfterPinCode, toolbar.btnBack, toolbar.btnClose
         )
-        editText1.requestFocus()
-        toolbar.textViewTitle.text = getString(R.string.confirm_pin)
+        editTextPinCode.requestFocus()
+
     }
 
     override fun onClick(v: View?) {
@@ -50,11 +49,11 @@ class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment
     override fun onShowPassTransformationMethod(
         transformationMethod: TransformationMethod
     ) = with(binding) {
-        editText1.transformationMethod = transformationMethod
+        editTextPinCode.transformationMethod = transformationMethod
     }
 
     override fun onShowPassImage(imageId: Int) = with(binding) {
-        showPassBtn.setImageResource(imageId)
+        btnShowPass.setImageResource(imageId)
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit

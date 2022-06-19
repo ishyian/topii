@@ -1,4 +1,4 @@
-package com.topiichat.app.core.platform
+package com.topiichat.app.core.presentation.platform
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner

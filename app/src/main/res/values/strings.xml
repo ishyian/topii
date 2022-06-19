@@ -11,7 +11,8 @@
     <string name="text_permissions">Permitir notificaciones y accesos a tus contactos te permite saber cuándo recibes un mensaje y te ayuda a encontrar a personas que conoces.\n\nTu lista de contactos está cifrada y solo tú tienes acceso. TOPII no tiene acceso a ella.</string>
     <string name="valid_phone_title">Introduce tu número\nde teléfono</string>
     <string name="title_otp">Código SMS</string>
-    <string name="subtitle_otp">Escribe el codigo recivido via SMS al +34900100106 para verificarlo.</string>
+    <string name="subtitle_otp">sEscribe el codigo recivido via SMS al %1$s para verificarlo.</string>
+    <string name="timer_otp">Renvia el codigo en %1$s minutos </string>
     <string name="button_otp">Continuar</string>
     <string name="phone_number">número de teléfono</string>
     <string name="codigo">Reenviar código</string>

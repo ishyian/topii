@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import com.topiichat.app.R
-import com.topiichat.app.core.navigation.Navigator
-import com.topiichat.app.core.platform.BaseFragment
+import com.topiichat.app.core.presentation.navigation.Navigator
+import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentValidPhoneNumberBinding
 
 class ValidPhoneNumberFragment : BaseFragment<FragmentValidPhoneNumberBinding>(),
@@ -29,21 +29,38 @@ class ValidPhoneNumberFragment : BaseFragment<FragmentValidPhoneNumberBinding>()
         savedInstanceState: Bundle?
     ): Unit = with(binding) {
         initObservers()
-        setupClickListener(nextAfterValidate, toolbar.imageViewBack, toolbar.imageViewClose)
-        editext.requestFocus()
-        toolbar.textViewTitle.text = getString(R.string.valid_phone_title)
+        setupClickListener(nextAfterValidate, toolbar.btnBack, toolbar.btnClose)
+        editText.requestFocus()
     }
 
     override fun onClick(v: View?) {
         viewModel.onClick(v)
+        when (v?.id) {
+            binding.nextAfterValidate.id -> {
+                viewModel.onValidPhoneNumberRequest(binding.editText.text.toString())
+            }
+        }
     }
 
     private fun initObservers() = with(viewModel) {
         observe(showLoader, ::onVisibilityLoader)
         observe(navigate, ::onNavigate)
+        observe(visibilityTextError, ::onVisibilityTextError)
+        observe(showMsgError, ::onShowMessageError)
     }
 
-    override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
+    override fun onShowMessageError(message: String) {
+        showToast(message)
+    }
+
+    override fun onVisibilityTextError(isVisible: Boolean) = with(binding) {
+        textViewError.isVisible = isVisible
+    }
+
+    override fun onVisibilityLoader(isVisibleLoader: Boolean) = with(binding) {
+        groupContent.isVisible = isVisibleLoader.not()
+        progressBar.isVisible = isVisibleLoader
+    }
 
     override fun onNavigate(navigator: Navigator) {
         navigator.navigate(currentActivity.navController)

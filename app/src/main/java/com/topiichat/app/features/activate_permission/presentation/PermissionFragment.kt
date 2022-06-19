@@ -11,8 +11,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.topiichat.app.R
-import com.topiichat.app.core.navigation.Navigator
-import com.topiichat.app.core.platform.BaseFragment
+import com.topiichat.app.core.presentation.navigation.Navigator
+import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentPermissionBinding
 
 class PermissionFragment : BaseFragment<FragmentPermissionBinding>(), IPermissionFragment {
@@ -34,8 +34,7 @@ class PermissionFragment : BaseFragment<FragmentPermissionBinding>(), IPermissio
     ) = with(binding) {
         initObservers()
         setupPermissions()
-        setupClickListener(nextAfterPermission, toolbar.imageViewBack, toolbar.imageViewClose)
-        toolbar.textViewTitle.text = getString(R.string.title_permission)
+        setupClickListener(nextAfterPermission, toolbar.btnBack, toolbar.btnClose)
     }
 
     override fun onClick(v: View?) {

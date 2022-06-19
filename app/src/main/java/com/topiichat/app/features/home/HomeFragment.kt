@@ -2,7 +2,7 @@ package com.topiichat.app.features.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.topiichat.app.core.platform.BaseFragment
+import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentHomeBinding
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(){

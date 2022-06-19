@@ -1,4 +1,4 @@
-//package com.topiichat.app.core.platform
+//package com.topiichat.app.core.presentation.platform
 //
 //import android.content.Context
 //import android.net.NetworkCapabilities

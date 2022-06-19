@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
 import com.topiichat.app.core.extension.Constants
-import com.topiichat.app.core.navigation.Navigator
-import com.topiichat.app.core.platform.BaseViewModel
+import com.topiichat.app.core.presentation.navigation.Navigator
+import com.topiichat.app.core.presentation.platform.BaseViewModel
 
 class TermsViewModel : BaseViewModel(), ITermsViewModel {
 
