@@ -22,7 +22,7 @@ abstract class BaseViewModel : ViewModel(), IBaseViewModel {
     protected val _showLoader: MutableLiveData<Boolean> = MutableLiveData()
     val showLoader: LiveData<Boolean> = _showLoader
 
-    protected val _showMsgError: MutableLiveData<String> = MutableLiveData()
+    protected val _showMsgError: SingleLiveData<String> = SingleLiveData()
     val showMsgError: LiveData<String> = _showMsgError
 
     private val _failure: MutableLiveData<Failure> = MutableLiveData()

@@ -5,6 +5,8 @@ import android.text.method.TransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
@@ -37,6 +39,11 @@ class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment
 
     override fun onClick(v: View?) {
         viewModel.onClick(v)
+        when (v?.id) {
+            binding.nextAfterPinCode.id -> {
+                viewModel.onCheckPinCode(binding.editTextPinCode.text.toString())
+            }
+        }
     }
 
     private fun initObservers() = with(viewModel) {
@@ -44,6 +51,12 @@ class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment
         observe(showPassImage, ::onShowPassImage)
         observe(showLoader, ::onVisibilityLoader)
         observe(navigate, ::onNavigate)
+        observe(textPinCode, ::onTextPinCode)
+        observe(visibilityTextContentTitle, ::onVisibilityTextContentTitle)
+        observe(visibilityTextDescription, ::onVisibilityTextDescription)
+        observe(visibilityTextError, ::onVisibilityTextError)
+        observe(colorEditTextPinCode, ::onColorEditTextPinCode)
+        observe(showMsgError, ::onShowMessageError)
     }
 
     override fun onShowPassTransformationMethod(
@@ -54,6 +67,30 @@ class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment
 
     override fun onShowPassImage(imageId: Int) = with(binding) {
         btnShowPass.setImageResource(imageId)
+    }
+
+    override fun onTextPinCode(text: String) = with(binding) {
+        editTextPinCode.setText(text)
+    }
+
+    override fun onVisibilityTextContentTitle(isVisible: Boolean) = with(binding) {
+        textViewContentTitle.isVisible = isVisible
+    }
+
+    override fun onVisibilityTextDescription(isVisible: Boolean) = with(binding) {
+        textViewDescription.isVisible = isVisible
+    }
+
+    override fun onVisibilityTextError(isVisible: Boolean) = with(binding) {
+        textViewError.isVisible = isVisible
+    }
+
+    override fun onColorEditTextPinCode(colorId: Int) = with(binding) {
+        editTextPinCode.setTextColor(ContextCompat.getColor(requireContext(), colorId))
+    }
+
+    override fun onShowMessageError(message: String) {
+        showToast(message)
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit

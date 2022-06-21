@@ -8,6 +8,7 @@ import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.splash.domain.usecases.FetchTokenUseCase
 import com.topiichat.app.features.splash.presentation.model.Token
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,7 +23,9 @@ class SplashViewModel @Inject constructor(
     override fun onLoaderStart() {
         _showLoader.value = false
         viewModelScope.launch {
+            delay(TIME_LOADER)
             _showLoader.value = true
+            delay(TIME_LOADER)
             val result = fetchToken()
             _navigate.setValue(Navigator(R.id.action_splash_to_terms))
         }
@@ -44,6 +47,6 @@ class SplashViewModel @Inject constructor(
     }
 
     companion object {
-        private const val TIME_LOADER = 500L
+        private const val TIME_LOADER = 2000L
     }
 }

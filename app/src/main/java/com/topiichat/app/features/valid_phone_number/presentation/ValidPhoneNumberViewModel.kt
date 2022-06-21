@@ -68,7 +68,7 @@ class ValidPhoneNumberViewModel @Inject constructor(
     }
 
     override fun onEmptyPhoneNumber() {
-        _showMsgError.value = "Phone number is empty"
+        _showMsgError.setValue("Phone number is empty")
     }
 
     override fun onNotMatchPinCode() {
@@ -76,7 +76,7 @@ class ValidPhoneNumberViewModel @Inject constructor(
     }
 
     override fun onFailValidPhoneNumber(failValidPhone: ValidPhone.Fail) {
-        _showMsgError.value = failValidPhone.msgError
+        _showMsgError.setValue(failValidPhone.msgError)
     }
 
     override fun onNextAfterValidate(phoneNumber: String) {

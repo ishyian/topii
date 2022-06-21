@@ -89,7 +89,7 @@ class OtpViewModel @Inject constructor(
     override fun onSmallLengthValidPinCode() {
         _colorPinView.value = R.color.subtitle_otp
         _visibilityTextError.value = false
-        _showMsgError.value = "Length pin code is small"
+        _showMsgError.setValue("Length pin code is small")
     }
 
     override fun onWrongValidPinCode() {
@@ -100,7 +100,7 @@ class OtpViewModel @Inject constructor(
     override fun onFailValidPinCode(failValidPinCode: ValidOtp.Fail) {
         _colorPinView.value = R.color.subtitle_otp
         _visibilityTextError.value = false
-        _showMsgError.value = failValidPinCode.msgError
+        _showMsgError.setValue(failValidPinCode.msgError)
     }
 
     override fun onSendSms(phoneNumber: String) {
@@ -127,7 +127,7 @@ class OtpViewModel @Inject constructor(
     override fun onSuccessSendSms() = Unit
 
     override fun onFailSendSms(failSendSms: SendSms.Fail) {
-        _showMsgError.value = failSendSms.msgError
+        _showMsgError.setValue(failSendSms.msgError)
     }
 
     override fun onCounterSendSms() {
