@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/whiteColor"
     android:orientation="vertical"
-    tools:context=".features.terms.TermsFragment">
+    tools:context=".features.terms.presentation.TermsFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

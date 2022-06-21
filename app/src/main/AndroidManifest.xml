@@ -24,65 +24,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name="com.topiichat.app.core.navigation.RouteActivity"
+
+        <activity android:name=".AppActivity"
             android:exported="true"
             android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".features.signup.SignupActivity"
-            android:label="@string/signup_screen_title">
-        </activity>
-        <activity
-            android:name=".features.splash.SplashActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:label="@string/signup_screen_splash">
-        </activity>
-        <activity
-            android:name=".features.loader.LoaderActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:label="@string/signup_screen_splash"/>
-        <activity
-            android:name=".features.terms.TermsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:label="@string/terms_activity">
-
-        </activity>
-        <activity
-            android:name=".features.activate_permission.PermissionActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:label="@string/signup_screen_splash"/>
-
-        <activity
-            android:name=".features.valid_phone_number.ValidPhoneNumberActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-
-            android:windowSoftInputMode="adjustResize"
-            android:label="@string/validatePhone_screen">
-
-        </activity>
-
-        <activity
-            android:name=".features.otp.OtpActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustResize"
-            android:label="@string/signup_screen_splash">
-
-        </activity>
-
-        <activity
-            android:name=".features.pin_code.PinCodeActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-
-            android:windowSoftInputMode="adjustResize"
-            android:label="@string/signup_screen_splash">
-
         </activity>
 
     </application>

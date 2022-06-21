@@ -9,4 +9,6 @@
     <color name="border_pin">#CCCCCC</color>
     <color name="back_button">#0D3E3E3F</color>
     <color name="error_color">#DC3027</color>
+    <color name="don_t_enabled_color">#D6DAE8</color>
+    <color name="green">#0D671C</color>
 </resources>
