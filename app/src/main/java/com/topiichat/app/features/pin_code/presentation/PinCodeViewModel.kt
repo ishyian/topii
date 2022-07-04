@@ -10,8 +10,15 @@ import com.topiichat.app.R
 import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.pin_code.domain.ValidPinCode
+import com.topiichat.app.features.registration.presentation.RegisterFragment
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 
-class PinCodeViewModel : BaseViewModel(), IPinCodeViewModel {
+class PinCodeViewModel @AssistedInject constructor(
+    @Assisted("phoneNumber") private val phoneNumber: String,
+    @Assisted("phoneCode") private val phoneCode: String,
+    @Assisted("authyId") private val authyId: String,
+) : BaseViewModel(), IPinCodeViewModel {
 
     private val _showPassTransformationMethod: MutableLiveData<TransformationMethod> =
         MutableLiveData()
@@ -136,8 +143,11 @@ class PinCodeViewModel : BaseViewModel(), IPinCodeViewModel {
             _visibilityTextContentTitle.value = false
             _visibilityTextDescription.value = true
             _visibilityTextError.value = false
-            _colorEditTextPinCode.value = R.color.colorPrimaryDark
-            _navigate.setValue(Navigator(R.id.action_pinCode_to_home))
+            _colorEditTextPinCode.value = R.color.pin_code_text_color
+            _navigate.setValue(Navigator(
+                actionId = R.id.action_pinCode_to_register,
+                data = RegisterFragment.makeArgs(phoneNumber, authyId, phoneCode, pinCode)
+            ))
         }
     }
 
@@ -164,6 +174,15 @@ class PinCodeViewModel : BaseViewModel(), IPinCodeViewModel {
 
     override fun onClickClose() {
         _navigate.setValue(Navigator(R.id.action_pinCode_to_terms))
+    }
+
+    @dagger.assisted.AssistedFactory
+    interface AssistedFactory {
+        fun create(
+            @Assisted("phoneNumber") phoneNumber: String,
+            @Assisted("phoneCode") phoneCode: String,
+            @Assisted("authyId") authyId: String
+        ): PinCodeViewModel
     }
 
     companion object {

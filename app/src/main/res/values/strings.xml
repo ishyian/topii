@@ -24,7 +24,13 @@
     <string name="onbording_text">Lleva la privacidad contigo Añade tu personalidad en todos tus mensajes.</string>
     <string name="confirm_pin">Confirma tu PIN</string>
     <string name="subtitle_confirm_pin">Introduce el PIN que acabas de crear.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="title_register">Solo un paso más</string>
+    <string name="button_register">Registrar</string>
+    <string name="text_switch1_register">He leido y acepto la politica de privacidad</string>
+    <string name="text_switch2_register">He leido y acepto las condiciones legales de TOPii</string>
+    <string name="chats">Chats</string>
+    <string name="chats_edit">Editar</string>
+    <string name="chats_no_chats">No tienes chats aun</string>
+    <string name="chats_new_chat"><u>Nuevo Mensaje</u></string>
+    <string name="chats_search_hint">Search</string>
 </resources>

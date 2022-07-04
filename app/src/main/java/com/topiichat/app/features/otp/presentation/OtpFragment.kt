@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
 import com.topiichat.app.R
+import com.topiichat.app.core.extension.hideKeyboard
+import com.topiichat.app.core.extension.showKeyboard
+import com.topiichat.app.core.extension.viewModelCreator
 import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentOtpBinding
@@ -20,11 +22,14 @@ import javax.inject.Inject
 class OtpFragment : BaseFragment<FragmentOtpBinding>(), IOtpFragment {
 
     @Inject
-    internal lateinit var factory: OtpViewModelFactory
-    private val viewModel: OtpViewModel by viewModels { factory }
-    private val argPhoneNumber get() = arguments?.getString(ARG_PHONE_NUMBER) ?: ""
+    lateinit var factory: OtpViewModel.AssistedFactory
+    private val viewModel by viewModelCreator {
+        factory.create(argPhoneNumber, argPhoneCode, argAuthyId)
+    }
 
-    override val tagId: Int get() = TODO("Not yet implemented")
+    private val argPhoneNumber get() = arguments?.getString(ARG_PHONE_NUMBER) ?: ""
+    private val argAuthyId get() = arguments?.getString(ARG_AUTHY_ID) ?: ""
+    private val argPhoneCode get() = arguments?.getString(ARG_PHONE_CODE) ?: ""
 
     override fun initBinding(
         inflater: LayoutInflater,
@@ -39,8 +44,14 @@ class OtpFragment : BaseFragment<FragmentOtpBinding>(), IOtpFragment {
     ): Unit = with(binding) {
         initObservers()
         setupClickListener(btnNextAfterOtp, btnSendSms, toolbar.btnBack, toolbar.btnClose)
-        pinView.requestFocus()
-        textViewTitleWithPhoneNumber.text = getString(R.string.subtitle_otp, argPhoneNumber)
+        textViewTitleWithPhoneNumber.text = getString(R.string.subtitle_otp, argPhoneCode.plus(argPhoneNumber))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        with(binding.pinView) {
+            post { showKeyboard() }
+        }
     }
 
     override fun onClick(v: View?) = with(binding) {
@@ -63,14 +74,21 @@ class OtpFragment : BaseFragment<FragmentOtpBinding>(), IOtpFragment {
         observe(showMsgError, ::onShowMessageError)
         observe(btnSendSmsEnabling, ::onEnablingBtnSendSms)
         observe(textSendSmsTimer, ::onTimerTextSendSms)
+        observe(hideKeyboard, ::onHideKeyboardEvent)
+    }
+
+    override fun onHideKeyboardEvent(nothing: Unit) {
+        with(binding.pinView) {
+            post { hideKeyboard() }
+        }
     }
 
     override fun onValidPinCodeRequest() {
-        viewModel.onValidPinCodeRequest(binding.pinView.text.toString())
+        viewModel.onValidOtpCodeRequest(binding.pinView.text.toString())
     }
 
     override fun onSendSms() {
-        viewModel.onSendSms(argPhoneNumber)
+        viewModel.onSendSms()
     }
 
     override fun onShowMessageError(message: String) {
@@ -115,10 +133,14 @@ class OtpFragment : BaseFragment<FragmentOtpBinding>(), IOtpFragment {
 
     companion object {
         private const val ARG_PHONE_NUMBER = "phoneNumber"
+        private const val ARG_AUTHY_ID = "authyId"
+        private const val ARG_PHONE_CODE = "code"
 
-        fun makeArgs(phoneNumber: String): Bundle {
-            return Bundle(1).apply {
+        fun makeArgs(phoneNumber: String, authyId: String, code: String): Bundle {
+            return Bundle(3).apply {
                 putString(ARG_PHONE_NUMBER, phoneNumber)
+                putString(ARG_AUTHY_ID, authyId)
+                putString(ARG_PHONE_CODE, code)
             }
         }
     }

@@ -5,21 +5,29 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
+import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseViewModel
+import com.topiichat.app.features.otp.domain.model.ResendOtpCodeDomain
 import com.topiichat.app.features.otp.domain.model.SendSms
-import com.topiichat.app.features.otp.domain.usecases.ValidOtpUseCase
 import com.topiichat.app.features.otp.domain.model.ValidOtp
-import com.topiichat.app.features.otp.domain.usecases.SendSmsUseCase
+import com.topiichat.app.features.otp.domain.model.ValidOtpCodeDomain
+import com.topiichat.app.features.otp.domain.usecases.ResendSmsUseCase
+import com.topiichat.app.features.otp.domain.usecases.ValidOtpUseCase
 import com.topiichat.app.features.otp.presentation.model.BtnSendSmsEnablingUi
 import com.topiichat.app.features.otp.presentation.model.TextSendSmsTimerUi
+import com.topiichat.app.features.pin_code.presentation.PinCodeFragment
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class OtpViewModel @Inject constructor(
+class OtpViewModel @AssistedInject constructor(
+    @Assisted("phoneNumber") private val phoneNumber: String,
+    @Assisted("phoneCode") private val phoneCode: String,
+    @Assisted("authyId") private val authyId: String,
     private val validPinCode: ValidOtpUseCase,
-    private val sendSms: SendSmsUseCase
+    private val sendSms: ResendSmsUseCase,
 ) : BaseViewModel(), IOtpViewModel {
 
     private val _colorPinView: MutableLiveData<Int> = MutableLiveData()
@@ -34,6 +42,9 @@ class OtpViewModel @Inject constructor(
     private val _textSendSmsTimer: MutableLiveData<TextSendSmsTimerUi> = MutableLiveData()
     val textSendSmsTimer: LiveData<TextSendSmsTimerUi> = _textSendSmsTimer
 
+    private val _hideKeyboard: MutableLiveData<Unit> = MutableLiveData()
+    val hideKeyboard: LiveData<Unit> = _hideKeyboard
+
     private var counterSendSms: Int = 0
 
     override fun onClick(view: View?) {
@@ -47,43 +58,42 @@ class OtpViewModel @Inject constructor(
         }
     }
 
-    override fun onValidPinCodeRequest(pinCode: String) {
-        if (pinCode.length < LENGTH_PIN_CODE) {
-            onRenderValidPinCode(ValidOtp.SmallLength)
+    override fun onValidOtpCodeRequest(otpCode: String) {
+        _hideKeyboard.value = Unit
+        if (otpCode.length < LENGTH_PIN_CODE) {
+            onSmallLengthValidPinCode()
             return
         }
         viewModelScope.launch {
             _visibilityTextError.value = false
             _showLoader.value = true
             delay(1000)
-            val request = ValidOtpUseCase.Params(pinCode)
+            val request = ValidOtpUseCase.Params(authyId, otpCode)
             val result = validPinCode(request)
             onRenderValidPinCode(result)
             _showLoader.value = false
         }
     }
 
-    override fun onRenderValidPinCode(validPinCode: ValidOtp) {
-        when (validPinCode) {
-            is ValidOtp.Success -> {
+    override fun onRenderValidPinCode(result: ResultData<ValidOtpCodeDomain>) {
+        when (result) {
+            is ResultData.Success -> {
                 onSuccessValidPinCode()
             }
-            is ValidOtp.SmallLength -> {
-                onSmallLengthValidPinCode()
-            }
-            is ValidOtp.Wrong -> {
-                onWrongValidPinCode()
-            }
-            is ValidOtp.Fail -> {
-                onFailValidPinCode(validPinCode)
-            }
+            is ResultData.Fail -> onFailValidPinCode(ValidOtp.Fail(result.error))
+            is ResultData.NetworkError -> onNetworkError()
         }
     }
 
     override fun onSuccessValidPinCode() {
         _colorPinView.value = R.color.subtitle_otp
         _visibilityTextError.value = false
-        _navigate.setValue(Navigator(R.id.action_otp_to_pinCode))
+        _navigate.setValue(
+            Navigator(
+                actionId = R.id.action_otp_to_pinCode,
+                data = PinCodeFragment.makeArgs(phoneNumber, authyId, phoneCode)
+            )
+        )
     }
 
     override fun onSmallLengthValidPinCode() {
@@ -100,26 +110,25 @@ class OtpViewModel @Inject constructor(
     override fun onFailValidPinCode(failValidPinCode: ValidOtp.Fail) {
         _colorPinView.value = R.color.subtitle_otp
         _visibilityTextError.value = false
-        _showMsgError.setValue(failValidPinCode.msgError)
+        _showMsgError.setValue(failValidPinCode.errorDomain.message)
     }
 
-    override fun onSendSms(phoneNumber: String) {
+    override fun onSendSms() {
         _textSendSmsTimer.value = TextSendSmsTimerUi(false)
         viewModelScope.launch {
-            val request = SendSmsUseCase.Params(phoneNumber)
+            val request = ResendSmsUseCase.Params(authyId)
             val result = sendSms(request)
             onRenderSendSms(result)
         }
     }
 
-    override fun onRenderSendSms(sendSms: SendSms) {
-        when (sendSms) {
-            is SendSms.Success -> {
+    override fun onRenderSendSms(result: ResultData<ResendOtpCodeDomain>) {
+        when (result) {
+            is ResultData.Success -> {
                 onSuccessSendSms()
             }
-            is SendSms.Fail -> {
-                onFailSendSms(sendSms)
-            }
+            is ResultData.Fail -> onFailSendSms(SendSms.Fail(result.error))
+            is ResultData.NetworkError -> onNetworkError()
         }
         onCounterSendSms()
     }
@@ -127,7 +136,7 @@ class OtpViewModel @Inject constructor(
     override fun onSuccessSendSms() = Unit
 
     override fun onFailSendSms(failSendSms: SendSms.Fail) {
-        _showMsgError.setValue(failSendSms.msgError)
+        _showMsgError.setValue(failSendSms.errorDomain.message)
     }
 
     override fun onCounterSendSms() {
@@ -167,8 +176,17 @@ class OtpViewModel @Inject constructor(
         _navigate.setValue(Navigator(R.id.action_otp_to_terms))
     }
 
+    @dagger.assisted.AssistedFactory
+    interface AssistedFactory {
+        fun create(
+            @Assisted("phoneNumber") phoneNumber: String,
+            @Assisted("phoneCode") phoneCode: String,
+            @Assisted("authyId") authyId: String
+        ): OtpViewModel
+    }
+
     companion object {
-        private const val LENGTH_PIN_CODE = 4
+        private const val LENGTH_PIN_CODE = 6
         private const val MAX_SEND_SMS = 5
         private const val TIME_BAN_SEND_SMS_OF_SECONDS = 10
     }

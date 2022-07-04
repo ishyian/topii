@@ -9,13 +9,13 @@
         android:id="@+id/splashFragment"
         android:name="com.topiichat.app.features.splash.presentation.SplashFragment"
         android:label="fragment_splash"
-        tools:layout="@layout/fragment_splash" >
+        tools:layout="@layout/fragment_splash">
 
         <action
             android:id="@+id/action_splash_to_terms"
             app:destination="@id/termsFragment"
             app:popUpTo="@id/splashFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
 
     </fragment>
 
@@ -23,7 +23,7 @@
         android:id="@+id/termsFragment"
         android:name="com.topiichat.app.features.terms.presentation.TermsFragment"
         android:label="fragment_terms"
-        tools:layout="@layout/fragment_terms" >
+        tools:layout="@layout/fragment_terms">
 
         <action
             android:id="@+id/action_terms_to_permission"
@@ -34,7 +34,7 @@
         android:id="@+id/permissionFragment"
         android:name="com.topiichat.app.features.activate_permission.presentation.PermissionFragment"
         android:label="fragment_permission"
-        tools:layout="@layout/fragment_permission" >
+        tools:layout="@layout/fragment_permission">
 
         <action
             android:id="@+id/action_permission_to_validPhoneNumber"
@@ -46,24 +46,24 @@
         android:id="@+id/pinCodeFragment"
         android:name="com.topiichat.app.features.pin_code.presentation.PinCodeFragment"
         android:label="fragment_pin_code"
-        tools:layout="@layout/fragment_pin_code" >
-
-        <action
-            android:id="@+id/action_pinCode_to_home"
-            app:destination="@id/homeFragment" />
+        tools:layout="@layout/fragment_pin_code">
 
         <action
             android:id="@+id/action_pinCode_to_terms"
             app:destination="@id/termsFragment"
             app:popUpTo="@id/pinCodeFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_pinCode_to_register"
+            app:destination="@id/registerFragment" />
 
     </fragment>
     <fragment
         android:id="@+id/validPhoneNumberFragment"
         android:name="com.topiichat.app.features.valid_phone_number.presentation.ValidPhoneNumberFragment"
         android:label="fragment_valid_phone_number"
-        tools:layout="@layout/fragment_valid_phone_number" >
+        tools:layout="@layout/fragment_valid_phone_number">
 
         <action
             android:id="@+id/action_validPhoneNumber_to_otp"
@@ -73,7 +73,7 @@
             android:id="@+id/action_validPhoneNumber_to_terms"
             app:destination="@id/termsFragment"
             app:popUpTo="@id/validPhoneNumberFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
 
     </fragment>
 
@@ -81,7 +81,7 @@
         android:id="@+id/otpFragment"
         android:name="com.topiichat.app.features.otp.presentation.OtpFragment"
         android:label="fragment_otp"
-        tools:layout="@layout/fragment_otp" >
+        tools:layout="@layout/fragment_otp">
 
         <action
             android:id="@+id/action_otp_to_pinCode"
@@ -91,14 +91,25 @@
             android:id="@+id/action_otp_to_terms"
             app:destination="@id/termsFragment"
             app:popUpTo="@id/otpFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.topiichat.app.features.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/chatsFragment"
+        android:name="com.topiichat.app.features.chats.presentation.ChatsFragment"
+        android:label="fragment_chats"
+        tools:layout="@layout/fragment_chats" />
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.topiichat.app.features.registration.presentation.RegisterFragment"
+        android:label="RegisterFragment"
+        tools:layout="@layout/fragment_register">
+
+        <action
+            android:id="@+id/action_register_to_chats"
+            app:destination="@id/chatsFragment" />
+    </fragment>
 
 </navigation>

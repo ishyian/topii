@@ -1,0 +1,34 @@
+package com.topiichat.app.features.registration.data.datasource
+
+import com.topiichat.app.core.data.ApiService
+import com.topiichat.app.core.data.datasource.BaseRemoteDataStore
+import com.topiichat.app.core.domain.ResultData
+import com.topiichat.app.features.registration.data.model.RegisterDto
+import com.topiichat.app.features.registration.data.model.RegisterRequestDto
+import com.topiichat.app.features.valid_phone_number.data.model.PhoneNumberDto
+import javax.inject.Inject
+
+class RegisterRemoteDataStore @Inject constructor(
+    private val apiService: ApiService
+) : BaseRemoteDataStore() {
+
+    suspend fun register(
+        phoneNumber: String,
+        code: String,
+        authyId: String,
+        pinCode: String
+    ): ResultData<RegisterDto?> {
+        return safeApiCall {
+            apiService.register(
+                RegisterRequestDto(
+                    phoneNumber = PhoneNumberDto(
+                        dialCountryCode = code,
+                        mobileNumber = phoneNumber
+                    ),
+                    authyId = authyId,
+                    pinCode = pinCode
+                )
+            )
+        }
+    }
+}

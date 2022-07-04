@@ -5,11 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
+import com.google.android.material.textfield.TextInputLayout
+import com.topiichat.app.AppActivity
+import com.topiichat.app.core.constants.Constants.INITIAL_COUNTRY_CODE
+import com.topiichat.app.core.extension.getPhoneNumber
+import com.topiichat.app.core.extension.hideKeyboard
+import com.topiichat.app.core.extension.showKeyboard
+import com.topiichat.app.core.extension.viewModelCreator
 import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentValidPhoneNumberBinding
 import dagger.hilt.android.AndroidEntryPoint
+import me.ibrahimsn.lib.PhoneNumberKit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -17,10 +24,8 @@ class ValidPhoneNumberFragment : BaseFragment<FragmentValidPhoneNumberBinding>()
     IValidPhoneNumberFragment {
 
     @Inject
-    internal lateinit var factory: ValidPhoneNumberViewModelFactory
-    private val viewModel: ValidPhoneNumberViewModel by viewModels { factory }
-
-    override val tagId: Int get() = TODO("Not yet implemented")
+    lateinit var factory: ValidPhoneNumberViewModel.AssistedFactory
+    private val viewModel by viewModelCreator { factory.create() }
 
     override fun initBinding(
         inflater: LayoutInflater,
@@ -33,16 +38,33 @@ class ValidPhoneNumberFragment : BaseFragment<FragmentValidPhoneNumberBinding>()
         view: View,
         savedInstanceState: Bundle?
     ): Unit = with(binding) {
+        setupPhoneNumberInputField(layoutEditText)
         initObservers()
         setupClickListener(nextAfterValidate, toolbar.btnBack, toolbar.btnClose)
-        editText.requestFocus()
+    }
+
+    override fun setupPhoneNumberInputField(inputLayout: TextInputLayout) {
+        val phoneNumberKit = PhoneNumberKit.Builder(requireContext())
+            .setIconEnabled(true)
+            .build()
+        phoneNumberKit.attachToInput(inputLayout, INITIAL_COUNTRY_CODE)
+        phoneNumberKit.setupCountryPicker(requireActivity() as AppActivity)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        with(binding.editText) {
+            post { showKeyboard() }
+        }
     }
 
     override fun onClick(v: View?) {
         viewModel.onClick(v)
         when (v?.id) {
             binding.nextAfterValidate.id -> {
-                viewModel.onValidPhoneNumberRequest(binding.editText.text.toString())
+                viewModel.onVerifyPhoneNumberRequest(
+                    binding.editText.getPhoneNumber(requireContext().applicationContext)
+                )
             }
         }
     }
@@ -52,6 +74,13 @@ class ValidPhoneNumberFragment : BaseFragment<FragmentValidPhoneNumberBinding>()
         observe(navigate, ::onNavigate)
         observe(visibilityTextError, ::onVisibilityTextError)
         observe(showMsgError, ::onShowMessageError)
+        observe(hideKeyboard, ::onHideKeyboardEvent)
+    }
+
+    override fun onHideKeyboardEvent(ignore: Unit) {
+        with(binding.editText) {
+            post { hideKeyboard() }
+        }
     }
 
     override fun onShowMessageError(message: String) {

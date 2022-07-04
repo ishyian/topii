@@ -1,46 +1,39 @@
 package com.topiichat.app.core.data
 
+import com.topiichat.app.features.otp.data.model.ResendOtpCodeDto
+import com.topiichat.app.features.otp.data.model.ResendOtpCodeRequestDto
+import com.topiichat.app.features.otp.data.model.ValidOtpCodeDto
+import com.topiichat.app.features.otp.data.model.ValidOtpCodeRequestDto
+import com.topiichat.app.features.registration.data.model.RegisterDto
+import com.topiichat.app.features.registration.data.model.RegisterRequestDto
 import com.topiichat.app.features.splash.data.model.TokenDto
-import com.topiichat.app.features.valid_phone_number.data.ValidPhoneNumberDto
-import com.topiichat.app.features.valid_phone_number.data.ValidPhoneNumberRequestDto
-import kotlinx.coroutines.delay
-import retrofit2.Response
+import com.topiichat.app.features.valid_phone_number.data.model.VerifyPhoneNumberDto
+import com.topiichat.app.features.valid_phone_number.data.model.VerifyPhoneNumberRequestDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import kotlin.random.Random
 
 interface ApiService {
-    @GET("/api/v1/verify/token_alice")
-    suspend fun fetchToken(): Response<TokenDto?>
+    @GET("api/v1/verify/token_alice")
+    suspend fun fetchToken(): TokenDto?
 
-    @POST("/api/v1/verify/valid_phone_number")
-    suspend fun fetchValidPhoneNumber(
-        @Body validPhoneNumberRequest: ValidPhoneNumberRequestDto
-    ): Response<ValidPhoneNumberDto?>
-}
+    @POST("api/v1/twilio/verify_phone_number")
+    suspend fun verifyPhoneNumber(
+        @Body verifyPhoneNumberRequestDto: VerifyPhoneNumberRequestDto
+    ): VerifyPhoneNumberDto?
 
-class MockApiService : ApiService {
+    @POST("api/v1/twilio/validate_code")
+    suspend fun validateOtpCode(
+        @Body validOtpCodeRequest: ValidOtpCodeRequestDto
+    ): ValidOtpCodeDto?
 
-    override suspend fun fetchToken(): Response<TokenDto?> {
-        delay(2000L)
-        return if (Random.nextBoolean()) {
-            val response = TokenDto(true, "blablabla", 30000)
-            Response.success(response)
-        } else {
-            Response.error(500, null)
-        }
-    }
+    @POST("api/v1/twilio/resend_code")
+    suspend fun resendOtpCode(
+        @Body resendOtpCodeRequestDto: ResendOtpCodeRequestDto
+    ): ResendOtpCodeDto?
 
-    override suspend fun fetchValidPhoneNumber(
-        validPhoneNumberRequest: ValidPhoneNumberRequestDto
-    ): Response<ValidPhoneNumberDto?> {
-        delay(2000L)
-        return if (Random.nextBoolean()) {
-            val response = ValidPhoneNumberDto(true, "valid phone number")
-            Response.success(response)
-        } else {
-            Response.error(500, null)
-        }
-    }
+    @POST("api/v1/auth/register")
+    suspend fun register(
+        @Body registerRequestDto: RegisterRequestDto
+    ): RegisterDto?
 }

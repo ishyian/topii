@@ -11,4 +11,18 @@
     <color name="error_color">#DC3027</color>
     <color name="don_t_enabled_color">#D6DAE8</color>
     <color name="green">#0D671C</color>
+    <color name="gray">#D7D7D7</color>
+
+    <color name="window_background">#FAFAFA</color>
+    <color name="onboard_background_color">#FFFFFF</color>
+    <color name="logo_color">#0000FF</color>
+    <color name="subtitle_color">#0521F5</color>
+    <color name="rounded_border_background">#FAFAFA</color>
+    <color name="pin_view_item_background_color">@color/whiteColor</color>
+    <color name="pin_code_text_color">#000635</color>
+    <color name="switch_thumb_color">#0521F5</color>
+    <color name="chats_background">@color/whiteColor</color>
+    <color name="chats_search_background">@color/whiteColor</color>
+    <color name="chats_search_border">#E7E7E7</color>
+    <color name="chats_list_background">#FAFAFA</color>
 </resources>

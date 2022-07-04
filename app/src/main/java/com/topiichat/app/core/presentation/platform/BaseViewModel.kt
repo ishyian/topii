@@ -25,17 +25,16 @@ abstract class BaseViewModel : ViewModel(), IBaseViewModel {
     protected val _showMsgError: SingleLiveData<String> = SingleLiveData()
     val showMsgError: LiveData<String> = _showMsgError
 
-    private val _failure: MutableLiveData<Failure> = MutableLiveData()
-    val failure: LiveData<Failure> = _failure
-
-    protected fun handleFailure(failure: Failure) {
-        _failure.value = failure
+    protected fun onNetworkError() {
+        _showMsgError.setValue("Something wrong with your network connection")
     }
 
     override fun onClickBack() {
-        _navigate.setValue(Navigator(
-            isBack = true
-        ))
+        _navigate.setValue(
+            Navigator(
+                isBack = true
+            )
+        )
     }
 
     override fun onClickClose() {

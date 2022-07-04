@@ -1,14 +1,26 @@
 package com.topiichat.app.core.di.module
 
+import com.topiichat.app.core.coroutines.AppDispatchers
 import com.topiichat.app.core.data.EmptyMapper
-import com.topiichat.app.features.splash.data.datasource.cache.AuthCache
+import com.topiichat.app.features.otp.data.datasource.OtpCodeRemoteDataSource
+import com.topiichat.app.features.otp.data.mapper.ResendOtpCodeRemoteMapper
+import com.topiichat.app.features.otp.data.mapper.ValidOtpCodeRemoteMapper
+import com.topiichat.app.features.otp.data.repo.OtpCodeRepositoryImpl
+import com.topiichat.app.features.otp.domain.repo.OtpCodeRepository
+import com.topiichat.app.features.registration.data.datasource.RegisterRemoteDataStore
+import com.topiichat.app.features.registration.data.mapper.RegisterRemoteMapper
+import com.topiichat.app.features.registration.data.repo.RegisterRepositoryImpl
+import com.topiichat.app.features.registration.domain.repo.RegisterRepository
 import com.topiichat.app.features.splash.data.datasource.cache.AuthCacheDataStore
-import com.topiichat.app.features.splash.data.datasource.cache.AuthCacheImpl
 import com.topiichat.app.features.splash.data.datasource.remote.AuthRemoteDataStore
 import com.topiichat.app.features.splash.data.mapper.TokenCacheMapper
 import com.topiichat.app.features.splash.data.mapper.TokenRemoteMapper
 import com.topiichat.app.features.splash.data.repo.AuthRepositoryImpl
 import com.topiichat.app.features.splash.domain.repo.AuthRepository
+import com.topiichat.app.features.valid_phone_number.data.datasource.ValidPhoneRemoteDataStore
+import com.topiichat.app.features.valid_phone_number.data.mapper.VerifyPhoneRemoteMapper
+import com.topiichat.app.features.valid_phone_number.data.repo.ValidPhoneRepositoryImpl
+import com.topiichat.app.features.valid_phone_number.domain.repo.ValidPhoneRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,6 +46,50 @@ object RepositoryModule {
             emptyMapper = emptyMapper,
             tokenRemoteMapper = tokenRemoteMapper,
             tokenCacheMapper = tokenCacheMapper
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideValidPhoneRepository(
+        validPhoneRemoteDataStore: ValidPhoneRemoteDataStore,
+        verifyPhoneRemoteMapper: VerifyPhoneRemoteMapper,
+        appDispatchers: AppDispatchers
+    ): ValidPhoneRepository {
+        return ValidPhoneRepositoryImpl(
+            validPhoneRemoteDataStore = validPhoneRemoteDataStore,
+            verifyPhoneRemoteMapper = verifyPhoneRemoteMapper,
+            appDispatchers = appDispatchers
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideOtpCodeRepository(
+        otpCodeRemoteDataSource: OtpCodeRemoteDataSource,
+        validOtpCodeRemoteMapper: ValidOtpCodeRemoteMapper,
+        resendOtpCodeRemoteMapper: ResendOtpCodeRemoteMapper,
+        appDispatchers: AppDispatchers
+    ): OtpCodeRepository {
+        return OtpCodeRepositoryImpl(
+            otpCodeRemoteDataSource = otpCodeRemoteDataSource,
+            validOtpCodeRemoteMapper = validOtpCodeRemoteMapper,
+            resendOtpCodeRemoteMapper = resendOtpCodeRemoteMapper,
+            appDispatchers = appDispatchers
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideRegisterRepository(
+        registerRemoteDataStore: RegisterRemoteDataStore,
+        registerRemoteMapper: RegisterRemoteMapper,
+        appDispatchers: AppDispatchers
+    ): RegisterRepository {
+        return RegisterRepositoryImpl(
+            registerRemoteDataStore = registerRemoteDataStore,
+            registerRemoteMapper = registerRemoteMapper,
+            appDispatchers = appDispatchers
         )
     }
 }

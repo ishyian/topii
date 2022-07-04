@@ -29,20 +29,21 @@ class SplashViewModel @Inject constructor(
             val result = fetchToken()
             _navigate.setValue(Navigator(R.id.action_splash_to_terms))
         }
-//        val r = fetchTokenUseCase.invoke()
+        //        val r = fetchTokenUseCase.invoke()
     }
 
     override fun onClick(view: View?) = Unit
 
     suspend fun fetchToken() {
         val request = FetchTokenUseCase.Params(isRemote = false)
-        val token = when (val result = fetchTokenUseCase(request)) {
+        when (fetchTokenUseCase(request)) {
             is ResultData.Success -> {
                 Token.Success
             }
             is ResultData.Fail -> {
                 Token.Fail("")
             }
+            is ResultData.NetworkError -> onNetworkError()
         }
     }
 

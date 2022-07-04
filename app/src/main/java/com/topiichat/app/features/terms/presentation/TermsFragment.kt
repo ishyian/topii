@@ -15,8 +15,6 @@ class TermsFragment : BaseFragment<FragmentTermsBinding>(), ITermsFragment {
 
     private val viewModel: TermsViewModel by viewModels()
 
-    override val tagId: Int get() = TODO("Not yet implemented")
-
     override fun initBinding(
         inflater: LayoutInflater,
         container: ViewGroup?

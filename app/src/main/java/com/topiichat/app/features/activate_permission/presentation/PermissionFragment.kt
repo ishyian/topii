@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import com.topiichat.app.R
 import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentPermissionBinding
@@ -18,8 +17,6 @@ import com.topiichat.app.databinding.FragmentPermissionBinding
 class PermissionFragment : BaseFragment<FragmentPermissionBinding>(), IPermissionFragment {
 
     private val viewModel: PermissionViewModel by viewModels()
-
-    override val tagId: Int get() = TODO("Not yet implemented")
 
     override fun initBinding(
         inflater: LayoutInflater,
