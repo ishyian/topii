@@ -1,0 +1,16 @@
+package com.topiichat.app.features.valid_phone_number.data.mapper
+
+import com.topiichat.app.core.domain.Mapper
+import com.topiichat.app.features.valid_phone_number.data.model.VerifyPhoneNumberDto
+import com.topiichat.app.features.valid_phone_number.domain.model.VerifyPhoneDomain
+import javax.inject.Inject
+
+class VerifyPhoneRemoteMapper @Inject constructor() : Mapper<VerifyPhoneNumberDto, VerifyPhoneDomain> {
+    override fun map(input: VerifyPhoneNumberDto?): VerifyPhoneDomain {
+        return VerifyPhoneDomain(
+            authyId = input?.authyId ?: "",
+            phoneNumber = input?.phoneNumber?.mobileNumber ?: "",
+            code = input?.phoneNumber?.dialCountryCode ?: ""
+        )
+    }
+}

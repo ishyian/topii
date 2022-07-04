@@ -19,7 +19,6 @@ import com.topiichat.app.AppActivity
  */
 abstract class BaseFragment<B : ViewBinding> : Fragment(), View.OnClickListener {
 
-    abstract val tagId: Int
     abstract fun initBinding(
         inflater: LayoutInflater,
         container: ViewGroup?

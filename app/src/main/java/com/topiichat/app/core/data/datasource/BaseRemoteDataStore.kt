@@ -1,32 +1,31 @@
 package com.topiichat.app.core.data.datasource
 
 import com.topiichat.app.core.data.Dto
-import com.topiichat.app.core.domain.RemoteFailStatus
 import com.topiichat.app.core.domain.ResultData
-import retrofit2.Response
+import com.topiichat.app.core.exception.data.ErrorParser
+import retrofit2.HttpException
+import java.io.IOException
 
 abstract class BaseRemoteDataStore : RemoteDataStore {
 
-    companion object {
-        private const val ERROR_CODE_UNAUTHORIZED = 401
-    }
+    private val errorParser = ErrorParser()
 
-    override suspend fun <T : Dto?> fetchResult(
-        call: suspend () -> Response<T?>
+    override suspend fun <T : Dto?> safeApiCall(
+        apiCall: suspend () -> T?
     ): ResultData<T?> {
         return try {
-            val response = call.invoke()
-            if (response.isSuccessful) {
-                ResultData.Success(response.body())
-            } else {
-                if (response.code() == ERROR_CODE_UNAUTHORIZED) {
-                    ResultData.Fail(status = RemoteFailStatus.NoAuth())
-                } else {
-                    ResultData.Fail(status = RemoteFailStatus.Generic())
+            ResultData.Success(apiCall.invoke())
+        } catch (throwable: Throwable) {
+            when (throwable) {
+                is IOException -> ResultData.NetworkError
+                is HttpException -> {
+                    val errorResponse = errorParser.parse(throwable)
+                    ResultData.Fail(error = errorResponse)
+                }
+                else -> {
+                    ResultData.Fail(error = errorParser.defaultError)
                 }
             }
-        } catch (e: RuntimeException) {
-            ResultData.Fail(status = RemoteFailStatus.ServerUnavailable())
         }
     }
 }

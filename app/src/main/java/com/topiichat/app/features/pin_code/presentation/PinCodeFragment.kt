@@ -7,16 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
+import com.topiichat.app.core.extension.viewModelCreator
 import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentPinCodeBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment {
 
-    private val viewModel: PinCodeViewModel by viewModels()
+    @Inject
+    lateinit var factory: PinCodeViewModel.AssistedFactory
+    private val viewModel by viewModelCreator {
+        factory.create(argPhoneNumber, argPhoneCode, argAuthyId)
+    }
 
-    override val tagId: Int get() = TODO("Not yet implemented")
+    private val argPhoneNumber get() = arguments?.getString(ARG_PHONE_NUMBER) ?: ""
+    private val argAuthyId get() = arguments?.getString(ARG_AUTHY_ID) ?: ""
+    private val argPhoneCode get() = arguments?.getString(ARG_PHONE_CODE) ?: ""
 
     override fun initBinding(
         inflater: LayoutInflater,
@@ -34,7 +43,6 @@ class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment
             btnShowPass, nextAfterPinCode, toolbar.btnBack, toolbar.btnClose
         )
         editTextPinCode.requestFocus()
-
     }
 
     override fun onClick(v: View?) {
@@ -97,5 +105,19 @@ class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment
 
     override fun onNavigate(navigator: Navigator) {
         navigator.navigate(currentActivity.navController)
+    }
+
+    companion object {
+        private const val ARG_PHONE_NUMBER = "phoneNumber"
+        private const val ARG_AUTHY_ID = "authyId"
+        private const val ARG_PHONE_CODE = "code"
+
+        fun makeArgs(phoneNumber: String, authyId: String, code: String): Bundle {
+            return Bundle(3).apply {
+                putString(ARG_PHONE_NUMBER, phoneNumber)
+                putString(ARG_AUTHY_ID, authyId)
+                putString(ARG_PHONE_CODE, code)
+            }
+        }
     }
 }

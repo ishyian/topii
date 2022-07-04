@@ -19,8 +19,6 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(), ISplashFragment {
     internal lateinit var factory: SplashViewModelFactory
     private val viewModel: SplashViewModel by viewModels { factory }
 
-    override val tagId: Int get() = TODO("Not yet implemented")
-
     override fun initBinding(
         inflater: LayoutInflater,
         container: ViewGroup?

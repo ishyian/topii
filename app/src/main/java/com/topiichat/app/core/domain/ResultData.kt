@@ -1,47 +1,30 @@
 package com.topiichat.app.core.domain
 
-sealed class ResultData<T> {
+import com.topiichat.app.core.exception.domain.ErrorDomain
 
-    abstract fun <R> transform(map: (T?) -> R): R
-    abstract fun transform(): ResultDataStatus
+sealed class ResultData<out T> {
 
     data class Success<T>(
-        val data: T? = null,
-        val status: ResultDataStatus = ResultDataStatus.Ok
-    ) : ResultData<T>() {
+        val data: T? = null
+    ) : ResultData<T>()
 
-        override fun <R> transform(map: (T?) -> R): R {
-            return map.invoke(data)
-        }
+    data class Fail(
+        val error: ErrorDomain
+    ) : ResultData<Nothing>()
 
-        override fun transform(): ResultDataStatus {
-            return status
-        }
-    }
-
-    data class Fail<T>(
-        val data: T? = null,
-        val status: ResultDataStatus
-    ) : ResultData<T>() {
-
-        override fun <R> transform(map: (T?) -> R): R {
-            return map.invoke(data)
-        }
-
-        override fun transform(): ResultDataStatus {
-            return status
-        }
-    }
+    object NetworkError : ResultData<Nothing>()
 
     fun <R> transformData(
         map: (T?) -> R
-    ): ResultData<R> = when(this) {
+    ): ResultData<R> = when (this) {
         is Success -> {
-            Success(this.transform(map))
+            Success(map.invoke(data))
         }
         is Fail -> {
-            Fail(this.transform(map), this.transform())
+            Fail(error)
+        }
+        is NetworkError -> {
+            NetworkError
         }
     }
-
 }

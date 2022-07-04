@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="window_background">#071D49</color>
+    <color name="onboard_background_color">#31476D</color>
+    <color name="logo_color">@color/whiteColor</color>
+    <color name="titleColor">@color/whiteColor</color>
+    <color name="subtitle_color">@color/whiteColor</color>
+    <color name="rounded_border_background">#31476D</color>
+    <color name="subtitle_otp">@color/whiteColor</color>
+    <color name="back_button">#CDD2DB</color>
+    <color name="border_pin">#FAFAFA</color>
+    <color name="pin_view_item_background_color">#31476D</color>
+    <color name="pin_code_text_color">#FAFAFA</color>
+    <color name="chats_background">#071D49</color>
+    <color name="chats_search_background">#31476D</color>
+    <color name="chats_search_border">#071D49</color>
+    <color name="chats_list_background">#31476D</color>
+</resources>

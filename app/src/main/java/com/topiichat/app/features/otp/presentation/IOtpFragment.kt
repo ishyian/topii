@@ -6,6 +6,7 @@ import com.topiichat.app.features.otp.presentation.model.TextSendSmsTimerUi
 
 interface IOtpFragment : IBaseFragment {
     fun onValidPinCodeRequest()
+    fun onHideKeyboardEvent(nothing: Unit)
     fun onSendSms()
     fun onShowMessageError(message: String)
     fun onColorPinView(colorId: Int)

@@ -3,16 +3,16 @@ package com.topiichat.app.core.di.module
 import android.util.Log
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.topiichat.app.BuildConfig
 import com.topiichat.app.core.data.ApiService
-import com.topiichat.app.core.data.MockApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -25,18 +25,16 @@ object NetworkModule {
     @Provides
     fun providesRetrofit(
         coroutineCallAdapterFactory: CoroutineCallAdapterFactory,
-        converterFactory: Converter.Factory,
+        converterFactory: MoshiConverterFactory,
         okHttpClient: OkHttpClient,
     ): ApiService {
-        return MockApiService()
-        //TODO mock service
-//        return Retrofit.Builder()
-//            .baseUrl("")
-//            .addCallAdapterFactory(coroutineCallAdapterFactory)
-//            .addConverterFactory(converterFactory)
-//            .client(okHttpClient)
-//            .build()
-//            .create(ApiService::class.java)
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.ENDPOINT)
+            .addCallAdapterFactory(coroutineCallAdapterFactory)
+            .addConverterFactory(converterFactory)
+            .client(okHttpClient)
+            .build()
+            .create(ApiService::class.java)
     }
 
     @Singleton
@@ -49,14 +47,16 @@ object NetworkModule {
     @Provides
     fun providesMoshiConverterFactory(
         moshi: Moshi
-    ): Converter.Factory {
+    ): MoshiConverterFactory {
         return MoshiConverterFactory.create(moshi)
     }
 
     @Singleton
     @Provides
     fun providesMoshi(): Moshi {
-        return Moshi.Builder().build()
+        return Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
     }
 
     @Singleton
@@ -66,6 +66,14 @@ object NetworkModule {
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+            .addInterceptor { chain ->
+                val request: Request = chain
+                    .request()
+                    .newBuilder()
+                    .addHeader("app-version", "0.1.11")
+                    .build()
+                chain.proceed(request)
+            }
             .build()
     }
 
