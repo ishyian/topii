@@ -40,6 +40,7 @@
         android:layout_marginTop="26dp"
         android:background="@drawable/rounded_border_edittext"
         android:inputType="numberPassword"
+        android:maxLength="20"
         android:paddingHorizontal="26dp"
         android:textAlignment="textStart"
         android:textColor="@color/pin_code_text_color"

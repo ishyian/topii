@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
+import com.topiichat.app.core.constants.Constants.INITIAL_COUNTRY_ISO_CODE
 import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseViewModel
@@ -26,6 +27,9 @@ class ValidPhoneNumberViewModel @AssistedInject constructor(
 
     private val _hideKeyboard: MutableLiveData<Unit> = MutableLiveData()
     val hideKeyboard: LiveData<Unit> = _hideKeyboard
+
+    private var _isoCode: String = INITIAL_COUNTRY_ISO_CODE
+    val isoCode: String = _isoCode
 
     override fun onClick(view: View?) {
         when (view?.id) {
@@ -50,15 +54,16 @@ class ValidPhoneNumberViewModel @AssistedInject constructor(
                 isoCode = phoneNumber.isoCode
             )
             val result = verifyPhoneNumber(request)
-            onRenderVerifyPhoneNumber(result)
+            onRenderVerifyPhoneNumber(result, phoneNumber.isoCode)
             _showLoader.value = false
         }
     }
 
-    override fun onRenderVerifyPhoneNumber(result: ResultData<VerifyPhoneDomain>) {
+    override fun onRenderVerifyPhoneNumber(result: ResultData<VerifyPhoneDomain>, isoCode: String?) {
         when (result) {
             is ResultData.Success -> {
                 result.data?.let {
+                    _isoCode = isoCode ?: INITIAL_COUNTRY_ISO_CODE
                     onNextAfterValidate(it.phoneNumber, it.authyId, it.code)
                 }
             }

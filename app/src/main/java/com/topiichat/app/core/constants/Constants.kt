@@ -6,5 +6,5 @@ import javax.inject.Singleton
 object Constants {
 
     const val URL_TERMS = "https://chat.topii.com/terms-policy"
-    const val INITIAL_COUNTRY_CODE = "PE"
+    const val INITIAL_COUNTRY_ISO_CODE = "PE"
 }

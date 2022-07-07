@@ -13,8 +13,8 @@ android {
         applicationId "com.fidecorp.chapii"
         minSdk 21
         targetSdk 32
-        versionCode 2
-        versionName "0.0.2"
+        versionCode 3
+        versionName "0.0.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -70,7 +70,7 @@ dependencies {
     //Views
     implementation 'com.fredporciuncula:phonemoji:1.2.0'
     implementation 'io.github.chaosleung:pinview:1.4.4'
-    implementation 'com.github.ishyian:PhoneNumberKit:2.0.9'
+    implementation 'com.github.ishyian:PhoneNumberKit:2.0.10'
 
 //    implementation project(path: ':TopiiChat-SDK')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
