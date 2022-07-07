@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.google.android.material.textfield.TextInputLayout
 import com.topiichat.app.AppActivity
-import com.topiichat.app.core.constants.Constants.INITIAL_COUNTRY_CODE
 import com.topiichat.app.core.extension.getPhoneNumber
 import com.topiichat.app.core.extension.hideKeyboard
 import com.topiichat.app.core.extension.showKeyboard
@@ -26,6 +25,11 @@ class ValidPhoneNumberFragment : BaseFragment<FragmentValidPhoneNumberBinding>()
     @Inject
     lateinit var factory: ValidPhoneNumberViewModel.AssistedFactory
     private val viewModel by viewModelCreator { factory.create() }
+    private val phoneNumberKit by lazy {
+        PhoneNumberKit.Builder(requireContext())
+            .setIconEnabled(true)
+            .build()
+    }
 
     override fun initBinding(
         inflater: LayoutInflater,
@@ -44,11 +48,11 @@ class ValidPhoneNumberFragment : BaseFragment<FragmentValidPhoneNumberBinding>()
     }
 
     override fun setupPhoneNumberInputField(inputLayout: TextInputLayout) {
-        val phoneNumberKit = PhoneNumberKit.Builder(requireContext())
-            .setIconEnabled(true)
-            .build()
-        phoneNumberKit.attachToInput(inputLayout, INITIAL_COUNTRY_CODE)
-        phoneNumberKit.setupCountryPicker(requireActivity() as AppActivity)
+        phoneNumberKit.attachToInput(binding.layoutEditText, viewModel.isoCode)
+        phoneNumberKit.setupCountryPicker(
+            activity = requireActivity() as AppActivity,
+            searchEnabled = true
+        )
     }
 
     override fun onResume() {

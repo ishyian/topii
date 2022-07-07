@@ -7,7 +7,7 @@ import com.topiichat.app.features.valid_phone_number.presentation.model.PhoneNum
 
 interface IValidPhoneNumberViewModel {
     fun onVerifyPhoneNumberRequest(phoneNumber: PhoneNumber)
-    fun onRenderVerifyPhoneNumber(result: ResultData<VerifyPhoneDomain>)
+    fun onRenderVerifyPhoneNumber(result: ResultData<VerifyPhoneDomain>, isoCode: String?)
     fun onEmptyPhoneNumber()
     fun onNotMatchPinCode()
     fun onFailValidPhoneNumber(failValidPhone: ValidPhone.Fail)
