@@ -7,7 +7,10 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import android.widget.EditText
+import android.widget.ImageView
+import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.topiichat.app.features.valid_phone_number.presentation.model.PhoneNumber
 
@@ -46,3 +49,9 @@ fun EditText.hideKeyboard() {
         .hideSoftInputFromWindow(windowToken, 0)
 }
 
+fun ImageView.setTintColor(@ColorRes color: Int) {
+    setColorFilter(
+        ContextCompat.getColor(context, color),
+        android.graphics.PorterDuff.Mode.SRC_IN
+    )
+}

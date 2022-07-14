@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <TextView
+        android:id="@+id/text_amount_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="@string/send_payment_total_amount_title"
+        android:textColor="#99999E"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/layout_amount"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="24dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_amount_title">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:text="@string/send_payment_amount_line_1"
+                android:textColor="@color/send_payment_subtitle_color"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:text="@string/send_payment_amount_line_2"
+                android:textColor="@color/send_payment_subtitle_color"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:text="@string/send_payment_amount_line_3"
+                android:textColor="@color/send_payment_subtitle_color"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:text="@string/send_payment_amount_line_4"
+                android:textColor="@color/send_payment_subtitle_color"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:text="@string/send_payment_amount_total"
+                android:textColor="@color/send_payment_amount_total_color"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_amount_commission_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:textColor="@color/send_payment_subtitle_color"
+                android:textSize="12sp"
+                tools:text="1.21 USD" />
+
+            <TextView
+                android:id="@+id/text_amount_commission_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:textColor="@color/send_payment_subtitle_color"
+                android:textSize="12sp"
+                tools:text="1.21 USD" />
+
+            <TextView
+                android:id="@+id/text_amount_commission_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:textColor="@color/send_payment_subtitle_color"
+                android:textSize="12sp"
+                tools:text="1.21 USD" />
+
+            <TextView
+                android:id="@+id/text_amount_commission_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:textColor="@color/send_payment_subtitle_color"
+                android:textSize="12sp"
+                tools:text="1.21 USD" />
+
+            <TextView
+                android:id="@+id/text_amount_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:textColor="@color/send_payment_amount_total_color"
+                android:textSize="18sp"
+                tools:text="89.64 EUR" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_payment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_send"
+        app:layout_constraintStart_toStartOf="@id/btn_send"
+        app:layout_constraintTop_toBottomOf="@id/layout_amount"
+        app:thumbTint="@color/switch_thumb_color"
+        app:trackTint="@color/border_pin"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/text_switch_payment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/sfprodisplayregular"
+        android:text="@string/text_switch2_register"
+        android:textAlignment="textStart"
+        android:textColor="@color/titleColor"
+        android:textColorLink="@color/send_payment_switch_link_color"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/switch_payment"
+        app:layout_constraintEnd_toEndOf="@id/btn_send"
+        app:layout_constraintStart_toEndOf="@id/switch_payment"
+        app:layout_constraintTop_toTopOf="@id/switch_payment" />
+
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="26dp"
+        android:background="@drawable/bg_button"
+        android:fontFamily="@font/sfprodisplaybold"
+        android:text="@string/send_payment_button_text"
+        android:textAllCaps="false"
+        android:textColor="@color/whiteColor"
+        android:textSize="@dimen/text_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</merge>

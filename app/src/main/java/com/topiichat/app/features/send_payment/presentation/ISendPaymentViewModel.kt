@@ -1,0 +1,3 @@
+package com.topiichat.app.features.send_payment.presentation
+
+interface ISendPaymentViewModel

@@ -2,8 +2,10 @@ package com.topiichat.app.core.presentation.customview
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isInvisible
 import com.topiichat.app.R
 import com.topiichat.app.databinding.PartToolbarBinding
 
@@ -53,6 +55,15 @@ class ToolbarView(
         ).apply {
             try {
                 binding.textViewTitle.text = getString(R.styleable.ToolbarView_text)
+                binding.imageViewBack.isInvisible = !getBoolean(R.styleable.ToolbarView_isBackButtonVisible, true)
+                binding.imageViewClose.isInvisible = !getBoolean(R.styleable.ToolbarView_isCloseButtonVisible, true)
+                binding.textViewTitle.setTextSize(
+                    COMPLEX_UNIT_PX,
+                    getDimensionPixelSize(
+                        R.styleable.ToolbarView_textSize,
+                        resources.getDimensionPixelSize(R.dimen.toolbar_view_default_text_size)
+                    ).toFloat()
+                )
             } finally {
                 recycle()
             }

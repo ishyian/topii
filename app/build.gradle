@@ -13,8 +13,8 @@ android {
         applicationId "com.fidecorp.chapii"
         minSdk 21
         targetSdk 32
-        versionCode 3
-        versionName "0.0.3"
+        versionCode 4
+        versionName "0.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -103,6 +103,11 @@ dependencies {
 
     //Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
+
+    //Adapter delegates
+    implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl:4.3.1"
+    implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:4.3.1"
+    implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:4.3.1"
 
     //Tests
     testImplementation 'junit:junit:4.13.2'

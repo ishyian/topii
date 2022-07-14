@@ -28,9 +28,28 @@
     <string name="button_register">Registrar</string>
     <string name="text_switch1_register">He leido y acepto la politica de privacidad</string>
     <string name="text_switch2_register">He leido y acepto las condiciones legales de TOPii</string>
+
     <string name="chats">Chats</string>
     <string name="chats_edit">Editar</string>
     <string name="chats_no_chats">No tienes chats aun</string>
     <string name="chats_new_chat"><u>Nuevo Mensaje</u></string>
     <string name="chats_search_hint">Search</string>
+
+    <string name="home_title">Historial</string>
+    <string name="home_send_payment_text">Enviar\nRemesa</string>
+    <string name="home_request_payment_text">Solicitar\nRemesa</string>
+    <string name="home_wallet_text">Wallet</string>
+    <string name="home_chat_text">Chat</string>
+    <string name="home_total_sent_sum_title">Total enviado</string>
+    <string name="home_total_requested_sum_title">Total recibido</string>
+    <string name="home_transactions_header_title">Recent Transactions</string>
+
+    <string name="send_payment_switch_text">He leído y acepto los Términos de Uso y la Política de Privacidad de Chappi</string>
+    <string name="send_payment_button_text">Enviar</string>
+    <string name="send_payment_total_amount_title">Resumen</string>
+    <string name="send_payment_amount_line_1">Tasa de la tarjeta de débito</string>
+    <string name="send_payment_amount_line_2">Nuestra comisión</string>
+    <string name="send_payment_amount_line_3">Convertimos</string>
+    <string name="send_payment_amount_line_4">Tarifa garantizada (8 horas)</string>
+    <string name="send_payment_amount_total">El receptor recive</string>
 </resources>
