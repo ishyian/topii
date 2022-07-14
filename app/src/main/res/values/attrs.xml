@@ -2,5 +2,8 @@
 <resources>
     <declare-styleable name="ToolbarView">
         <attr name="text" format="string" />
+        <attr name="textSize" format="dimension" />
+        <attr name="isBackButtonVisible" format="boolean" />
+        <attr name="isCloseButtonVisible" format="boolean" />
     </declare-styleable>
 </resources>

@@ -17,6 +17,17 @@
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
 
+        <action
+            android:id="@+id/action_splash_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_splash_to_send_payment"
+            app:destination="@id/sendPaymentFragment"
+            app:popUpTo="@id/sendPaymentFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -112,4 +123,15 @@
             app:destination="@id/chatsFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.topiichat.app.features.home.presentation.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/sendPaymentFragment"
+        android:name="com.topiichat.app.features.send_payment.presentation.SendPaymentFragment"
+        android:label="fragment_send_payment"
+        tools:layout="@layout/fragment_send_payment" />
 </navigation>

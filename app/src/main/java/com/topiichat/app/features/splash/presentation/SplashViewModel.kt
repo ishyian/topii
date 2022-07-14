@@ -27,7 +27,7 @@ class SplashViewModel @Inject constructor(
             _showLoader.value = true
             delay(TIME_LOADER)
             val result = fetchToken()
-            _navigate.setValue(Navigator(R.id.action_splash_to_terms))
+            _navigate.setValue(Navigator(R.id.action_splash_to_send_payment))
         }
         //        val r = fetchTokenUseCase.invoke()
     }
