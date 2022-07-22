@@ -7,14 +7,15 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.topiichat.app.core.extension.lazyUnsynchronized
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentHomeBinding
 import com.topiichat.app.features.home.presentation.adapter.HomeAdapter
 import com.topiichat.app.features.home.presentation.header.HomeHeaderView
 import com.topiichat.app.features.home.presentation.header.HomeHeaderViewOptions
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.random.Random
 
+@AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(),
     IHomeFragment,
     HomeHeaderView.HomeHeaderViewClickListener {
@@ -69,10 +70,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
-
-    override fun onNavigate(navigator: Navigator) {
-        navigator.navigate(currentActivity.navController)
-    }
 
     private fun initObservers() = with(viewModel) {
         observe(content, ::onContentLoaded)

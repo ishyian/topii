@@ -54,7 +54,7 @@ class ToolbarView(
             attrs, R.styleable.ToolbarView, defStyleAttr, defStyleRes
         ).apply {
             try {
-                binding.textViewTitle.text = getString(R.styleable.ToolbarView_text)
+                binding.textViewTitle.text = getString(R.styleable.ToolbarView_toolbarTitle)
                 binding.imageViewBack.isInvisible = !getBoolean(R.styleable.ToolbarView_isBackButtonVisible, true)
                 binding.imageViewClose.isInvisible = !getBoolean(R.styleable.ToolbarView_isCloseButtonVisible, true)
                 binding.textViewTitle.setTextSize(

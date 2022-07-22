@@ -23,5 +23,4 @@ class SingleLiveData<T> : MutableLiveData<T>() {
         pending.set(true)
         super.setValue(value)
     }
-
 }

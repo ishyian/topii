@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
 import com.topiichat.app.core.constants.Constants.INITIAL_COUNTRY_ISO_CODE
 import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseViewModel
-import com.topiichat.app.features.otp.presentation.OtpFragment
+import com.topiichat.app.features.MainScreens
+import com.topiichat.app.features.otp.presentation.OtpParameters
 import com.topiichat.app.features.valid_phone_number.domain.model.ValidPhone
 import com.topiichat.app.features.valid_phone_number.domain.model.VerifyPhoneDomain
 import com.topiichat.app.features.valid_phone_number.domain.usecases.VerifyPhoneNumberUseCase
@@ -17,10 +17,12 @@ import com.topiichat.app.features.valid_phone_number.presentation.model.PhoneNum
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.terrakok.cicerone.Router
 
 class ValidPhoneNumberViewModel @AssistedInject constructor(
-    private val verifyPhoneNumber: VerifyPhoneNumberUseCase
-) : BaseViewModel(), IValidPhoneNumberViewModel {
+    private val verifyPhoneNumber: VerifyPhoneNumberUseCase,
+    appRouter: Router
+) : BaseViewModel(appRouter), IValidPhoneNumberViewModel {
 
     private val _visibilityTextError: MutableLiveData<Boolean> = MutableLiveData()
     val visibilityTextError: LiveData<Boolean> = _visibilityTextError
@@ -85,16 +87,15 @@ class ValidPhoneNumberViewModel @AssistedInject constructor(
     }
 
     override fun onNextAfterValidate(phoneNumber: String, authyId: String, code: String) {
-        _navigate.setValue(
-            Navigator(
-                actionId = R.id.action_validPhoneNumber_to_otp,
-                data = OtpFragment.makeArgs(phoneNumber, authyId, code)
+        navigate(
+            MainScreens.Otp(
+                OtpParameters(
+                    phoneNumber = phoneNumber,
+                    authyId = authyId,
+                    code = code
+                )
             )
         )
-    }
-
-    override fun onClickClose() {
-        _navigate.setValue(Navigator(R.id.action_validPhoneNumber_to_terms))
     }
 
     @dagger.assisted.AssistedFactory

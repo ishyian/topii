@@ -28,6 +28,7 @@
     <string name="button_register">Registrar</string>
     <string name="text_switch1_register">He leido y acepto la politica de privacidad</string>
     <string name="text_switch2_register">He leido y acepto las condiciones legales de TOPii</string>
+    <string name="cancel">Cancel</string>
 
     <string name="chats">Chats</string>
     <string name="chats_edit">Editar</string>
@@ -52,4 +53,35 @@
     <string name="send_payment_amount_line_3">Convertimos</string>
     <string name="send_payment_amount_line_4">Tarifa garantizada (8 horas)</string>
     <string name="send_payment_amount_total">El receptor recive</string>
+
+    <string name="kyc_button_continue">Continuar</string>
+    <string name="personal_data_screen_title">Tus datos personales</string>
+    <string name="personal_data_name_hint">Nombre</string>
+    <string name="personal_data_last_name_hint">Primer Apellido</string>
+    <string name="personal_data_second_last_name_hint">Segundo Apellido (opcional)</string>
+    <string name="personal_data_description">Escribe tu nombre y apellido tal y como aparece en tu documento de identidad.</string>
+
+    <string name="enter_email_screen_title">Tu correo electrónico</string>
+    <string name="enter_email_description">Solo usaremos tu correo electronico para recuperar tu clave y enviarte novedades del producto.</string>
+
+    <string name="birth_date_screen_title">Fecha de nacimiento</string>
+    <string name="birth_date_description">Escribe tu fecha de nacimiento como aparece en tu documento de identidad.</string>
+    <string name="birth_date_hint">DD/MM/AAAA</string>
+    <string name="birth_date_place">País de nacimiento</string>
+
+    <string name="document_screen_title">Documento de Identidad</string>
+    <string name="document_screen_description">Introduce tu numero de documento como aparece en tu NIE , NIF o Pasaporte.</string>
+
+    <string name="address_screen_title">Direccion</string>
+    <string name="address_screen_description">Escribe tu direccion en tu pais de recidencia.</string>
+    <string name="address_address_hint">Direccion</string>
+    <string name="address_country_hint">Pais</string>
+    <string name="address_region_hint">Estado</string>
+    <string name="address_city_hint">Ciudad</string>
+    <string name="address_postal_code">Codigo Postal</string>
+
+    <string name="verification_screen_title">Verificación de identidad</string>
+    <string name="verification_description">Deberá permitir acceso a la camara para continuar.</string>
+    <string name="verification_button_description">No podemos verificar tu identidad sin acceso a tu camara</string>
+    <string name="verification_button_text">Conceder acceso a la cámara</string>
 </resources>

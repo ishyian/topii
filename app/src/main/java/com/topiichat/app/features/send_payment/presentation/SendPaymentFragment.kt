@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentSendPaymentBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SendPaymentFragment : BaseFragment<FragmentSendPaymentBinding>(), ISendPaymentFragment {
 
     private val viewModel: SendPaymentViewModel by viewModels()
@@ -36,8 +37,4 @@ class SendPaymentFragment : BaseFragment<FragmentSendPaymentBinding>(), ISendPay
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
-
-    override fun onNavigate(navigator: Navigator) {
-        navigator.navigate(currentActivity.navController)
-    }
 }

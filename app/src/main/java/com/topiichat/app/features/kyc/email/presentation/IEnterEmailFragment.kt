@@ -1,0 +1,5 @@
+package com.topiichat.app.features.kyc.email.presentation
+
+import com.topiichat.app.features.kyc.base.presentation.IKYCFragment
+
+interface IEnterEmailFragment : IKYCFragment

@@ -2,19 +2,20 @@ package com.topiichat.app.features.splash.presentation
 
 import android.view.View
 import androidx.lifecycle.viewModelScope
-import com.topiichat.app.R
 import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseViewModel
+import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.splash.domain.usecases.FetchTokenUseCase
 import com.topiichat.app.features.splash.presentation.model.Token
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(
-    private val fetchTokenUseCase: FetchTokenUseCase
-) : BaseViewModel(), ISplashViewModel {
+    private val fetchTokenUseCase: FetchTokenUseCase,
+    appRouter: Router
+) : BaseViewModel(appRouter), ISplashViewModel {
 
     init {
         onLoaderStart()
@@ -26,15 +27,14 @@ class SplashViewModel @Inject constructor(
             delay(TIME_LOADER)
             _showLoader.value = true
             delay(TIME_LOADER)
-            val result = fetchToken()
-            _navigate.setValue(Navigator(R.id.action_splash_to_send_payment))
+            fetchToken()
+            navigate(MainScreens.Terms, true)
         }
-        //        val r = fetchTokenUseCase.invoke()
     }
 
     override fun onClick(view: View?) = Unit
 
-    suspend fun fetchToken() {
+    private suspend fun fetchToken() {
         val request = FetchTokenUseCase.Params(isRemote = false)
         when (fetchTokenUseCase(request)) {
             is ResultData.Success -> {

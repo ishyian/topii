@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import com.topiichat.app.core.delegates.parcelableParameters
 import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentPinCodeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,12 +20,9 @@ class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment
     @Inject
     lateinit var factory: PinCodeViewModel.AssistedFactory
     private val viewModel by viewModelCreator {
-        factory.create(argPhoneNumber, argPhoneCode, argAuthyId)
+        factory.create(parameters)
     }
-
-    private val argPhoneNumber get() = arguments?.getString(ARG_PHONE_NUMBER) ?: ""
-    private val argAuthyId get() = arguments?.getString(ARG_AUTHY_ID) ?: ""
-    private val argPhoneCode get() = arguments?.getString(ARG_PHONE_CODE) ?: ""
+    private val parameters: PinCodeParameters by parcelableParameters()
 
     override fun initBinding(
         inflater: LayoutInflater,
@@ -58,7 +55,6 @@ class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment
         observe(showPassTransformationMethod, ::onShowPassTransformationMethod)
         observe(showPassImage, ::onShowPassImage)
         observe(showLoader, ::onVisibilityLoader)
-        observe(navigate, ::onNavigate)
         observe(textPinCode, ::onTextPinCode)
         observe(visibilityTextContentTitle, ::onVisibilityTextContentTitle)
         observe(visibilityTextDescription, ::onVisibilityTextDescription)
@@ -102,22 +98,4 @@ class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
-
-    override fun onNavigate(navigator: Navigator) {
-        navigator.navigate(currentActivity.navController)
-    }
-
-    companion object {
-        private const val ARG_PHONE_NUMBER = "phoneNumber"
-        private const val ARG_AUTHY_ID = "authyId"
-        private const val ARG_PHONE_CODE = "code"
-
-        fun makeArgs(phoneNumber: String, authyId: String, code: String): Bundle {
-            return Bundle(3).apply {
-                putString(ARG_PHONE_NUMBER, phoneNumber)
-                putString(ARG_AUTHY_ID, authyId)
-                putString(ARG_PHONE_CODE, code)
-            }
-        }
-    }
 }

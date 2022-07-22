@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
 import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseViewModel
+import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.otp.domain.model.ResendOtpCodeDomain
 import com.topiichat.app.features.otp.domain.model.SendSms
 import com.topiichat.app.features.otp.domain.model.ValidOtp
@@ -16,19 +16,19 @@ import com.topiichat.app.features.otp.domain.usecases.ResendSmsUseCase
 import com.topiichat.app.features.otp.domain.usecases.ValidOtpUseCase
 import com.topiichat.app.features.otp.presentation.model.BtnSendSmsEnablingUi
 import com.topiichat.app.features.otp.presentation.model.TextSendSmsTimerUi
-import com.topiichat.app.features.pin_code.presentation.PinCodeFragment
+import com.topiichat.app.features.pin_code.presentation.PinCodeParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.terrakok.cicerone.Router
 
 class OtpViewModel @AssistedInject constructor(
-    @Assisted("phoneNumber") private val phoneNumber: String,
-    @Assisted("phoneCode") private val phoneCode: String,
-    @Assisted("authyId") private val authyId: String,
+    @Assisted("otpParameters") private val parameters: OtpParameters,
     private val validPinCode: ValidOtpUseCase,
     private val sendSms: ResendSmsUseCase,
-) : BaseViewModel(), IOtpViewModel {
+    appRouter: Router
+) : BaseViewModel(appRouter), IOtpViewModel {
 
     private val _colorPinView: MutableLiveData<Int> = MutableLiveData()
     val colorPinView: LiveData<Int> = _colorPinView
@@ -68,7 +68,7 @@ class OtpViewModel @AssistedInject constructor(
             _visibilityTextError.value = false
             _showLoader.value = true
             delay(1000)
-            val request = ValidOtpUseCase.Params(authyId, otpCode)
+            val request = ValidOtpUseCase.Params(parameters.authyId, otpCode)
             val result = validPinCode(request)
             onRenderValidPinCode(result)
             _showLoader.value = false
@@ -88,10 +88,13 @@ class OtpViewModel @AssistedInject constructor(
     override fun onSuccessValidPinCode() {
         _colorPinView.value = R.color.subtitle_otp
         _visibilityTextError.value = false
-        _navigate.setValue(
-            Navigator(
-                actionId = R.id.action_otp_to_pinCode,
-                data = PinCodeFragment.makeArgs(phoneNumber, authyId, phoneCode)
+        navigate(
+            MainScreens.PinCode(
+                PinCodeParameters(
+                    phoneNumber = parameters.phoneNumber,
+                    authyId = parameters.authyId,
+                    code = parameters.code
+                )
             )
         )
     }
@@ -116,7 +119,7 @@ class OtpViewModel @AssistedInject constructor(
     override fun onSendSms() {
         _textSendSmsTimer.value = TextSendSmsTimerUi(false)
         viewModelScope.launch {
-            val request = ResendSmsUseCase.Params(authyId)
+            val request = ResendSmsUseCase.Params(parameters.authyId)
             val result = sendSms(request)
             onRenderSendSms(result)
         }
@@ -173,15 +176,13 @@ class OtpViewModel @AssistedInject constructor(
     }
 
     override fun onClickClose() {
-        _navigate.setValue(Navigator(R.id.action_otp_to_terms))
+        backTo(MainScreens.Terms)
     }
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
         fun create(
-            @Assisted("phoneNumber") phoneNumber: String,
-            @Assisted("phoneCode") phoneCode: String,
-            @Assisted("authyId") authyId: String
+            @Assisted("otpParameters") parameters: OtpParameters
         ): OtpViewModel
     }
 

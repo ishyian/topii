@@ -10,10 +10,11 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentPermissionBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PermissionFragment : BaseFragment<FragmentPermissionBinding>(), IPermissionFragment {
 
     private val viewModel: PermissionViewModel by viewModels()
@@ -40,7 +41,6 @@ class PermissionFragment : BaseFragment<FragmentPermissionBinding>(), IPermissio
 
     private fun initObservers() = with(viewModel) {
         observe(showLoader, ::onVisibilityLoader)
-        observe(navigate, ::onNavigate)
     }
 
     private fun setupPermissions() {
@@ -79,10 +79,6 @@ class PermissionFragment : BaseFragment<FragmentPermissionBinding>(), IPermissio
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
-
-    override fun onNavigate(navigator: Navigator) {
-        navigator.navigate(currentActivity.navController)
-    }
 
     companion object {
         private const val RECORD_REQUEST_CODE = 1

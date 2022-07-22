@@ -6,10 +6,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 import com.topiichat.app.features.splash.domain.usecases.FetchTokenUseCase
+import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class SplashViewModelFactory @Inject constructor(
     private val fetchTokenUseCase: FetchTokenUseCase,
+    private val appRouter: Router,
     owner: Activity
 ): AbstractSavedStateViewModelFactory(owner as SavedStateRegistryOwner, null) {
 
@@ -19,6 +21,6 @@ class SplashViewModelFactory @Inject constructor(
         handle: SavedStateHandle
     ): T {
         @Suppress("UNCHECKED_CAST")
-        return SplashViewModel(fetchTokenUseCase) as T
+        return SplashViewModel(fetchTokenUseCase, appRouter) as T
     }
 }

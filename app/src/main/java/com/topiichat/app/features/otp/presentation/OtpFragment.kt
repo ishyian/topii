@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.topiichat.app.R
+import com.topiichat.app.core.delegates.parcelableParameters
 import com.topiichat.app.core.extension.hideKeyboard
 import com.topiichat.app.core.extension.showKeyboard
 import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentOtpBinding
 import com.topiichat.app.features.otp.presentation.model.BtnSendSmsEnablingUi
@@ -24,12 +24,9 @@ class OtpFragment : BaseFragment<FragmentOtpBinding>(), IOtpFragment {
     @Inject
     lateinit var factory: OtpViewModel.AssistedFactory
     private val viewModel by viewModelCreator {
-        factory.create(argPhoneNumber, argPhoneCode, argAuthyId)
+        factory.create(parameters)
     }
-
-    private val argPhoneNumber get() = arguments?.getString(ARG_PHONE_NUMBER) ?: ""
-    private val argAuthyId get() = arguments?.getString(ARG_AUTHY_ID) ?: ""
-    private val argPhoneCode get() = arguments?.getString(ARG_PHONE_CODE) ?: ""
+    private val parameters: OtpParameters by parcelableParameters()
 
     override fun initBinding(
         inflater: LayoutInflater,
@@ -44,7 +41,8 @@ class OtpFragment : BaseFragment<FragmentOtpBinding>(), IOtpFragment {
     ): Unit = with(binding) {
         initObservers()
         setupClickListener(btnNextAfterOtp, btnSendSms, toolbar.btnBack, toolbar.btnClose)
-        textViewTitleWithPhoneNumber.text = getString(R.string.subtitle_otp, argPhoneCode.plus(argPhoneNumber))
+        textViewTitleWithPhoneNumber.text =
+            getString(R.string.subtitle_otp, parameters.code.plus(parameters.phoneNumber))
     }
 
     override fun onResume() {
@@ -68,7 +66,6 @@ class OtpFragment : BaseFragment<FragmentOtpBinding>(), IOtpFragment {
 
     private fun initObservers() = with(viewModel) {
         observe(showLoader, ::onVisibilityLoader)
-        observe(navigate, ::onNavigate)
         observe(colorPinView, ::onColorPinView)
         observe(visibilityTextError, ::onVisibilityTextError)
         observe(showMsgError, ::onShowMessageError)
@@ -125,23 +122,5 @@ class OtpFragment : BaseFragment<FragmentOtpBinding>(), IOtpFragment {
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = with(binding) {
         groupContent.isVisible = isVisibleLoader.not()
         progressBar.isVisible = isVisibleLoader
-    }
-
-    override fun onNavigate(navigator: Navigator) {
-        navigator.navigate(currentActivity.navController)
-    }
-
-    companion object {
-        private const val ARG_PHONE_NUMBER = "phoneNumber"
-        private const val ARG_AUTHY_ID = "authyId"
-        private const val ARG_PHONE_CODE = "code"
-
-        fun makeArgs(phoneNumber: String, authyId: String, code: String): Bundle {
-            return Bundle(3).apply {
-                putString(ARG_PHONE_NUMBER, phoneNumber)
-                putString(ARG_AUTHY_ID, authyId)
-                putString(ARG_PHONE_CODE, code)
-            }
-        }
     }
 }

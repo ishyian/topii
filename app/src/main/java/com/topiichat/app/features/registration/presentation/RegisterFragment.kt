@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.core.view.isVisible
+import com.topiichat.app.core.delegates.parcelableParameters
 import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentRegisterBinding
 import com.topiichat.app.features.registration.presentation.model.BtnRegisterEnablingUi
@@ -21,13 +21,9 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(), IRegisterFragm
     @Inject
     lateinit var factory: RegisterViewModel.AssistedFactory
     private val viewModel by viewModelCreator {
-        factory.create(argPhoneNumber, argPhoneCode, argAuthyId, argPinCode)
+        factory.create(parameters)
     }
-
-    private val argPhoneNumber get() = arguments?.getString(ARG_PHONE_NUMBER) ?: ""
-    private val argAuthyId get() = arguments?.getString(ARG_AUTHY_ID) ?: ""
-    private val argPhoneCode get() = arguments?.getString(ARG_PHONE_CODE) ?: ""
-    private val argPinCode get() = arguments?.getString(ARG_PIN_CODE) ?: ""
+    private val parameters: RegisterParameters by parcelableParameters()
 
     override fun initBinding(
         inflater: LayoutInflater,
@@ -56,7 +52,6 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(), IRegisterFragm
 
     private fun initObservers() = with(viewModel) {
         observe(showLoader, ::onVisibilityLoader)
-        observe(navigate, ::onNavigate)
         observe(btnRegisterEnabling, ::onEnablingBtnRegister)
         observe(showMsgError, ::onShowMessageError)
     }
@@ -75,30 +70,5 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(), IRegisterFragm
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = with(binding) {
         groupContent.isVisible = isVisibleLoader.not()
         progressBar.isVisible = isVisibleLoader
-    }
-
-    override fun onNavigate(navigator: Navigator) {
-        navigator.navigate(currentActivity.navController)
-    }
-
-    companion object {
-        private const val ARG_PHONE_NUMBER = "phoneNumber"
-        private const val ARG_AUTHY_ID = "authyId"
-        private const val ARG_PHONE_CODE = "code"
-        private const val ARG_PIN_CODE = "pinCode"
-
-        fun makeArgs(
-            phoneNumber: String,
-            authyId: String,
-            code: String,
-            pinCode: String
-        ): Bundle {
-            return Bundle(4).apply {
-                putString(ARG_PHONE_NUMBER, phoneNumber)
-                putString(ARG_AUTHY_ID, authyId)
-                putString(ARG_PHONE_CODE, code)
-                putString(ARG_PIN_CODE, pinCode)
-            }
-        }
     }
 }
