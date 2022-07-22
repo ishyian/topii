@@ -3,11 +3,23 @@ package com.topiichat.app
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
+import com.topiichat.app.features.MainScreens
 import dagger.hilt.android.AndroidEntryPoint
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity() {
+
+    private val navigator = SupportAppNavigator(this, R.id.container)
+
+    @Inject
+    lateinit var navigatorHolder: NavigatorHolder
+
+    @Inject
+    lateinit var router: Router
 
     private var _navController: NavController? = null
     val navController get() = _navController ?: error("nav controller exception")
@@ -15,18 +27,18 @@ class AppActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_app)
-        initNavController()
+        if (savedInstanceState == null) {
+            router.newRootScreen(MainScreens.Splash)
+        }
     }
 
-    private fun initNavController() {
-        val navHost = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        _navController = navHost.navController
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        navigatorHolder.setNavigator(navigator)
     }
 
-    override fun onBackPressed() {
-        if (navController.currentDestination?.id == R.id.termsFragment) {
-            finish()
-        } else super.onBackPressed()
+    override fun onPause() {
+        super.onPause()
+        navigatorHolder.removeNavigator()
     }
 }

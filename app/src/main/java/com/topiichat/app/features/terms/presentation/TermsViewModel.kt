@@ -6,10 +6,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
 import com.topiichat.app.core.constants.Constants
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseViewModel
+import com.topiichat.app.features.MainScreens
+import dagger.hilt.android.lifecycle.HiltViewModel
+import ru.terrakok.cicerone.Router
+import javax.inject.Inject
 
-class TermsViewModel : BaseViewModel(), ITermsViewModel {
+@HiltViewModel
+class TermsViewModel @Inject constructor(
+    appRouter: Router
+) : BaseViewModel(appRouter), ITermsViewModel {
 
     private val _goActionView: MutableLiveData<Uri> = MutableLiveData()
     val goActionView: LiveData<Uri> = _goActionView
@@ -30,6 +36,6 @@ class TermsViewModel : BaseViewModel(), ITermsViewModel {
     }
 
     override fun onClickNextScreen() {
-        _navigate.setValue(Navigator(R.id.action_terms_to_permission))
+        navigate(MainScreens.Permission)
     }
 }

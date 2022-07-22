@@ -7,8 +7,14 @@ import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.home.domain.model.TransactionDomain
 import com.topiichat.app.features.home.presentation.model.HomeTransactionUiModel
 import com.topiichat.app.features.home.presentation.model.HomeTransactionsHeaderUiModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import ru.terrakok.cicerone.Router
+import javax.inject.Inject
 
-class HomeViewModel : BaseViewModel(), IHomeViewModel {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    appRouter: Router
+) : BaseViewModel(appRouter), IHomeViewModel {
 
     private val _content: MutableLiveData<List<Any>> = MutableLiveData()
     val content: LiveData<List<Any>> = _content

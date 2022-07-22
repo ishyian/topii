@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
 import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseViewModel
+import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.registration.domain.model.RegisterDomain
 import com.topiichat.app.features.registration.domain.usecases.RegisterUseCase
 import com.topiichat.app.features.registration.presentation.model.BtnRegisterEnablingUi
@@ -15,14 +15,13 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.terrakok.cicerone.Router
 
 class RegisterViewModel @AssistedInject constructor(
-    @Assisted("phoneNumber") private val phoneNumber: String,
-    @Assisted("phoneCode") private val phoneCode: String,
-    @Assisted("authyId") private val authyId: String,
-    @Assisted("pinCode") private val pinCode: String,
-    private val registerUseCase: RegisterUseCase
-) : BaseViewModel(), IRegisterViewModel {
+    @Assisted("registerParameters") private val parameters: RegisterParameters,
+    private val registerUseCase: RegisterUseCase,
+    appRouter: Router
+) : BaseViewModel(appRouter), IRegisterViewModel {
 
     private val _btnRegisterEnabling: MutableLiveData<BtnRegisterEnablingUi> = MutableLiveData()
     val btnRegisterEnabling: LiveData<BtnRegisterEnablingUi> = _btnRegisterEnabling
@@ -46,9 +45,26 @@ class RegisterViewModel @AssistedInject constructor(
                 onClickClose()
             }
             R.id.btn_register -> {
-                onRegisterRequest()
+                if (parameters.isFromAuth) {
+                    onRegisterRequest()
+                } else {
+                    onRegisterKYC()
+                }
             }
         }
+    }
+
+    private fun onRegisterKYC() {
+        viewModelScope.launch {
+            _showLoader.value = true
+            delay(1000)
+            onSuccessRegisterKYC()
+            _showLoader.value = false
+        }
+    }
+
+    private fun onSuccessRegisterKYC() {
+        navigate(MainScreens.Chats, true)
     }
 
     override fun onCheckedChanged(id: Int?, isChecked: Boolean) {
@@ -82,10 +98,10 @@ class RegisterViewModel @AssistedInject constructor(
     override fun onRegisterRequest() {
         viewModelScope.launch {
             val request = RegisterUseCase.Params(
-                phoneNumber = phoneNumber,
-                code = phoneCode,
-                authyId = authyId,
-                pinCode = pinCode
+                phoneNumber = parameters.phoneNumber,
+                code = parameters.code,
+                authyId = parameters.authyId,
+                pinCode = parameters.pinCode
             )
             _showLoader.value = true
             delay(1000)
@@ -110,7 +126,7 @@ class RegisterViewModel @AssistedInject constructor(
 
     override fun onSuccessRegister() {
         //todo("parameters")
-        _navigate.setValue(Navigator(R.id.action_register_to_chats))
+        navigate(MainScreens.Chats, true)
     }
 
     override fun onFailRegister() {
@@ -121,10 +137,7 @@ class RegisterViewModel @AssistedInject constructor(
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
         fun create(
-            @Assisted("phoneNumber") phoneNumber: String,
-            @Assisted("phoneCode") phoneCode: String,
-            @Assisted("authyId") authyId: String,
-            @Assisted("pinCode") pinCode: String
+            @Assisted("registerParameters") parameters: RegisterParameters
         ): RegisterViewModel
     }
 }

@@ -7,18 +7,18 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseViewModel
+import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.pin_code.domain.ValidPinCode
-import com.topiichat.app.features.registration.presentation.RegisterFragment
+import com.topiichat.app.features.registration.presentation.RegisterParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import ru.terrakok.cicerone.Router
 
 class PinCodeViewModel @AssistedInject constructor(
-    @Assisted("phoneNumber") private val phoneNumber: String,
-    @Assisted("phoneCode") private val phoneCode: String,
-    @Assisted("authyId") private val authyId: String,
-) : BaseViewModel(), IPinCodeViewModel {
+    @Assisted("pinCodeParameters") private val parameters: PinCodeParameters,
+    appRouter: Router
+) : BaseViewModel(appRouter), IPinCodeViewModel {
 
     private val _showPassTransformationMethod: MutableLiveData<TransformationMethod> =
         MutableLiveData()
@@ -144,10 +144,16 @@ class PinCodeViewModel @AssistedInject constructor(
             _visibilityTextDescription.value = true
             _visibilityTextError.value = false
             _colorEditTextPinCode.value = R.color.pin_code_text_color
-            _navigate.setValue(Navigator(
-                actionId = R.id.action_pinCode_to_register,
-                data = RegisterFragment.makeArgs(phoneNumber, authyId, phoneCode, pinCode)
-            ))
+            navigate(
+                MainScreens.Register(
+                    RegisterParameters(
+                        phoneNumber = parameters.phoneNumber,
+                        authyId = parameters.authyId,
+                        code = parameters.code,
+                        pinCode = pinCode
+                    )
+                )
+            )
         }
     }
 
@@ -173,15 +179,13 @@ class PinCodeViewModel @AssistedInject constructor(
     }
 
     override fun onClickClose() {
-        _navigate.setValue(Navigator(R.id.action_pinCode_to_terms))
+        backTo(MainScreens.Terms)
     }
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
         fun create(
-            @Assisted("phoneNumber") phoneNumber: String,
-            @Assisted("phoneCode") phoneCode: String,
-            @Assisted("authyId") authyId: String
+            @Assisted("pinCodeParameters") parameters: PinCodeParameters
         ): PinCodeViewModel
     }
 

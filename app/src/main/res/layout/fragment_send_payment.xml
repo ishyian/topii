@@ -12,7 +12,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:text="Enviar remesa" />
+        app:toolbarTitle="Enviar remesa" />
 
     <com.topiichat.app.features.send_payment.presentation.total_amount.SendPaymentTotalAmountView
         android:id="@+id/send_payment_amount"

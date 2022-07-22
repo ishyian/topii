@@ -5,19 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.topiichat.app.core.exception.Failure
-import com.topiichat.app.core.presentation.navigation.Navigator
+import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.Screen
 
 /**
  * Base ViewModel class with default Failure handling.
  * @see ViewModel
  * @see Failure
  */
-abstract class BaseViewModel : ViewModel(), IBaseViewModel {
+abstract class BaseViewModel(private val router: Router) : ViewModel(), IBaseViewModel {
 
     abstract fun onClick(view: View?)
-
-    protected val _navigate: SingleLiveData<Navigator> = SingleLiveData()
-    val navigate: LiveData<Navigator> = _navigate
 
     protected val _showLoader: MutableLiveData<Boolean> = MutableLiveData()
     val showLoader: LiveData<Boolean> = _showLoader
@@ -29,12 +27,17 @@ abstract class BaseViewModel : ViewModel(), IBaseViewModel {
         _showMsgError.setValue("Something wrong with your network connection")
     }
 
+    protected fun navigate(screen: Screen, clearBackStack: Boolean = false) {
+        if (clearBackStack) router.newRootScreen(screen)
+        else router.navigateTo(screen)
+    }
+
+    protected fun backTo(screen: Screen) {
+        router.backTo(screen)
+    }
+
     override fun onClickBack() {
-        _navigate.setValue(
-            Navigator(
-                isBack = true
-            )
-        )
+        router.exit()
     }
 
     override fun onClickClose() {

@@ -7,10 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.topiichat.app.core.presentation.navigation.Navigator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentTermsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TermsFragment : BaseFragment<FragmentTermsBinding>(), ITermsFragment {
 
     private val viewModel: TermsViewModel by viewModels()
@@ -37,7 +38,6 @@ class TermsFragment : BaseFragment<FragmentTermsBinding>(), ITermsFragment {
     private fun initObservers() = with(viewModel) {
         observe(goActionView, ::onGoActionView)
         observe(showLoader, ::onVisibilityLoader)
-        observe(navigate, ::onNavigate)
     }
 
     override fun onGoActionView(uri: Uri) {
@@ -46,8 +46,4 @@ class TermsFragment : BaseFragment<FragmentTermsBinding>(), ITermsFragment {
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
-
-    override fun onNavigate(navigator: Navigator) {
-        navigator.navigate(currentActivity.navController)
-    }
 }
