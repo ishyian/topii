@@ -2,7 +2,7 @@ package com.topiichat.app.features
 
 import com.topiichat.app.core.delegates.parcelableParametersBundleOf
 import com.topiichat.app.features.activate_permission.presentation.PermissionFragment
-import com.topiichat.app.features.chats.presentation.ChatsFragment
+import com.topiichat.app.features.chats.root.presentation.ChatsFragment
 import com.topiichat.app.features.otp.presentation.OtpFragment
 import com.topiichat.app.features.otp.presentation.OtpParameters
 import com.topiichat.app.features.pin_code.presentation.PinCodeFragment

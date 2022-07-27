@@ -1,4 +1,4 @@
-package com.topiichat.app.features.chats.presentation
+package com.topiichat.app.features.chats.root.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
