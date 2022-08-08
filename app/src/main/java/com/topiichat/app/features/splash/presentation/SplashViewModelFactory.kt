@@ -5,12 +5,12 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
-import com.topiichat.app.features.splash.domain.usecases.FetchTokenUseCase
+import com.topiichat.app.features.registration.domain.usecases.FetchAccessTokenUseCase
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class SplashViewModelFactory @Inject constructor(
-    private val fetchTokenUseCase: FetchTokenUseCase,
+    private val fetchTokenUseCase: FetchAccessTokenUseCase,
     private val appRouter: Router,
     owner: Activity
 ): AbstractSavedStateViewModelFactory(owner as SavedStateRegistryOwner, null) {

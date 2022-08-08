@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/whiteColor"
+    android:layout_height="match_parent">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#F9F9FA"
+        app:layout_constraintBottom_toTopOf="@id/rv_messages_list"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/image_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_recipient_name"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="@font/sfprodisplaybold"
+        android:lines="1"
+        android:textColor="#000635"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/image_avatar"
+        app:layout_constraintEnd_toStartOf="@+id/image_kyc"
+        app:layout_constraintStart_toEndOf="@id/image_avatar"
+        app:layout_constraintTop_toTopOf="@id/image_avatar"
+        tools:text="Carlos Santaella" />
+
+    <ImageView
+        android:id="@+id/image_call"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@id/image_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/image_avatar"
+        app:srcCompat="@drawable/ic_call" />
+
+    <ImageView
+        android:id="@+id/image_video_call"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/image_avatar"
+        app:layout_constraintEnd_toStartOf="@id/image_call"
+        app:layout_constraintTop_toTopOf="@id/image_avatar"
+        app:srcCompat="@drawable/ic_video_call" />
+
+    <ImageView
+        android:id="@+id/image_kyc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/image_avatar"
+        app:layout_constraintEnd_toStartOf="@id/image_video_call"
+        app:layout_constraintTop_toTopOf="@id/image_avatar"
+        app:srcCompat="@drawable/ic_kyc" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_messages_list"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="12dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/vChatBottomBarrier"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_avatar" />
+
+    <ImageView
+        android:id="@+id/image_attach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="24dp"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_add" />
+
+    <EditText
+        android:id="@+id/edit_message_input"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bg_edit_input_message"
+        android:fontFamily="@font/sfprodisplaymedium"
+        android:maxLength="8192"
+        android:maxLines="10"
+        android:minHeight="48dp"
+        android:padding="16dp"
+        android:textColor="@color/chats_input_text_color"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/image_send"
+        app:layout_constraintStart_toEndOf="@id/image_attach"
+        tools:text="a\" />
+
+    <ImageView
+        android:id="@+id/image_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_send_message" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/vChatBottomBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="image_attach,edit_message_input,image_send" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

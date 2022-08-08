@@ -1,4 +1,4 @@
-package com.topiichat.app.features.registration.data.datasource
+package com.topiichat.app.features.registration.data.datasource.remote
 
 import com.topiichat.app.core.data.ApiService
 import com.topiichat.app.core.data.datasource.BaseRemoteDataStore

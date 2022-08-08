@@ -8,6 +8,6 @@ interface IRegisterViewModel {
     fun onUpdateBtnRegister()
     fun onRegisterRequest()
     fun onRenderRegister(result: ResultData<RegisterDomain>)
-    fun onSuccessRegister()
+    fun onSuccessRegister(accessToken: String)
     fun onFailRegister()
 }

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/send_payment_card_background"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp">
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:text="@string/send_payment_card_title"
+            android:textColor="@color/send_payment_text_title_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/image_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_input_sum"
+            app:srcCompat="@drawable/ic_switch" />
+
+        <TextView
+            android:id="@+id/text_you_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:text="@string/send_payment_card_you_send"
+            android:textColor="#803E3E3E"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_title" />
+
+        <EditText
+            android:id="@+id/edit_input_sum"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/send_payment_card_background"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:includeFontPadding="false"
+            android:textColor="@color/send_payment_subtitle_color"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toStartOf="@+id/image_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_you_send"
+            tools:text="100,50" />
+
+        <View
+            android:id="@+id/view_divider_left"
+            android:layout_width="0px"
+            android:layout_height="1dp"
+            android:layout_marginEnd="16dp"
+            android:background="#BFCCCCCC"
+            app:layout_constraintBottom_toBottomOf="@id/image_switch"
+            app:layout_constraintEnd_toStartOf="@id/image_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/image_switch" />
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="1dp"
+            android:layout_marginEnd="16dp"
+            android:background="#BFCCCCCC"
+            app:layout_constraintBottom_toBottomOf="@id/image_switch"
+            app:layout_constraintEnd_toStartOf="@id/image_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/image_switch" />
+
+        <TextView
+            android:id="@+id/text_receiver_receiver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:text="@string/send_payment_card_receiver_receives"
+            android:textColor="#803E3E3E"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_divider_left" />
+
+        <TextView
+            android:id="@+id/text_receiver_sum"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:textColor="@color/send_payment_subtitle_color"
+            android:textSize="36sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/image_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_receiver_receiver"
+            tools:text="80,50" />
+
+        <TextView
+            android:id="@+id/text_send_currency_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_currency_picker"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:textColor="#042545"
+            android:textSize="18sp"
+            app:drawableEndCompat="@drawable/ic_arrow_small"
+            app:drawableStartCompat="@drawable/ic_euro"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_input_sum"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_input_sum"
+            tools:text="EUR" />
+
+        <TextView
+            android:id="@+id/text_receiver_currency_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_currency_picker"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:textColor="#042545"
+            android:textSize="18sp"
+            app:drawableEndCompat="@drawable/ic_arrow_small"
+            app:drawableStartCompat="@drawable/ic_euro"
+            app:layout_constraintBottom_toBottomOf="@+id/text_receiver_sum"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_receiver_sum"
+            tools:text="EUR" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

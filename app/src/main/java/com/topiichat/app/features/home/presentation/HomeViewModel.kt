@@ -4,6 +4,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.core.presentation.platform.BaseViewModel
+import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.home.domain.model.TransactionDomain
 import com.topiichat.app.features.home.presentation.model.HomeTransactionUiModel
 import com.topiichat.app.features.home.presentation.model.HomeTransactionsHeaderUiModel
@@ -20,7 +21,6 @@ class HomeViewModel @Inject constructor(
     val content: LiveData<List<Any>> = _content
 
     init {
-        //TODO: Load data from API
         _content.value = listOf(
             HomeTransactionsHeaderUiModel,
             HomeTransactionUiModel(
@@ -36,11 +36,19 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    fun onFiltersClick() {
+    override fun onFiltersClick() {
 
     }
 
-    fun onTransactionClick(transactionDomain: TransactionDomain) {
+    override fun onTransactionClick(transactionDomain: TransactionDomain) {
 
+    }
+
+    override fun onSendPaymentClick() {
+        //navigate(MainScreens.SendPayment)
+    }
+
+    override fun onChatsClick() {
+        navigate(ChatsScreens.ChatsList)
     }
 }

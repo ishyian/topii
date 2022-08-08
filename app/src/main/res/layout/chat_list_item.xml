@@ -1,7 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/text_message_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="22dp"
+        android:fontFamily="@font/sfprodisplaymedium"
+        android:textColor="@color/titleColor"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="14:04" />
+
+    <TextView
+        android:id="@+id/text_message_recipient"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/sfprodisplaymedium"
+        android:lines="1"
+        android:textColor="@color/titleColor"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@id/text_message_time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Alberto García" />
+
+    <TextView
+        android:id="@+id/text_message_preview"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/sfprodisplaymedium"
+        android:lines="1"
+        android:textColor="@color/titleColor"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/text_message_time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_message_recipient"
+        tools:text="Hola! Esto es un mensaje" />
+
+    <TextView
+        android:id="@+id/text_unread_messages_count"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_marginEnd="22dp"
+        android:background="@drawable/bg_unread_messages_count"
+        android:fontFamily="@font/sfprodisplaybold"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:minWidth="16dp"
+        android:paddingHorizontal="3dp"
+        android:paddingVertical="2dp"
+        android:textColor="@color/whiteColor"
+        android:textSize="10sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/text_message_preview"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="SmallSp"
+        tools:text="23" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

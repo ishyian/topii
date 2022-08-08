@@ -5,7 +5,7 @@ import com.topiichat.app.core.exception.data.ErrorParser
 import com.topiichat.app.data.core.MainDispatcherRule
 import com.topiichat.app.data.core.TestAppDispatchers
 import com.topiichat.app.data.features.registration.utils.RegisterTestUtils
-import com.topiichat.app.features.registration.data.datasource.RegisterRemoteDataStore
+import com.topiichat.app.features.registration.data.datasource.remote.RegisterRemoteDataStore
 import com.topiichat.app.features.registration.data.mapper.RegisterRemoteMapper
 import com.topiichat.app.features.registration.data.repo.RegisterRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
