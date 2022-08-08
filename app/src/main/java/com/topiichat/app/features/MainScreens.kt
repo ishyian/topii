@@ -2,13 +2,14 @@ package com.topiichat.app.features
 
 import com.topiichat.app.core.delegates.parcelableParametersBundleOf
 import com.topiichat.app.features.activate_permission.presentation.PermissionFragment
-import com.topiichat.app.features.chats.root.presentation.ChatsFragment
+import com.topiichat.app.features.home.presentation.HomeFragment
 import com.topiichat.app.features.otp.presentation.OtpFragment
 import com.topiichat.app.features.otp.presentation.OtpParameters
 import com.topiichat.app.features.pin_code.presentation.PinCodeFragment
 import com.topiichat.app.features.pin_code.presentation.PinCodeParameters
 import com.topiichat.app.features.registration.presentation.RegisterFragment
 import com.topiichat.app.features.registration.presentation.RegisterParameters
+import com.topiichat.app.features.send_payment.presentation.SendPaymentFragment
 import com.topiichat.app.features.splash.presentation.SplashFragment
 import com.topiichat.app.features.terms.presentation.TermsFragment
 import com.topiichat.app.features.valid_phone_number.presentation.ValidPhoneNumberFragment
@@ -62,7 +63,11 @@ object MainScreens {
         )
     }
 
-    object Chats : SupportAppScreen() {
-        override fun getFragment() = ChatsFragment()
+    object Home : SupportAppScreen() {
+        override fun getFragment() = HomeFragment()
+    }
+
+    object SendPayment : SupportAppScreen() {
+        override fun getFragment() = SendPaymentFragment()
     }
 }

@@ -5,15 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
-import com.topiichat.app.features.splash.domain.usecases.FetchTokenUseCase
-import com.topiichat.app.features.splash.presentation.model.Token
+import com.topiichat.app.features.chats.ChatsScreens
+import com.topiichat.app.features.registration.domain.usecases.FetchAccessTokenUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(
-    private val fetchTokenUseCase: FetchTokenUseCase,
+    private val fetchAccessToken: FetchAccessTokenUseCase,
     appRouter: Router
 ) : BaseViewModel(appRouter), ISplashViewModel {
 
@@ -28,22 +28,21 @@ class SplashViewModel @Inject constructor(
             _showLoader.value = true
             delay(TIME_LOADER)
             fetchToken()
-            navigate(MainScreens.Terms, true)
         }
     }
 
     override fun onClick(view: View?) = Unit
 
     private suspend fun fetchToken() {
-        val request = FetchTokenUseCase.Params(isRemote = false)
-        when (fetchTokenUseCase(request)) {
+        when (val result = fetchAccessToken()) {
             is ResultData.Success -> {
-                Token.Success
+                if (result.data?.token.isNullOrEmpty()) {
+                    navigate(ChatsScreens.ChatsList, true)
+                } else navigate(MainScreens.Home, true)
             }
-            is ResultData.Fail -> {
-                Token.Fail("")
+            else -> {
+                navigate(MainScreens.Terms, true)
             }
-            is ResultData.NetworkError -> onNetworkError()
         }
     }
 

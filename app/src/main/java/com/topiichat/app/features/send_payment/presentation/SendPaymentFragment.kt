@@ -25,6 +25,7 @@ class SendPaymentFragment : BaseFragment<FragmentSendPaymentBinding>(), ISendPay
         view: View,
         savedInstanceState: Bundle?
     ) = with(binding) {
+        setupClickListener(toolbar.btnBack)
         initObservers()
     }
 

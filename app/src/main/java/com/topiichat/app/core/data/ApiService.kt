@@ -11,6 +11,7 @@ import com.topiichat.app.features.valid_phone_number.data.model.VerifyPhoneNumbe
 import com.topiichat.app.features.valid_phone_number.data.model.VerifyPhoneNumberRequestDto
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface ApiService {
@@ -36,4 +37,9 @@ interface ApiService {
     suspend fun register(
         @Body registerRequestDto: RegisterRequestDto
     ): RegisterDto?
+
+    @POST("api/v1/remittance/by_month")
+    suspend fun fetchRemittanceHistory(
+        @Header("Authorization") accessToken: String
+    ): EmptyDto
 }

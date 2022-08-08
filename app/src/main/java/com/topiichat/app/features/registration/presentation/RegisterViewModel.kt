@@ -8,8 +8,10 @@ import com.topiichat.app.R
 import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
+import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.registration.domain.model.RegisterDomain
 import com.topiichat.app.features.registration.domain.usecases.RegisterUseCase
+import com.topiichat.app.features.registration.domain.usecases.SaveAccessTokenUseCase
 import com.topiichat.app.features.registration.presentation.model.BtnRegisterEnablingUi
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -19,7 +21,8 @@ import ru.terrakok.cicerone.Router
 
 class RegisterViewModel @AssistedInject constructor(
     @Assisted("registerParameters") private val parameters: RegisterParameters,
-    private val registerUseCase: RegisterUseCase,
+    private val register: RegisterUseCase,
+    private val saveAccessToken: SaveAccessTokenUseCase,
     appRouter: Router
 ) : BaseViewModel(appRouter), IRegisterViewModel {
 
@@ -64,7 +67,7 @@ class RegisterViewModel @AssistedInject constructor(
     }
 
     private fun onSuccessRegisterKYC() {
-        navigate(MainScreens.Chats, true)
+        navigate(ChatsScreens.ChatsList, true)
     }
 
     override fun onCheckedChanged(id: Int?, isChecked: Boolean) {
@@ -105,7 +108,7 @@ class RegisterViewModel @AssistedInject constructor(
             )
             _showLoader.value = true
             delay(1000)
-            val result = registerUseCase(request)
+            val result = register(request)
             onRenderRegister(result)
             _showLoader.value = false
         }
@@ -115,7 +118,7 @@ class RegisterViewModel @AssistedInject constructor(
         when (result) {
             is ResultData.Success -> {
                 result.data?.let {
-                    onSuccessRegister()
+                    onSuccessRegister(it.accessToken)
                 }
             }
             is ResultData.Fail -> onFailRegister()
@@ -124,9 +127,11 @@ class RegisterViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onSuccessRegister() {
-        //todo("parameters")
-        navigate(MainScreens.Chats, true)
+    override fun onSuccessRegister(accessToken: String) {
+        viewModelScope.launch {
+            saveAccessToken(SaveAccessTokenUseCase.Params(accessToken))
+            navigate(MainScreens.Home, true)
+        }
     }
 
     override fun onFailRegister() {

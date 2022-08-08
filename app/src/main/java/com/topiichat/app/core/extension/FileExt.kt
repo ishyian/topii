@@ -19,7 +19,7 @@ fun File.toBase64(): String = Base64.encodeToString(readBytes(), Base64.NO_WRAP)
 
 fun File.getMimeType(fallback: String = "image/*"): String {
     return MimeTypeMap.getFileExtensionFromUrl(path)?.let {
-        MimeTypeMap.getSingleton().getMimeTypeFromExtension(it.toLowerCase(Locale.ENGLISH))
+        MimeTypeMap.getSingleton().getMimeTypeFromExtension(it.lowercase(Locale.ENGLISH))
     } ?: fallback
 }
 

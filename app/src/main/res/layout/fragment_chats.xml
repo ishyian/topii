@@ -24,7 +24,7 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/text_screen_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -39,6 +39,7 @@
             app:layout_constraintTop_toBottomOf="@+id/floatingActionButton" />
 
         <TextView
+            android:id="@+id/text_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0.5"
@@ -48,18 +49,18 @@
             android:text="@string/chats_edit"
             android:textColor="@color/titleColor"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintBottom_toBottomOf="@+id/text_screen_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView" />
+            app:layout_constraintTop_toTopOf="@+id/text_screen_title" />
 
         <ImageView
             android:id="@+id/image_write"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintBottom_toBottomOf="@+id/text_screen_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="@+id/text_screen_title"
             app:srcCompat="@drawable/ic_write" />
 
         <ImageView
@@ -67,9 +68,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="14dp"
-            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintBottom_toBottomOf="@+id/text_screen_title"
             app:layout_constraintEnd_toStartOf="@+id/image_write"
-            app:layout_constraintTop_toTopOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="@+id/text_screen_title"
             app:srcCompat="@drawable/ic_kyc" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -83,6 +84,8 @@
         android:drawablePadding="8dp"
         android:fontFamily="@font/sfprodisplaybold"
         android:hint="@string/chats_search_hint"
+        android:lines="1"
+        android:maxLines="1"
         android:paddingHorizontal="26dp"
         android:textAlignment="textStart"
         android:textColor="@color/pin_code_text_color"
@@ -92,12 +95,25 @@
         app:layout_constraintTop_toBottomOf="@id/text_view_content_title"
         tools:ignore="TouchTargetSizeCheck" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_chats_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/chats_list_background"
+        android:overScrollMode="never"
+        android:paddingStart="12dp"
+        android:paddingEnd="4dp"
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
     <LinearLayout
+        android:id="@+id/layout_chats_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/chats_list_background"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"

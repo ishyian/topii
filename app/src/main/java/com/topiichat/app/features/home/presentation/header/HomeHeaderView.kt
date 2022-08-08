@@ -57,6 +57,12 @@ class HomeHeaderView(
             selectRequestPayment(true)
             clickListener?.onRequestPaymentClicked()
         }
+        binding.layoutChat.setOnClickListener {
+            clickListener?.onChatsClicked()
+        }
+        binding.layoutWallet.setOnClickListener {
+            clickListener?.onWalletClicked()
+        }
         updateUi()
     }
 
@@ -141,5 +147,7 @@ class HomeHeaderView(
     interface HomeHeaderViewClickListener {
         fun onSendPaymentClicked()
         fun onRequestPaymentClicked()
+        fun onChatsClicked()
+        fun onWalletClicked()
     }
 }

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
 import com.topiichat.app.core.presentation.platform.BaseViewModel
-import com.topiichat.app.features.MainScreens
+import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -68,6 +68,6 @@ class EnterEmailViewModel @Inject constructor(
     }
 
     override fun onClickClose() {
-        backTo(MainScreens.Chats)
+        backTo(ChatsScreens.ChatsList)
     }
 }

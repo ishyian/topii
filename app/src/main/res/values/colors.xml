@@ -25,6 +25,9 @@
     <color name="chats_search_background">@color/whiteColor</color>
     <color name="chats_search_border">#E7E7E7</color>
     <color name="chats_list_background">#FAFAFA</color>
+    <color name="chats_unread_messages_count_color">#0521F5</color>
+    <color name="chats_input_text_color">#120D34</color>
+
     <color name="history_header_item_background">#F3F4FE</color>
     <color name="history_header_item_selected_border">#0000FF</color>
 
@@ -41,9 +44,14 @@
     <color name="home_transaction_user_name">#60708F</color>
     <color name="home_transaction_date">#B1BED8</color>
 
+    <color name="kyc_text_color">#3E3E3E</color>
+
     <color name="send_payment_switch_link_color">#0000FF</color>
     <color name="send_payment_subtitle_color">#5D7BB1</color>
     <color name="send_payment_amount_total_color">#82F080</color>
-
-    <color name="kyc_text_color">#3E3E3E</color>
+    <color name="send_payment_card_background">#F3F4FE</color>
+    <color name="send_payment_text_title_color">#17194B</color>
+    <color name="send_payment_currency_divider">#0521F5</color>
+    <color name="send_payment_text_color">#3E3E3E</color>
+    <color name="chats_list_divider">#EFEFEF</color>
 </resources>

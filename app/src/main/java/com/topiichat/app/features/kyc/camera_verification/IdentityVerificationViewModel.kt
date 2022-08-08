@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
+import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.registration.presentation.RegisterParameters
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.terrakok.cicerone.Router
@@ -41,7 +42,7 @@ class IdentityVerificationViewModel @Inject constructor(
     }
 
     override fun onClickClose() {
-        backTo(MainScreens.Chats)
+        backTo(ChatsScreens.ChatsList)
     }
 
     override fun onCameraImageSelected(uri: Uri?) {

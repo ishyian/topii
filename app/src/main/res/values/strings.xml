@@ -35,6 +35,9 @@
     <string name="chats_no_chats">No tienes chats aun</string>
     <string name="chats_new_chat"><u>Nuevo Mensaje</u></string>
     <string name="chats_search_hint">Search</string>
+    <string name="chats_action_create_group">Crear Grupo</string>
+    <string name="chats_action_search_by_phone">Encontrar Por Número Telefónico</string>
+    <string name="chats_action_invite_friends">Invitar Amigos </string>
 
     <string name="home_title">Historial</string>
     <string name="home_send_payment_text">Enviar\nRemesa</string>
@@ -53,6 +56,11 @@
     <string name="send_payment_amount_line_3">Convertimos</string>
     <string name="send_payment_amount_line_4">Tarifa garantizada (8 horas)</string>
     <string name="send_payment_amount_total">El receptor recive</string>
+    <string name="send_payment_card_title">Monto a enviar</string>
+    <string name="send_payment_card_you_send">Tu enviar</string>
+    <string name="send_payment_card_receiver_receives">El receptor recive</string>
+    <string name="send_payment_title">Enviar remesa</string>
+    <string name="send_payment_concept_remittance_title">Introduce concepto de la remesa</string>
 
     <string name="kyc_button_continue">Continuar</string>
     <string name="personal_data_screen_title">Tus datos personales</string>

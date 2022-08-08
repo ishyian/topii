@@ -7,7 +7,9 @@ import com.topiichat.app.features.otp.data.mapper.ResendOtpCodeRemoteMapper
 import com.topiichat.app.features.otp.data.mapper.ValidOtpCodeRemoteMapper
 import com.topiichat.app.features.otp.data.repo.OtpCodeRepositoryImpl
 import com.topiichat.app.features.otp.domain.repo.OtpCodeRepository
-import com.topiichat.app.features.registration.data.datasource.RegisterRemoteDataStore
+import com.topiichat.app.features.registration.data.datasource.cache.RegisterCacheDataStore
+import com.topiichat.app.features.registration.data.datasource.remote.RegisterRemoteDataStore
+import com.topiichat.app.features.registration.data.mapper.RegisterCacheMapper
 import com.topiichat.app.features.registration.data.mapper.RegisterRemoteMapper
 import com.topiichat.app.features.registration.data.repo.RegisterRepositoryImpl
 import com.topiichat.app.features.registration.domain.repo.RegisterRepository
@@ -82,13 +84,19 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideRegisterRepository(
+        registerCacheDataStore: RegisterCacheDataStore,
         registerRemoteDataStore: RegisterRemoteDataStore,
         registerRemoteMapper: RegisterRemoteMapper,
+        registerCacheMapper: RegisterCacheMapper,
+        emptyMapper: EmptyMapper,
         appDispatchers: AppDispatchers
     ): RegisterRepository {
         return RegisterRepositoryImpl(
+            registerCacheDataStore = registerCacheDataStore,
             registerRemoteDataStore = registerRemoteDataStore,
             registerRemoteMapper = registerRemoteMapper,
+            registerCacheMapper = registerCacheMapper,
+            emptyMapper = emptyMapper,
             appDispatchers = appDispatchers
         )
     }

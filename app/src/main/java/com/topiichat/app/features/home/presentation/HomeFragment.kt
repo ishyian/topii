@@ -62,11 +62,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
     }
 
     override fun onSendPaymentClicked() {
-        // TODO: Change UI according to that
+        viewModel.onSendPaymentClick()
     }
 
     override fun onRequestPaymentClicked() {
         // TODO: Change UI according to that
+    }
+
+    override fun onChatsClicked() {
+        viewModel.onChatsClick()
+    }
+
+    override fun onWalletClicked() {
+        // Nothing for now
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
@@ -75,7 +83,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
         observe(content, ::onContentLoaded)
     }
 
-    private fun onContentLoaded(content: List<Any>) {
+    override fun onContentLoaded(content: List<Any>) {
         homeAdapter.items = content
     }
 }

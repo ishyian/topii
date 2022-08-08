@@ -2,17 +2,95 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.topiichat.app.core.presentation.customview.ToolbarView
+        android:id="@+id/toolbar"
         android:layout_width="0px"
         android:layout_height="wrap_content"
         app:isCloseButtonVisible="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:toolbarTitle="Enviar remesa" />
+        app:toolbarTitle="@string/send_payment_title" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@id/send_payment_amount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/card_send_payment"
+                layout="@layout/card_send_payment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/offset22"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset8"
+                android:fontFamily="@font/sfprodisplayregular"
+                android:text="@string/send_payment_concept_remittance_title"
+                android:textColor="@color/send_payment_text_color"
+                android:textSize="@dimen/text15" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edit_text_remittance_concept"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/offset50"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset8"
+                android:background="@drawable/rounded_border_edittext"
+                android:fontFamily="@font/sfprodisplaymedium"
+                android:paddingHorizontal="@dimen/offset24"
+                android:textAlignment="textStart"
+                android:textColor="@color/send_payment_text_color"
+                android:textSize="@dimen/text15"
+                tools:ignore="SpeakableTextPresentCheck"
+                tools:text="Regalo de Bodas" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset8"
+                android:fontFamily="@font/sfprodisplayregular"
+                android:text="@string/send_payment_concept_remittance_title"
+                android:textColor="@color/send_payment_text_color"
+                android:textSize="@dimen/text15" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edit_text_notes"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/offset50"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset8"
+                android:background="@drawable/rounded_border_edittext"
+                android:fontFamily="@font/sfprodisplaymedium"
+                android:paddingHorizontal="@dimen/offset24"
+                android:textAlignment="textStart"
+                android:textColor="@color/send_payment_text_color"
+                android:textSize="@dimen/text15"
+                tools:ignore="SpeakableTextPresentCheck"
+                tools:text="De parte de Carmen y yo" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <com.topiichat.app.features.send_payment.presentation.total_amount.SendPaymentTotalAmountView
         android:id="@+id/send_payment_amount"
