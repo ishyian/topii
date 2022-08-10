@@ -4,6 +4,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.core.presentation.platform.BaseViewModel
+import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.home.domain.model.TransactionDomain
 import com.topiichat.app.features.home.presentation.model.HomeTransactionUiModel
@@ -45,7 +46,7 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onSendPaymentClick() {
-        //navigate(MainScreens.SendPayment)
+        navigate(MainScreens.SendPayment)
     }
 
     override fun onChatsClick() {

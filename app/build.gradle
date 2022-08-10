@@ -15,8 +15,8 @@ android {
         applicationId "com.fidecorp.chapii"
         minSdk globalConfiguration["androidMinSdkVersion"]
         targetSdk globalConfiguration["androidTargetSdkVersion"]
-        versionCode 7
-        versionName "0.0.7"
+        versionCode 10
+        versionName "0.0.10"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -36,7 +36,7 @@ android {
     productFlavors {
         dev {
             dimension "environment"
-            buildConfigField 'String', 'ENDPOINT', "\"https://topiichattest.eu.ngrok.io/\""
+            buildConfigField 'String', 'ENDPOINT', "\"https://develop.api.chapii.com/\""
         }
 
         production {

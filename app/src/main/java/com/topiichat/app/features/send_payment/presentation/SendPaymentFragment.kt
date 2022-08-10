@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
+import com.topiichat.app.R
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentSendPaymentBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +29,11 @@ class SendPaymentFragment : BaseFragment<FragmentSendPaymentBinding>(), ISendPay
     ) = with(binding) {
         setupClickListener(toolbar.btnBack)
         initObservers()
+        cardSendPayment.editInputSum.doAfterTextChanged { text ->
+            cardSendPayment.textReceiverSum.text = text.toString()
+        }
+        cardSendPayment.textReceiverCurrencyPicker.text = getString(R.string.currency_sample)
+        cardSendPayment.textSendCurrencyPicker.text = getString(R.string.currency_sample)
     }
 
     override fun onClick(v: View?) {
