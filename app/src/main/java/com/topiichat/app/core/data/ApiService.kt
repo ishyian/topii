@@ -15,30 +15,30 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface ApiService {
-    @GET("api/v1/verify/token_alice")
+    @GET("api/v1/verify/token_alice/")
     suspend fun fetchToken(): TokenDto?
 
-    @POST("api/v1/twilio/verify_phone_number")
+    @POST("api/v1/twilio/verify_phone_number/")
     suspend fun verifyPhoneNumber(
         @Body verifyPhoneNumberRequestDto: VerifyPhoneNumberRequestDto
     ): VerifyPhoneNumberDto?
 
-    @POST("api/v1/twilio/validate_code")
+    @POST("api/v1/twilio/validate_code/")
     suspend fun validateOtpCode(
         @Body validOtpCodeRequest: ValidOtpCodeRequestDto
     ): ValidOtpCodeDto?
 
-    @POST("api/v1/twilio/resend_code")
+    @POST("api/v1/twilio/resend_code/")
     suspend fun resendOtpCode(
         @Body resendOtpCodeRequestDto: ResendOtpCodeRequestDto
     ): ResendOtpCodeDto?
 
-    @POST("api/v1/auth/register")
+    @POST("api/v1/auth/register/")
     suspend fun register(
         @Body registerRequestDto: RegisterRequestDto
     ): RegisterDto?
 
-    @POST("api/v1/remittance/by_month")
+    @POST("api/v1/remittance/by_month/")
     suspend fun fetchRemittanceHistory(
         @Header("Authorization") accessToken: String
     ): EmptyDto

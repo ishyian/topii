@@ -9,5 +9,5 @@ interface IRegisterViewModel {
     fun onRegisterRequest()
     fun onRenderRegister(result: ResultData<RegisterDomain>)
     fun onSuccessRegister(accessToken: String)
-    fun onFailRegister()
+    fun onFailRegister(message: String)
 }

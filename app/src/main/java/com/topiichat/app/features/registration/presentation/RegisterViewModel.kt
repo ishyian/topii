@@ -121,9 +121,8 @@ class RegisterViewModel @AssistedInject constructor(
                     onSuccessRegister(it.accessToken)
                 }
             }
-            is ResultData.Fail -> onFailRegister()
+            is ResultData.Fail -> onFailRegister(result.error.message)
             is ResultData.NetworkError -> onNetworkError()
-
         }
     }
 
@@ -134,9 +133,8 @@ class RegisterViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onFailRegister() {
-        //todo("parameters")
-        _showMsgError.setValue("Fail")
+    override fun onFailRegister(message: String) {
+        _showMsgError.setValue(message)
     }
 
     @dagger.assisted.AssistedFactory

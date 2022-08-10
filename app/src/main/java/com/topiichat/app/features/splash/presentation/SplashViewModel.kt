@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
-import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.registration.domain.usecases.FetchAccessTokenUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -37,7 +36,7 @@ class SplashViewModel @Inject constructor(
         when (val result = fetchAccessToken()) {
             is ResultData.Success -> {
                 if (result.data?.token.isNullOrEmpty()) {
-                    navigate(ChatsScreens.ChatsList, true)
+                    navigate(MainScreens.Terms, true)
                 } else navigate(MainScreens.Home, true)
             }
             else -> {

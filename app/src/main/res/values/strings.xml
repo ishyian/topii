@@ -92,4 +92,5 @@
     <string name="verification_description">Deberá permitir acceso a la camara para continuar.</string>
     <string name="verification_button_description">No podemos verificar tu identidad sin acceso a tu camara</string>
     <string name="verification_button_text">Conceder acceso a la cámara</string>
+    <string name="currency_sample">EUR</string>
 </resources>
