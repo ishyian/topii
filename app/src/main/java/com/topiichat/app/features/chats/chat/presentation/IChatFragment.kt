@@ -6,4 +6,5 @@ import com.topiichat.app.features.chats.chat.presentation.model.ChatMessageUiMod
 interface IChatFragment : IBaseFragment {
     fun onMessagesLoaded(messages: List<ChatMessageUiModel>)
     fun onClearInput(ignore: Unit)
+    fun onShowAddAttachmentDialog(ignore: Unit)
 }

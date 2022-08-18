@@ -27,6 +27,7 @@ ext {
     materialDatePickerVersion = '4.2.3'
     inputMaskAndroidVersion = '6.1.0'
     ciceroneVersion = '5.1.0'
+    contactsVersion = '0.2.3'
     junitVersion = '4.13.2'
     junitExtVersion = '1.1.3'
     mockitoVersion = '4.0.0'
@@ -75,6 +76,10 @@ ext {
     inputMaskAndroid = "com.redmadrobot:input-mask-android:$inputMaskAndroidVersion"
     cicerone = "com.github.terrakok:cicerone:$ciceroneVersion"
 
+    contactsCore = "com.github.vestrel00.contacts-android:core:$contactsVersion"
+    contactsAsync = "com.github.vestrel00.contacts-android:async:$contactsVersion"
+    contactsPermission = "com.github.vestrel00.contacts-android:permissions:$contactsVersion"
+
     junit = "junit:junit:$junitVersion"
     mockito = "org.mockito.kotlin:mockito-kotlin:$mockitoVersion"
     coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion"
@@ -111,7 +116,10 @@ ext {
                     adapterDelegatesContainer,
                     adapterDelegatesViewBinding,
                     materialDatePicker,
-                    cicerone
+                    cicerone,
+                    contactsCore,
+                    contactsAsync,
+                    contactsPermission
             ],
 
             forKapt          : [

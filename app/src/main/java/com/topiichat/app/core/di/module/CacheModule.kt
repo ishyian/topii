@@ -2,10 +2,13 @@ package com.topiichat.app.core.di.module
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.topiichat.app.features.contacts.data.datasource.ContactsCache
+import com.topiichat.app.features.contacts.data.datasource.ContactsCacheImpl
 import com.topiichat.app.features.registration.data.datasource.cache.RegisterCache
 import com.topiichat.app.features.registration.data.datasource.cache.RegisterCacheImpl
 import com.topiichat.app.features.splash.data.datasource.cache.AuthCache
 import com.topiichat.app.features.splash.data.datasource.cache.AuthCacheImpl
+import contacts.core.Contacts
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,5 +40,12 @@ object CacheModule {
         pref: SharedPreferences
     ): RegisterCache {
         return RegisterCacheImpl(pref)
+    }
+
+    @Provides
+    fun providesContactsCache(
+        contacts: Contacts
+    ): ContactsCache {
+        return ContactsCacheImpl(contacts)
     }
 }

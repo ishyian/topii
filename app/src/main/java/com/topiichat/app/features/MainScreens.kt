@@ -2,6 +2,7 @@ package com.topiichat.app.features
 
 import com.topiichat.app.core.delegates.parcelableParametersBundleOf
 import com.topiichat.app.features.activate_permission.presentation.PermissionFragment
+import com.topiichat.app.features.contacts.presentation.ContactsFragment
 import com.topiichat.app.features.home.presentation.HomeFragment
 import com.topiichat.app.features.otp.presentation.OtpFragment
 import com.topiichat.app.features.otp.presentation.OtpParameters
@@ -69,5 +70,9 @@ object MainScreens {
 
     object SendPayment : SupportAppScreen() {
         override fun getFragment() = SendPaymentFragment()
+    }
+
+    object Contacts : SupportAppScreen() {
+        override fun getFragment() = ContactsFragment()
     }
 }

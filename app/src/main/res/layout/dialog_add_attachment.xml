@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/offset24">
+
+    <LinearLayout
+        android:id="@+id/layout_attachments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_add_attachment"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/offset32"
+        android:paddingVertical="@dimen/offset24"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:id="@+id/layout_camera"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_camera_small" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/offset3"
+                    android:fontFamily="@font/sfprodisplayregular"
+                    android:text="@string/chat_attachment_camera"
+                    android:textAlignment="center"
+                    android:textColor="@color/chats_attachment_option_text_color"
+                    android:textSize="@dimen/text12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_gallery"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_picture" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/offset3"
+                    android:fontFamily="@font/sfprodisplayregular"
+                    android:text="@string/chat_attachment_gallery"
+                    android:textAlignment="center"
+                    android:textColor="@color/chats_attachment_option_text_color"
+                    android:textSize="@dimen/text12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_document"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_document_small" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/offset3"
+                    android:fontFamily="@font/sfprodisplayregular"
+                    android:text="@string/chat_attachment_document"
+                    android:textAlignment="center"
+                    android:textColor="@color/chats_attachment_option_text_color"
+                    android:textSize="@dimen/text12" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/offset8"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:id="@+id/layout_location"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_location" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sfprodisplayregular"
+                    android:text="@string/chat_attachment_location"
+                    android:textAlignment="center"
+                    android:textColor="@color/chats_attachment_option_text_color"
+                    android:textSize="@dimen/text12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_contact"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_contacts" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sfprodisplayregular"
+                    android:text="@string/chat_attachment_contact"
+                    android:textAlignment="center"
+                    android:textColor="@color/chats_attachment_option_text_color"
+                    android:textSize="@dimen/text12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_transfer"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_transfers" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sfprodisplayregular"
+                    android:text="@string/chat_attachment_transfers"
+                    android:textAlignment="center"
+                    android:textColor="@color/chats_attachment_option_text_color"
+                    android:textSize="@dimen/text12" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/offset15"
+            android:background="#D6E1FF" />
+
+        <TextView
+            android:id="@+id/text_share_wallet_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/offset24"
+            android:fontFamily="@font/sfprodisplayregular"
+            android:gravity="center_vertical"
+            android:text="@string/chat_attachment_share_data"
+            android:textColor="@color/chats_attachment_option_text_color"
+            android:textSize="@dimen/text14"
+            app:drawableStartCompat="@drawable/ic_share" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offset16"
+        android:background="@drawable/bg_add_attachment"
+        android:fontFamily="@font/sfprodisplaymedium"
+        android:gravity="center_horizontal"
+        android:paddingVertical="@dimen/offset24"
+        android:text="@string/chat_attachment_close"
+        android:textColor="@color/chats_attachment_option_text_color"
+        android:textSize="@dimen/text14"
+        app:layout_constraintTop_toBottomOf="@id/layout_attachments" />
+</androidx.constraintlayout.widget.ConstraintLayout>
