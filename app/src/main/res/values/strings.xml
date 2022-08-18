@@ -93,4 +93,16 @@
     <string name="verification_button_description">No podemos verificar tu identidad sin acceso a tu camara</string>
     <string name="verification_button_text">Conceder acceso a la cámara</string>
     <string name="currency_sample">EUR</string>
+
+    <string name="chat_attachment_camera">Camara</string>
+    <string name="chat_attachment_gallery">Galería</string>
+    <string name="chat_attachment_document">Documentos</string>
+    <string name="chat_attachment_location">Localización</string>
+    <string name="chat_attachment_contact">Contactos</string>
+    <string name="chat_attachment_transfers">Remesas</string>
+    <string name="chat_attachment_share_data">Compartir los datos de mi Wallet</string>
+    <string name="chat_attachment_close">Cerrar</string>
+
+    <string name="contacts_title">Contactos</string>
+    <string name="contacts_button_next">Siguiente</string>
 </resources>

@@ -54,4 +54,9 @@
     <color name="send_payment_currency_divider">#0521F5</color>
     <color name="send_payment_text_color">#3E3E3E</color>
     <color name="chats_list_divider">#EFEFEF</color>
+    <color name="chats_attachment_option_text_color">#070A66</color>
+    <color name="contacts_header_text_color">#0000FF</color>
+    <color name="contacts_primary_color">#0000FF</color>
+    <color name="contacts_secondary_color">#120D34</color>
+    <color name="contacts_subtitle_text_color">#042545</color>
 </resources>

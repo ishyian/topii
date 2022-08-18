@@ -51,6 +51,13 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), View.OnClickListener 
         }
     }
 
+    protected fun setupClickListener(action: () -> Unit, vararg clickIds: View) {
+        action()
+        clickIds.forEach { view ->
+            view.setOnClickListener(this)
+        }
+    }
+
     protected inline fun <T> LifecycleOwner.observe(
         liveData: LiveData<T>,
         crossinline action: (t: T) -> Unit

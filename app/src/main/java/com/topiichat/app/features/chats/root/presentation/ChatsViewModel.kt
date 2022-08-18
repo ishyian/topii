@@ -94,6 +94,9 @@ class ChatsViewModel @AssistedInject constructor(
             R.id.image_kyc -> {
                 onKYCClick()
             }
+            R.id.image_back -> {
+                onClickBack()
+            }
         }
     }
 

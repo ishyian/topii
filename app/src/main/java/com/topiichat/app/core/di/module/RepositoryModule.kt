@@ -2,6 +2,10 @@ package com.topiichat.app.core.di.module
 
 import com.topiichat.app.core.coroutines.AppDispatchers
 import com.topiichat.app.core.data.EmptyMapper
+import com.topiichat.app.features.contacts.data.datasource.ContactsCacheDataStore
+import com.topiichat.app.features.contacts.data.mapper.ContactsCacheMapper
+import com.topiichat.app.features.contacts.data.repo.ContactsRepositoryImpl
+import com.topiichat.app.features.contacts.domain.repo.ContactsRepository
 import com.topiichat.app.features.otp.data.datasource.OtpCodeRemoteDataSource
 import com.topiichat.app.features.otp.data.mapper.ResendOtpCodeRemoteMapper
 import com.topiichat.app.features.otp.data.mapper.ValidOtpCodeRemoteMapper
@@ -97,6 +101,20 @@ object RepositoryModule {
             registerRemoteMapper = registerRemoteMapper,
             registerCacheMapper = registerCacheMapper,
             emptyMapper = emptyMapper,
+            appDispatchers = appDispatchers
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providesContactsRepository(
+        contactsCacheDataStore: ContactsCacheDataStore,
+        contactsCacheMapper: ContactsCacheMapper,
+        appDispatchers: AppDispatchers
+    ): ContactsRepository {
+        return ContactsRepositoryImpl(
+            contactsCacheDataStore = contactsCacheDataStore,
+            contactsCacheMapper = contactsCacheMapper,
             appDispatchers = appDispatchers
         )
     }

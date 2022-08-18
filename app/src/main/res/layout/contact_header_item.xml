@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/text_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#33CCCCCC"
+    android:paddingHorizontal="@dimen/offset16"
+    android:paddingVertical="@dimen/offset2"
+    android:fontFamily="@font/opensans_semibold"
+    android:textColor="@color/contacts_header_text_color"
+    android:textSize="@dimen/text14"
+    tools:text="A" />

@@ -34,6 +34,7 @@ abstract class BaseViewModel(private val router: Router) : ViewModel(), IBaseVie
 
     protected fun backTo(screen: Screen) {
         router.backTo(screen)
+        router
     }
 
     override fun onClickBack() {

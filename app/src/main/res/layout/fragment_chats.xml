@@ -12,16 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginStart="8dp"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_back"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginVertical="@dimen/offset16"
+            android:layout_marginStart="@dimen/offset16"
             android:layout_marginTop="8dp"
-            app:backgroundTint="@color/whiteColor"
+            android:src="@drawable/ic_arrow_back"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SpeakableTextPresentCheck" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text_screen_title"
@@ -36,7 +36,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/floatingActionButton" />
+            app:layout_constraintTop_toBottomOf="@+id/image_back" />
 
         <TextView
             android:id="@+id/text_edit"
