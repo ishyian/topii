@@ -93,7 +93,8 @@ class OtpViewModel @AssistedInject constructor(
                 PinCodeParameters(
                     phoneNumber = parameters.phoneNumber,
                     authyId = parameters.authyId,
-                    code = parameters.code
+                    code = parameters.code,
+                    isoCode = parameters.isoCode
                 )
             )
         )

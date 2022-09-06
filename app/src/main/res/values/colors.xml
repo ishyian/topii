@@ -59,4 +59,13 @@
     <color name="contacts_primary_color">#0000FF</color>
     <color name="contacts_secondary_color">#120D34</color>
     <color name="contacts_subtitle_text_color">#042545</color>
+    <color name="add_recipient_stroke_color">#60708F</color>
+    <color name="add_recipient_bg_color">#F3F4FE</color>
+
+    <color name="remittance_detail_primary_text_color">#042545</color>
+    <color name="remittance_detail_neutral_text_color">#5D7BB1</color>
+    <color name="remittance_detail_secondary_text_color">#0521F5</color>
+    <color name="remittance_detail_dark_text_color">#3E3E3E</color>
+    <color name="button_gradient_color_1">#8E54E9</color>
+    <color name="button_gradient_color_2">#4776E6</color>
 </resources>

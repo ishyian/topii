@@ -8,7 +8,7 @@ import com.topiichat.app.features.registration.data.datasource.cache.RegisterCac
 import com.topiichat.app.features.registration.data.datasource.remote.RegisterRemoteDataStore
 import com.topiichat.app.features.registration.data.mapper.RegisterCacheMapper
 import com.topiichat.app.features.registration.data.mapper.RegisterRemoteMapper
-import com.topiichat.app.features.registration.domain.model.AccessTokenDomain
+import com.topiichat.app.features.registration.domain.model.AuthDataDomain
 import com.topiichat.app.features.registration.domain.model.RegisterDomain
 import com.topiichat.app.features.registration.domain.repo.RegisterRepository
 import kotlinx.coroutines.withContext
@@ -35,17 +35,15 @@ class RegisterRepositoryImpl(
         }
     }
 
-    override suspend fun fetchAccessToken(): ResultData<AccessTokenDomain> {
+    override suspend fun getAuthData(): AuthDataDomain {
         return withContext(appDispatchers.storage) {
-            registerCacheDataStore.fetchToken().transformData {
-                registerCacheMapper.map(it)
-            }
+            registerCacheMapper.map(registerCacheDataStore.fetchToken())
         }
     }
 
-    override suspend fun saveAccessToken(token: AccessTokenDomain): ResultData<EmptyDomain> {
+    override suspend fun saveAuthData(authData: AuthDataDomain): ResultData<EmptyDomain> {
         return withContext(appDispatchers.storage) {
-            registerCacheDataStore.saveToken(token)
+            registerCacheDataStore.saveToken(authData)
                 .transformData {
                     emptyMapper.map(it)
                 }

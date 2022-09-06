@@ -6,6 +6,16 @@ import com.topiichat.app.features.contacts.data.datasource.ContactsCacheDataStor
 import com.topiichat.app.features.contacts.data.mapper.ContactsCacheMapper
 import com.topiichat.app.features.contacts.data.repo.ContactsRepositoryImpl
 import com.topiichat.app.features.contacts.domain.repo.ContactsRepository
+import com.topiichat.app.features.home.data.datasource.HomeRemoteDataSource
+import com.topiichat.app.features.home.data.mapper.AvailableCountriesRemoteMapper
+import com.topiichat.app.features.home.data.mapper.RecentUsersRemoteMapper
+import com.topiichat.app.features.home.data.mapper.RemittanceHistoryRemoteMapper
+import com.topiichat.app.features.home.data.repo.HomeRepositoryImpl
+import com.topiichat.app.features.home.domain.repo.HomeRepository
+import com.topiichat.app.features.kyc.base.data.datasource.KYCRemoteDataSource
+import com.topiichat.app.features.kyc.base.data.mapper.KYCStatusRemoteMapper
+import com.topiichat.app.features.kyc.base.data.repo.KYCRepositoryImpl
+import com.topiichat.app.features.kyc.base.domain.repo.KYCRepository
 import com.topiichat.app.features.otp.data.datasource.OtpCodeRemoteDataSource
 import com.topiichat.app.features.otp.data.mapper.ResendOtpCodeRemoteMapper
 import com.topiichat.app.features.otp.data.mapper.ValidOtpCodeRemoteMapper
@@ -17,6 +27,16 @@ import com.topiichat.app.features.registration.data.mapper.RegisterCacheMapper
 import com.topiichat.app.features.registration.data.mapper.RegisterRemoteMapper
 import com.topiichat.app.features.registration.data.repo.RegisterRepositoryImpl
 import com.topiichat.app.features.registration.domain.repo.RegisterRepository
+import com.topiichat.app.features.remittance.data.datasource.RemittanceRemoteDataSource
+import com.topiichat.app.features.remittance.data.repo.RemittanceRepositoryImpl
+import com.topiichat.app.features.remittance.domain.repo.RemittanceRepository
+import com.topiichat.app.features.send_remittance.data.datasource.SendRemittanceRemoteDataSource
+import com.topiichat.app.features.send_remittance.data.mapper.CardsRemoteMapper
+import com.topiichat.app.features.send_remittance.data.mapper.FxRateRemoteMapper
+import com.topiichat.app.features.send_remittance.data.mapper.RemittancePurposesRemoteMapper
+import com.topiichat.app.features.send_remittance.data.mapper.RemittanceRemoteMapper
+import com.topiichat.app.features.send_remittance.data.repo.SendRemittanceRepositoryImpl
+import com.topiichat.app.features.send_remittance.domain.repo.SendRemittanceRepository
 import com.topiichat.app.features.splash.data.datasource.cache.AuthCacheDataStore
 import com.topiichat.app.features.splash.data.datasource.remote.AuthRemoteDataStore
 import com.topiichat.app.features.splash.data.mapper.TokenCacheMapper
@@ -115,6 +135,72 @@ object RepositoryModule {
         return ContactsRepositoryImpl(
             contactsCacheDataStore = contactsCacheDataStore,
             contactsCacheMapper = contactsCacheMapper,
+            appDispatchers = appDispatchers
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providesHomeRepository(
+        homeRemoteDataSource: HomeRemoteDataSource,
+        remittanceHistoryMapper: RemittanceHistoryRemoteMapper,
+        availableCountriesMapper: AvailableCountriesRemoteMapper,
+        recentUsersMapper: RecentUsersRemoteMapper,
+        appDispatchers: AppDispatchers
+    ): HomeRepository {
+        return HomeRepositoryImpl(
+            homeRemoteDataSource = homeRemoteDataSource,
+            remittanceHistoryMapper = remittanceHistoryMapper,
+            availableCountriesMapper = availableCountriesMapper,
+            recentUsersMapper = recentUsersMapper,
+            appDispatchers = appDispatchers
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providesSendPaymentRepository(
+        sendRemittanceRemoteDataSource: SendRemittanceRemoteDataSource,
+        fxRateRemoteMapper: FxRateRemoteMapper,
+        remittancePurposesRemoteMapper: RemittancePurposesRemoteMapper,
+        cardsMapper: CardsRemoteMapper,
+        remittanceRemoteMapper: RemittanceRemoteMapper,
+        appDispatchers: AppDispatchers
+    ): SendRemittanceRepository {
+        return SendRemittanceRepositoryImpl(
+            sendRemittanceRemoteDataSource = sendRemittanceRemoteDataSource,
+            fxRateRemoteMapper = fxRateRemoteMapper,
+            remittancePurposesRemoteMapper = remittancePurposesRemoteMapper,
+            cardsMapper = cardsMapper,
+            remittanceRemoteMapper = remittanceRemoteMapper,
+            appDispatchers = appDispatchers
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providesKYCRepository(
+        kycRemoteDataSource: KYCRemoteDataSource,
+        kycStatusRemoteMapper: KYCStatusRemoteMapper,
+        appDispatchers: AppDispatchers
+    ): KYCRepository {
+        return KYCRepositoryImpl(
+            kycRemoteDataSource = kycRemoteDataSource,
+            kycStatusRemoteMapper = kycStatusRemoteMapper,
+            appDispatchers = appDispatchers
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providesRemittanceRepository(
+        remittanceRemoteDataSource: RemittanceRemoteDataSource,
+        remittanceRemoteMapper: RemittanceRemoteMapper,
+        appDispatchers: AppDispatchers
+    ): RemittanceRepository {
+        return RemittanceRepositoryImpl(
+            remittanceRemoteDataSource = remittanceRemoteDataSource,
+            remittanceRemoteMapper = remittanceRemoteMapper,
             appDispatchers = appDispatchers
         )
     }

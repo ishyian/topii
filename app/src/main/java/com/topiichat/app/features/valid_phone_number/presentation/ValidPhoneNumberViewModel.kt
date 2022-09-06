@@ -64,7 +64,7 @@ class ValidPhoneNumberViewModel @AssistedInject constructor(
     override fun onRenderVerifyPhoneNumber(result: ResultData<VerifyPhoneDomain>, isoCode: String?) {
         when (result) {
             is ResultData.Success -> {
-                result.data?.let {
+                result.data.let {
                     _isoCode = isoCode ?: INITIAL_COUNTRY_ISO_CODE
                     onNextAfterValidate(it.phoneNumber, it.authyId, it.code)
                 }
@@ -92,7 +92,8 @@ class ValidPhoneNumberViewModel @AssistedInject constructor(
                 OtpParameters(
                     phoneNumber = phoneNumber,
                     authyId = authyId,
-                    code = code
+                    code = code,
+                    isoCode = _isoCode
                 )
             )
         )

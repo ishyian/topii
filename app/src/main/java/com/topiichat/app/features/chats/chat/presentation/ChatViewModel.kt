@@ -10,6 +10,7 @@ import com.topiichat.app.core.presentation.platform.SingleLiveData
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.chats.chat.domain.model.MessageType
 import com.topiichat.app.features.chats.chat.presentation.model.ChatMessageUiModel
+import com.topiichat.app.features.contacts.presentation.ContactsParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ru.terrakok.cicerone.Router
@@ -79,7 +80,7 @@ class ChatViewModel @AssistedInject constructor(
     }
 
     override fun onContactClick() {
-        navigate(MainScreens.Contacts)
+        navigate(MainScreens.Contacts(ContactsParameters()))
     }
 
     override fun onGalleryClick() {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/text_add_recipient"
+        android:layout_width="53dp"
+        android:layout_height="53dp"
+        android:background="@drawable/bg_add_recipient"
+        android:fontFamily="@font/sfprodisplaybold"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/send_payment_plus"
+        android:textColor="@color/send_payment_currency_divider"
+        android:textSize="@dimen/text18"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_add_recipient_empty"
+        android:layout_width="53dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="@dimen/offset15"
+        android:background="@drawable/bg_add_recipient_empty"
+        android:fontFamily="@font/sfprodisplaybold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/text_add_recipient"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image_arrow_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/view_add_recipient_empty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_add_recipient_empty"
+        app:srcCompat="@drawable/ic_arrow_right" />
+</androidx.constraintlayout.widget.ConstraintLayout>

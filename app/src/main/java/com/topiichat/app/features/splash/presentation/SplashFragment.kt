@@ -9,14 +9,11 @@ import androidx.fragment.app.viewModels
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentSplashBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SplashFragment : BaseFragment<FragmentSplashBinding>(), ISplashFragment {
 
-    @Inject
-    internal lateinit var factory: SplashViewModelFactory
-    private val viewModel: SplashViewModel by viewModels { factory }
+    private val viewModel: SplashViewModel by viewModels()
 
     override fun initBinding(
         inflater: LayoutInflater,

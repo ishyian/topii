@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.topiichat.app.core.presentation.customview.ToolbarView
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:isBackButtonVisible="true"
+        app:isCloseButtonVisible="false"
+        app:toolbarTitle="@string/remittance_detail_title" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:paddingHorizontal="@dimen/offset24">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/offset50">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/offset40"
+                app:srcCompat="@drawable/ic_remittance" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offset20"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:text="@string/remittance_detail_subtitle"
+                android:textAlignment="center"
+                android:textColor="@color/remittance_detail_primary_text_color"
+                android:textSize="@dimen/text24" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_remittance_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offset12"
+                android:fontFamily="@font/sfprodisplayregular"
+                android:textAlignment="center"
+                android:textColor="@color/remittance_detail_neutral_text_color"
+                android:textSize="@dimen/text14"
+                tools:text="17 de Marzo de 2021, 13:00" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_remittance_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offset12"
+                android:fontFamily="@font/sfprodisplaymedium"
+                android:textAlignment="center"
+                android:textColor="@color/remittance_detail_secondary_text_color"
+                android:textSize="@dimen/text18"
+                tools:text="ID: ***123456" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_remittance_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offset12"
+                android:background="@drawable/bg_remittance_detail"
+                android:fontFamily="@font/sfprodisplaymedium"
+                android:paddingVertical="@dimen/offset16"
+                android:textAlignment="center"
+                android:textColor="@color/remittance_detail_primary_text_color"
+                android:textSize="@dimen/text15"
+                tools:text="It took 15 seconds to send this remittance" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offset24"
+                android:background="@drawable/bg_remittance_detail">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_amount_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/offset24"
+                    android:fontFamily="@font/sfprodisplaymedium"
+                    android:text="@string/remittance_detail_amount"
+                    android:textAlignment="center"
+                    android:textColor="@color/remittance_detail_secondary_text_color"
+                    android:textSize="@dimen/text14"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_amount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/offset24"
+                    android:layout_marginTop="@dimen/offset6"
+                    android:fontFamily="@font/sfprodisplaybold"
+                    android:textAlignment="center"
+                    android:textColor="@color/remittance_detail_primary_text_color"
+                    android:textSize="@dimen/text28"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_amount_title"
+                    tools:text="1,167.55GTQ" />
+
+                <LinearLayout
+                    android:id="@+id/layout_recipient"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/offset24"
+                    android:layout_marginTop="@dimen/offset16"
+                    android:background="@drawable/bg_home_total_sum"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/offset20"
+                    android:paddingVertical="@dimen/offset20"
+                    app:layout_constraintTop_toBottomOf="@id/text_amount">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/image_avatar"
+                        android:layout_width="@dimen/offset40"
+                        android:layout_height="@dimen/offset40" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/offset12"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/text_recipient_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sfprodisplaymedium"
+                            android:textAlignment="center"
+                            android:textColor="@color/remittance_detail_primary_text_color"
+                            android:textSize="@dimen/text18"
+                            tools:text="Carlos Santaella" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/text_recipient_country"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:drawablePadding="@dimen/offset6"
+                            android:fontFamily="@font/sfprodisplaymedium"
+                            android:textColor="@color/remittance_detail_primary_text_color"
+                            android:textSize="@dimen/text14"
+                            tools:text="España" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_remittance_summary"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/offset15"
+                    android:layout_marginTop="@dimen/offset22"
+                    android:layout_marginBottom="@dimen/offset50"
+                    android:fontFamily="@font/sfprodisplayregular"
+                    android:textAlignment="center"
+                    android:textColor="@color/remittance_detail_primary_text_color"
+                    android:textSize="@dimen/text18"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layout_recipient"
+                    tools:text="Has enviado 150$ equivalentes a 1167.55GTQ con tasa de cambio 1USD=7.78GTQ y comisión 2.99$ a Carlos Santaella" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loader" />
+</LinearLayout>

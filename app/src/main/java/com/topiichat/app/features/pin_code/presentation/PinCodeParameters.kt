@@ -7,5 +7,6 @@ import kotlinx.parcelize.Parcelize
 data class PinCodeParameters(
     val phoneNumber: String,
     val authyId: String,
-    val code: String
+    val code: String,
+    val isoCode: String
 ) : Parcelable

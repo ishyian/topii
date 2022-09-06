@@ -13,13 +13,13 @@ class AuthCacheDataStore @Inject constructor(
 ) : BaseCacheDataStore() {
 
     suspend fun fetchToken(): ResultData<TokenCacheDto?> {
-        return fetchResult {
+        return getResult {
             authCache.fetchToken()
         }
     }
 
     suspend fun saveToken(token: TokenDomain): ResultData<EmptyDto?> {
-        return fetchResult(cacheFailStatus = CacheFailStatus.Write()) {
+        return getResult(cacheFailStatus = CacheFailStatus.Write()) {
             authCache.saveToken(token)
         }
     }

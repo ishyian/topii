@@ -5,3 +5,5 @@ data class ErrorDomain(
     val code: Int?,
     val exceptionClass: Class<*>,
 )
+
+fun emitError(message: String) = ErrorDomain(message, 400, IllegalStateException::class.java)

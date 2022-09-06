@@ -11,7 +11,7 @@ import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.registration.domain.model.RegisterDomain
 import com.topiichat.app.features.registration.domain.usecases.RegisterUseCase
-import com.topiichat.app.features.registration.domain.usecases.SaveAccessTokenUseCase
+import com.topiichat.app.features.registration.domain.usecases.SaveAuthDataUseCase
 import com.topiichat.app.features.registration.presentation.model.BtnRegisterEnablingUi
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -22,7 +22,7 @@ import ru.terrakok.cicerone.Router
 class RegisterViewModel @AssistedInject constructor(
     @Assisted("registerParameters") private val parameters: RegisterParameters,
     private val register: RegisterUseCase,
-    private val saveAccessToken: SaveAccessTokenUseCase,
+    private val saveAuthData: SaveAuthDataUseCase,
     appRouter: Router
 ) : BaseViewModel(appRouter), IRegisterViewModel {
 
@@ -117,18 +117,16 @@ class RegisterViewModel @AssistedInject constructor(
     override fun onRenderRegister(result: ResultData<RegisterDomain>) {
         when (result) {
             is ResultData.Success -> {
-                result.data?.let {
-                    onSuccessRegister(it.accessToken)
-                }
+                onSuccessRegister(result.data.accessToken, result.data.senderId)
             }
             is ResultData.Fail -> onFailRegister(result.error.message)
             is ResultData.NetworkError -> onNetworkError()
         }
     }
 
-    override fun onSuccessRegister(accessToken: String) {
+    override fun onSuccessRegister(accessToken: String, senderId: String) {
         viewModelScope.launch {
-            saveAccessToken(SaveAccessTokenUseCase.Params(accessToken))
+            saveAuthData(SaveAuthDataUseCase.Params(accessToken, senderId, parameters.isoCode))
             navigate(MainScreens.Home, true)
         }
     }

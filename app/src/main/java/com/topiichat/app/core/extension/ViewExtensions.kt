@@ -4,16 +4,22 @@ import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.ContextWrapper
 import android.content.DialogInterface
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.ColorRes
+import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.textfield.TextInputEditText
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
@@ -84,4 +90,45 @@ fun Fragment.showSelectorDialog(
         dialogInterface.dismiss()
     }
     dialog.show()
+}
+
+fun TextView.addStartDrawableFromUrl(url: String) {
+    Glide.with(context)
+        .load(url)
+        .into(object : CustomTarget<Drawable?>(60, 60) {
+            override fun onResourceReady(
+                resource: Drawable,
+                transition: com.bumptech.glide.request.transition.Transition<in Drawable?>?
+            ) {
+                drawableStart = resource
+            }
+
+            override fun onLoadCleared(@Nullable placeholder: Drawable?) {
+                drawableStart = placeholder
+            }
+        })
+}
+
+fun TextView.addStartCircleDrawableFromUrl(url: String) {
+    Glide.with(context)
+        .load(url)
+        .circleCrop()
+        .into(object : CustomTarget<Drawable?>(60, 60) {
+            override fun onResourceReady(
+                resource: Drawable,
+                transition: com.bumptech.glide.request.transition.Transition<in Drawable?>?
+            ) {
+                drawableStart = resource
+            }
+
+            override fun onLoadCleared(@Nullable placeholder: Drawable?) {
+                drawableStart = placeholder
+            }
+        })
+}
+
+fun AutoCompleteTextView.showDropDownWhenClick() {
+    setOnClickListener {
+        showDropDown()
+    }
 }

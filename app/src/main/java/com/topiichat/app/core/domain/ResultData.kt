@@ -5,7 +5,7 @@ import com.topiichat.app.core.exception.domain.ErrorDomain
 sealed class ResultData<out T> {
 
     data class Success<T>(
-        val data: T? = null
+        val data: T
     ) : ResultData<T>()
 
     data class Fail(
@@ -15,7 +15,7 @@ sealed class ResultData<out T> {
     object NetworkError : ResultData<Nothing>()
 
     fun <R> transformData(
-        map: (T?) -> R
+        map: (T) -> R
     ): ResultData<R> = when (this) {
         is Success -> {
             Success(map.invoke(data))

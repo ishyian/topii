@@ -1,0 +1,21 @@
+package com.topiichat.app.features.kyc.base.data.datasource
+
+import com.topiichat.app.core.data.ApiService
+import com.topiichat.app.core.data.datasource.BaseRemoteDataStore
+import com.topiichat.app.core.domain.ResultData
+import com.topiichat.app.features.kyc.base.data.model.KYCStatusDto
+import javax.inject.Inject
+
+class KYCRemoteDataSource @Inject constructor(
+    private val apiService: ApiService
+) : BaseRemoteDataStore() {
+    suspend fun getKYCStatus(
+        token: String
+    ): ResultData<KYCStatusDto?> {
+        return safeApiCall {
+            apiService.getKYCStatus(
+                accessToken = token
+            )
+        }
+    }
+}

@@ -8,7 +8,8 @@ import javax.inject.Inject
 class RegisterRemoteMapper @Inject constructor() : Mapper<RegisterDto, RegisterDomain> {
     override fun map(input: RegisterDto?): RegisterDomain {
         return RegisterDomain(
-            accessToken = input?.accessToken ?: ""
+            accessToken = input?.accessToken ?: "",
+            senderId = input?.id ?: ""
         )
     }
 }

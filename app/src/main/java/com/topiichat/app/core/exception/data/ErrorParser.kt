@@ -7,6 +7,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.topiichat.app.core.exception.domain.ErrorDomain
 import com.topiichat.app.core.exception.mapper.ErrorMessageMapper
 import retrofit2.HttpException
+import timber.log.Timber
 import java.net.UnknownHostException
 
 class ErrorParser {
@@ -23,15 +24,19 @@ class ErrorParser {
             val httpError = (e as HttpException)
             val parsedBody = httpError.response()?.errorBody()?.string().toString()
             val code = httpError.code()
+            Timber.d(e.message())
             try {
                 val adapter = moshi.adapter(ErrorMessageDto::class.java)
                 val errorMessageDto = adapter.fromJson(parsedBody)
                 ErrorDomain(errorMessageMapper.map(errorMessageDto), code, e.javaClass)
             } catch (e: JsonEncodingException) {
+                Timber.e(e)
                 defaultError
             } catch (e: JsonDataException) {
+                Timber.e(e)
                 defaultError
             } catch (e: NullPointerException) {
+                Timber.e(e)
                 defaultError
             }
         } catch (_: ClassCastException) {

@@ -12,14 +12,15 @@ import com.topiichat.app.features.contacts.presentation.mapper.ContactsUiMapper
 import com.topiichat.app.features.contacts.presentation.model.ContactUiModel
 import com.topiichat.app.features.contacts.presentation.model.ContactsListUiModel
 import com.topiichat.app.features.contacts.presentation.model.changeContactCheckedStatus
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.topiichat.app.features.contacts.presentation.model.changeContactSingleCheckedStatus
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
-import javax.inject.Inject
 
-@HiltViewModel
 class ContactsViewModel
-@Inject constructor(
+@AssistedInject constructor(
+    @Assisted("contactsParameters") private val parameters: ContactsParameters,
     private val fetchContacts: FetchContactsUseCase,
     private val contactsUiMapper: ContactsUiMapper,
     appRouter: Router
@@ -42,7 +43,11 @@ class ContactsViewModel
     }
 
     override fun onContactClick(item: ContactUiModel) {
-        val newModel = content.value?.changeContactCheckedStatus(item)
+        val newModel = if (parameters.isSingleSelection) {
+            content.value?.changeContactSingleCheckedStatus(item)
+        } else {
+            content.value?.changeContactCheckedStatus(item)
+        }
         _content.value = newModel
     }
 
@@ -69,5 +74,12 @@ class ContactsViewModel
 
     override fun onNextClick() {
         onClickBack()
+    }
+
+    @dagger.assisted.AssistedFactory
+    interface AssistedFactory {
+        fun create(
+            @Assisted("contactsParameters") parameters: ContactsParameters
+        ): ContactsViewModel
     }
 }

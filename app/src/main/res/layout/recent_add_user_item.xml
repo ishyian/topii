@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/text_add_recipient"
+    android:layout_width="@dimen/offset50"
+    android:layout_height="@dimen/offset50"
+    android:background="@drawable/bg_add_recipient"
+    android:fontFamily="@font/sfprodisplaybold"
+    android:gravity="center"
+    android:includeFontPadding="false"
+    android:layout_marginHorizontal="@dimen/offset7"
+    android:text="@string/send_payment_plus"
+    android:textColor="@color/send_payment_currency_divider"
+    android:textSize="@dimen/text18"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />

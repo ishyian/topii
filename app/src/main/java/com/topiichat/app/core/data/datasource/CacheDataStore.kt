@@ -5,7 +5,7 @@ import com.topiichat.app.core.domain.CacheFailStatus
 import com.topiichat.app.core.domain.ResultData
 
 interface CacheDataStore {
-    suspend fun <T : Dto?> fetchResult(
+    suspend fun <T : Dto?> getResult(
         cacheFailStatus: CacheFailStatus = CacheFailStatus.Read(),
         call: suspend () -> T?
     ): ResultData<T?>
