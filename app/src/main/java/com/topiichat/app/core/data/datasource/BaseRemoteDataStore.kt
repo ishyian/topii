@@ -1,18 +1,18 @@
 package com.topiichat.app.core.data.datasource
 
-import com.topiichat.app.core.data.Dto
 import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.exception.data.ErrorParser
 import retrofit2.HttpException
+import timber.log.Timber
 import java.io.IOException
 
 abstract class BaseRemoteDataStore : RemoteDataStore {
 
     private val errorParser = ErrorParser()
 
-    override suspend fun <T : Dto?> safeApiCall(
-        apiCall: suspend () -> T?
-    ): ResultData<T?> {
+    override suspend fun <T> safeApiCall(
+        apiCall: suspend () -> T
+    ): ResultData<T> {
         return try {
             ResultData.Success(apiCall.invoke())
         } catch (throwable: Throwable) {
@@ -23,6 +23,9 @@ abstract class BaseRemoteDataStore : RemoteDataStore {
                     ResultData.Fail(error = errorResponse)
                 }
                 else -> {
+                    Timber.d("error ${throwable.localizedMessage}")
+                    Timber.e(throwable)
+                    Timber.d(throwable.cause)
                     ResultData.Fail(error = errorParser.defaultError)
                 }
             }

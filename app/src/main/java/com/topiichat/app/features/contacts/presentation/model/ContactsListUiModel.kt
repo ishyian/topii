@@ -24,3 +24,23 @@ fun ContactsListUiModel.changeContactCheckedStatus(
         }
     )
 }
+
+fun ContactsListUiModel.changeContactSingleCheckedStatus(
+    contact: ContactUiModel
+): ContactsListUiModel {
+    return ContactsListUiModel(
+        items.map { item ->
+            when {
+                item is ContactUiModel && item.telephone == contact.telephone -> {
+                    item.copy(isSelected = !item.isSelected)
+                }
+                item is ContactUiModel && item.telephone != contact.telephone && item.isSelected -> {
+                    item.copy(isSelected = false)
+                }
+                else -> {
+                    item
+                }
+            }
+        }
+    )
+}

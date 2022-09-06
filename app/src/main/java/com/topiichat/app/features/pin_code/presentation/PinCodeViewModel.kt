@@ -150,7 +150,8 @@ class PinCodeViewModel @AssistedInject constructor(
                         phoneNumber = parameters.phoneNumber,
                         authyId = parameters.authyId,
                         code = parameters.code,
-                        pinCode = pinCode
+                        pinCode = pinCode,
+                        isoCode = parameters.isoCode
                     )
                 )
             )

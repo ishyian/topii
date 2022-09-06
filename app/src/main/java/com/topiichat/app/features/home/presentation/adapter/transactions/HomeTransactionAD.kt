@@ -2,31 +2,46 @@ package com.topiichat.app.features.home.presentation.adapter.transactions
 
 import android.annotation.SuppressLint
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import com.topiichat.app.R
+import com.topiichat.app.core.extension.date.DateFormats
+import com.topiichat.app.core.extension.date.toString
 import com.topiichat.app.databinding.HomeTransactionItemBinding
-import com.topiichat.app.features.home.domain.model.TransactionDomain
+import com.topiichat.app.features.home.domain.model.RemittanceDomain
+import com.topiichat.app.features.home.domain.model.RemittanceType
 import com.topiichat.app.features.home.presentation.model.HomeTransactionUiModel
 
 @SuppressLint("SetTextI18n")
 fun homeTransactionAD(
-    onTransactionClick: (TransactionDomain) -> Unit
+    onTransactionClick: (RemittanceDomain) -> Unit
 ) = adapterDelegateViewBinding<HomeTransactionUiModel, Any, HomeTransactionItemBinding>(
     { layoutInflater, parent ->
         HomeTransactionItemBinding.inflate(layoutInflater, parent, false)
     }
 ) {
+    val radius = itemView.resources.getDimension(R.dimen.offset15)
     itemView.setOnClickListener {
         onTransactionClick(item.transaction)
     }
     bind {
-        val amountTextColorResource = if (item.transaction.amount < 0.0) {
-            R.color.home_transaction_sum_expense
-        } else R.color.home_transaction_sum_profit
+        val amountTextColorResource = when (item.transaction.action) {
+            RemittanceType.REQUEST -> {
+                R.color.home_transaction_sum_profit
+            }
+            RemittanceType.SEND -> {
+                R.color.home_transaction_sum_expense
+            }
+        }
         with(binding) {
+            val shapeAppearanceModel = imageAvatar.shapeAppearanceModel.toBuilder()
+                .setAllCornerSizes(radius)
+                .build()
+            imageAvatar.shapeAppearanceModel = shapeAppearanceModel
+            Glide.with(itemView).load(item.transaction.avatar).into(imageAvatar)
             textUserName.text = item.transaction.userName
-            textDate.text = item.transaction.date
-            textSum.text = "${item.transaction.amount}$"
+            textDate.text = item.transaction.date.toString(DateFormats.TRANSACTION_ITEM_FORMAT)
+            textSum.text = item.transaction.amountText
             textSum.setTextColor(ContextCompat.getColor(itemView.context, amountTextColorResource))
         }
     }

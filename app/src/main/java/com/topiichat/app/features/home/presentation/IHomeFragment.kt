@@ -1,7 +1,9 @@
 package com.topiichat.app.features.home.presentation
 
 import com.topiichat.app.core.presentation.platform.IBaseFragment
+import com.topiichat.app.features.home.presentation.model.HomeRemittanceHistoryUiModel
 
 interface IHomeFragment : IBaseFragment {
-    fun onContentLoaded(content: List<Any>)
+    fun onContentLoaded(content: HomeRemittanceHistoryUiModel)
+    fun onShowMessageError(message: String)
 }

@@ -1,0 +1,18 @@
+package com.topiichat.app.features.home.data.mapper
+
+import com.topiichat.app.core.domain.Mapper
+import com.topiichat.app.features.home.data.model.RecentUsersDto
+import com.topiichat.app.features.home.domain.model.RecentUserDomain
+import javax.inject.Inject
+
+class RecentUsersRemoteMapper @Inject constructor() :
+    Mapper<RecentUsersDto, List<RecentUserDomain>> {
+    override fun map(input: RecentUsersDto?): List<RecentUserDomain> {
+        return input?.recentUsers?.map { user ->
+            RecentUserDomain(
+                avatar = user.profile.avatar,
+                recipientId = user.id
+            )
+        } ?: emptyList()
+    }
+}

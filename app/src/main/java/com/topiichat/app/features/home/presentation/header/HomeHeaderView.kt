@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import com.topiichat.app.R
 import com.topiichat.app.core.extension.setTintColor
 import com.topiichat.app.databinding.ViewHomeHeaderBinding
+import com.topiichat.app.features.home.domain.model.CurrentCountryDomain
 
 class HomeHeaderView(
     context: Context,
@@ -67,6 +68,21 @@ class HomeHeaderView(
     }
 
     fun renderWith(options: HomeHeaderViewOptions) {
+        this.options = options
+        updateUi()
+    }
+
+    fun renderWith(featuresDomain: CurrentCountryDomain) {
+        val options = if (featuresDomain.isAvailable) {
+            HomeHeaderViewOptions(
+                isSendPaymentEnabled = featuresDomain.countryInfo?.allowedFrom ?: false,
+                isRequestPaymentEnabled = featuresDomain.countryInfo?.allowedTo ?: false,
+                isWalletEnabled = true,
+                isChatEnabled = true
+            )
+        } else {
+            HomeHeaderViewOptions()
+        }
         this.options = options
         updateUi()
     }

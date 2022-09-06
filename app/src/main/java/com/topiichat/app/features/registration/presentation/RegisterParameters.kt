@@ -9,5 +9,6 @@ data class RegisterParameters(
     val authyId: String = " ",
     val code: String = "",
     val pinCode: String = "",
+    val isoCode: String = "",
     val isFromAuth: Boolean = true
 ) : Parcelable

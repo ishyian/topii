@@ -75,4 +75,16 @@
         app:layout_constraintTop_toTopOf="@+id/text_month_name"
         app:srcCompat="@drawable/ic_arrow_right" />
 
+    <ProgressBar
+        android:id="@+id/progress_total_sum"
+        android:layout_width="@dimen/offset45"
+        android:layout_height="@dimen/offset45"
+        android:layout_marginTop="@dimen/offset24"
+        android:layout_marginBottom="@dimen/offset24"
+        android:indeterminateTint="@color/send_payment_currency_divider"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view" />
 </merge>

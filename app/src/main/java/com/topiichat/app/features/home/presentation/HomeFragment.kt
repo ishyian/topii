@@ -9,16 +9,20 @@ import androidx.fragment.app.viewModels
 import com.topiichat.app.core.extension.lazyUnsynchronized
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentHomeBinding
+import com.topiichat.app.features.home.domain.model.CountryCode
+import com.topiichat.app.features.home.domain.model.CurrentCountryDomain
 import com.topiichat.app.features.home.presentation.adapter.HomeAdapter
 import com.topiichat.app.features.home.presentation.header.HomeHeaderView
-import com.topiichat.app.features.home.presentation.header.HomeHeaderViewOptions
+import com.topiichat.app.features.home.presentation.model.HomeRemittanceHistoryUiModel
+import com.topiichat.app.features.home.presentation.model.HomeTransactionsHeaderUiModel
+import com.topiichat.app.features.home.presentation.total_sum.HomeTotalSumByMonthView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(),
     IHomeFragment,
-    HomeHeaderView.HomeHeaderViewClickListener {
+    HomeHeaderView.HomeHeaderViewClickListener,
+    HomeTotalSumByMonthView.OnMonthChangedListener {
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -32,33 +36,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
     override fun initBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentHomeBinding.inflate(inflater, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
-        binding.homeHeader.renderWith(
-            HomeHeaderViewOptions(
-                isSendPaymentEnabled = true,
-                isRequestPaymentEnabled = true,
-                isWalletEnabled = true,
-                isChatEnabled = true
-            )
-        )
-        binding.homeHeader.setupClickListener(this)
-        binding.rvTransactions.run {
+        rvTransactions.run {
             setHasFixedSize(false)
             adapter = homeAdapter
         }
-        initTotalSumView()
-    }
-
-    private fun initTotalSumView() {
-        if (Random.nextBoolean()) {
-            binding.homeTotalSum.isVisible = true
-            binding.homeTotalSum.renderWith(55.4, 123.5)
-        } else {
-            binding.homeTotalSumByMonth.isVisible = true
-            binding.homeTotalSumByMonth.renderWith(55.4, "January")
-        }
+        binding.homeTotalSumByMonth.setupMonthChangedListener(this@HomeFragment)
     }
 
     override fun onSendPaymentClicked() {
@@ -77,13 +62,50 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
         // Nothing for now
     }
 
-    override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
+    override fun onVisibilityLoader(isVisibleLoader: Boolean) = with(binding) {
+        groupContent.isVisible = isVisibleLoader.not()
+        progressBar.isVisible = isVisibleLoader
+    }
 
     private fun initObservers() = with(viewModel) {
         observe(content, ::onContentLoaded)
+        observe(availableCountryFeatures, ::onAvailableFeaturesLoaded)
+        observe(showMsgError, ::onShowMessageError)
+        observe(showLoader, ::onVisibilityLoader)
+        observe(showTotalSumByMonthLoader, ::onTotalSumByMonthLoader)
     }
 
-    override fun onContentLoaded(content: List<Any>) {
-        homeAdapter.items = content
+    private fun onTotalSumByMonthLoader(isLoading: Boolean) {
+        binding.homeTotalSumByMonth.isLoading = isLoading
+    }
+
+    private fun onAvailableFeaturesLoaded(featuresDomain: CurrentCountryDomain) = with(binding) {
+        homeHeader.renderWith(featuresDomain)
+        homeHeader.setupClickListener(this@HomeFragment)
+        when (featuresDomain.countryInfo?.countryCode) {
+            CountryCode.US -> {
+                homeTotalSumByMonth.isVisible = true
+            }
+            CountryCode.GT -> {
+                homeTotalSum.isVisible = true
+            }
+            else -> {
+                // Nothing
+            }
+        }
+    }
+
+    override fun onShowMessageError(message: String) {
+        showToast(message)
+    }
+
+    override fun onMonthChanged(month: Int) {
+        viewModel.loadRemmittanceHistory(month)
+    }
+
+    override fun onContentLoaded(content: HomeRemittanceHistoryUiModel) {
+        binding.homeTotalSumByMonth.renderWith(content.totalSent, content.currency)
+        binding.homeTotalSum.renderWith(content.totalSent, content.totalReceived, content.currency)
+        homeAdapter.items = listOf(HomeTransactionsHeaderUiModel).plus(content.remittances)
     }
 }

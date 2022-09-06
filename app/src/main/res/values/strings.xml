@@ -105,4 +105,23 @@
 
     <string name="contacts_title">Contactos</string>
     <string name="contacts_button_next">Siguiente</string>
+    <string name="send_payment_plus">+</string>
+    <string name="send_payment_select_recipient">Elija el destinatario</string>
+    <string name="select_receiver_currency">Select receiver currency</string>
+    <string name="send_payment_notes">Nota</string>
+
+    <string name="remittance_detail_title">Detalles de la remesa</string>
+    <string name="remittance_detail_subtitle">Remesa enviada</string>
+    <string name="remittance_detail_amount">Importe</string>
+    <string name="remittance_time_1">It took</string>
+    <string name="remittance_time_2">seconds</string>
+    <string name="remittance_time_3">to send this remittance</string>
+    <string name="remittance_detail_summary_1">Has enviado</string>
+    <string name="remittance_detail_summary_2">equivalentes a</string>
+    <string name="remittance_detail_summary_3">con tasa de cambio</string>
+    <string name="remittance_detail_summary_4">y comisión</string>
+    <string name="remittance_detail_summary_5">a</string>
+    <string name="remittance_error_btn_text">Regresar</string>
+    <string name="remittance_error_subtitle">Parece que no tienes saldo suficiente para esta transacción.</string>
+    <string name="remittance_error_title">Oops! Algo salió mal.</string>
 </resources>

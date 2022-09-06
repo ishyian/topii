@@ -6,16 +6,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/image_avatar"
+        android:layout_width="@dimen/offset45"
+        android:layout_height="@dimen/offset45"
+        android:layout_marginStart="@dimen/offset36"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/layout_transaction_details"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="96dp"
-        android:layout_marginEnd="36dp"
+        android:layout_marginStart="@dimen/offset12"
+        android:layout_marginEnd="@dimen/offset8"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/text_sum"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_avatar"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -25,7 +34,7 @@
             android:fontFamily="@font/sfprodisplaybold"
             android:lines="1"
             android:textColor="@color/home_transaction_user_name"
-            android:textSize="18sp"
+            android:textSize="@dimen/text14"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -38,7 +47,7 @@
             android:fontFamily="@font/sfprodisplayregular"
             android:lines="1"
             android:textColor="@color/home_transaction_date"
-            android:textSize="14sp"
+            android:textSize="@dimen/text14"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

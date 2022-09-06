@@ -4,22 +4,20 @@ import com.topiichat.app.core.data.EmptyDto
 import com.topiichat.app.core.data.datasource.BaseCacheDataStore
 import com.topiichat.app.core.domain.CacheFailStatus
 import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.features.registration.data.model.AccessTokenDto
-import com.topiichat.app.features.registration.domain.model.AccessTokenDomain
+import com.topiichat.app.features.registration.data.model.AuthDataDto
+import com.topiichat.app.features.registration.domain.model.AuthDataDomain
 import javax.inject.Inject
 
 class RegisterCacheDataStore @Inject constructor(
     private val registerCache: RegisterCache
 ) : BaseCacheDataStore() {
 
-    suspend fun fetchToken(): ResultData<AccessTokenDto?> {
-        return fetchResult {
-            registerCache.fetchAccessToken()
-        }
+    suspend fun fetchToken(): AuthDataDto {
+        return registerCache.fetchAccessToken()
     }
 
-    suspend fun saveToken(token: AccessTokenDomain): ResultData<EmptyDto?> {
-        return fetchResult(cacheFailStatus = CacheFailStatus.Write()) {
+    suspend fun saveToken(token: AuthDataDomain): ResultData<EmptyDto?> {
+        return getResult(cacheFailStatus = CacheFailStatus.Write()) {
             registerCache.saveAccessToken(token)
         }
     }

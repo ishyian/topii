@@ -12,7 +12,7 @@ class AuthRemoteDataStore @Inject constructor(
 
     suspend fun fetchToken(): ResultData<TokenDto?> {
         return safeApiCall {
-            apiService.fetchToken()
+            apiService.getToken()
         }
     }
 }

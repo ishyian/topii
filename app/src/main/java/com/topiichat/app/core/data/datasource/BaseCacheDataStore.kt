@@ -7,7 +7,7 @@ import com.topiichat.app.core.exception.domain.ErrorDomain
 
 abstract class BaseCacheDataStore : CacheDataStore {
 
-    override suspend fun <T : Dto?> fetchResult(
+    override suspend fun <T : Dto?> getResult(
         cacheFailStatus: CacheFailStatus,
         call: suspend () -> T?
     ): ResultData<T?> {

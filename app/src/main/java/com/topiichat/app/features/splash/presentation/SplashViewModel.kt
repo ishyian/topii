@@ -2,17 +2,18 @@ package com.topiichat.app.features.splash.presentation
 
 import android.view.View
 import androidx.lifecycle.viewModelScope
-import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
-import com.topiichat.app.features.registration.domain.usecases.FetchAccessTokenUseCase
+import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
+@HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val fetchAccessToken: FetchAccessTokenUseCase,
+    private val getAccessToken: GetAuthDataUseCase,
     appRouter: Router
 ) : BaseViewModel(appRouter), ISplashViewModel {
 
@@ -33,16 +34,10 @@ class SplashViewModel @Inject constructor(
     override fun onClick(view: View?) = Unit
 
     private suspend fun fetchToken() {
-        when (val result = fetchAccessToken()) {
-            is ResultData.Success -> {
-                if (result.data?.token.isNullOrEmpty()) {
-                    navigate(MainScreens.Terms, true)
-                } else navigate(MainScreens.Home, true)
-            }
-            else -> {
-                navigate(MainScreens.Terms, true)
-            }
-        }
+        val result = getAccessToken()
+        if (result.token.isEmpty()) {
+            navigate(MainScreens.Terms, true)
+        } else navigate(MainScreens.Home, true)
     }
 
     companion object {
