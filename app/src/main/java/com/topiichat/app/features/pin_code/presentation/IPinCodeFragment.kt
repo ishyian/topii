@@ -11,5 +11,4 @@ interface IPinCodeFragment : IBaseFragment {
     fun onVisibilityTextDescription(isVisible: Boolean)
     fun onVisibilityTextError(isVisible: Boolean)
     fun onColorEditTextPinCode(colorId: Int)
-    fun onShowMessageError(message: String)
 }

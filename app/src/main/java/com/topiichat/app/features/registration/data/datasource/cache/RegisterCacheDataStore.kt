@@ -21,4 +21,10 @@ class RegisterCacheDataStore @Inject constructor(
             registerCache.saveAccessToken(token)
         }
     }
+
+    suspend fun deleteAuthData(): ResultData<EmptyDto?> {
+        return getResult(cacheFailStatus = CacheFailStatus.Write()) {
+            registerCache.deleteAuthData()
+        }
+    }
 }

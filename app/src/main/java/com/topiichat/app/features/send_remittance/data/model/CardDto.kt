@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.topiichat.app.core.data.Dto
 
 data class CardDto(
-    @Json(name = "card_id")
+    @Json(name = "token")
     val cardId: String,
     @Json(name = "expiryMonth")
     val expiryMonth: Int?,

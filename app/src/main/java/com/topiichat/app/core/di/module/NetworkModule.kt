@@ -1,6 +1,8 @@
 package com.topiichat.app.core.di.module
 
+import android.content.Context
 import android.util.Log
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -9,6 +11,7 @@ import com.topiichat.app.core.data.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -62,14 +65,24 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    fun providesChuckerInterceptor(
+        @ApplicationContext context: Context
+    ): ChuckerInterceptor {
+        return ChuckerInterceptor.Builder(context).build()
+    }
+
+    @Singleton
+    @Provides
     fun providesOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor
+        loggingInterceptor: HttpLoggingInterceptor,
+        chuckerInterceptor: ChuckerInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
+            .addInterceptor(chuckerInterceptor)
             .addInterceptor { chain ->
                 val request: Request = chain
                     .request()

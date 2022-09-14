@@ -9,8 +9,12 @@ import com.topiichat.app.features.otp.data.model.ResendOtpCodeDto
 import com.topiichat.app.features.otp.data.model.ResendOtpCodeRequestDto
 import com.topiichat.app.features.otp.data.model.ValidOtpCodeDto
 import com.topiichat.app.features.otp.data.model.ValidOtpCodeRequestDto
+import com.topiichat.app.features.pin_code.data.model.ValidPinCodeDto
+import com.topiichat.app.features.pin_code.data.model.ValidPinCodeRequestDto
 import com.topiichat.app.features.registration.data.model.RegisterDto
 import com.topiichat.app.features.registration.data.model.RegisterRequestDto
+import com.topiichat.app.features.request_remittance.data.model.RequestRemittanceDto
+import com.topiichat.app.features.request_remittance.data.model.RequestRemittanceRequestDto
 import com.topiichat.app.features.send_remittance.data.model.CardDto
 import com.topiichat.app.features.send_remittance.data.model.FxRateDto
 import com.topiichat.app.features.send_remittance.data.model.RemittanceDto
@@ -109,4 +113,15 @@ interface ApiService {
         @Header("Authorization") accessToken: String,
         @Path("remittanceId") remittanceId: String
     ): RemittanceDto
+
+    @POST("api/v1/auth/validate_pin/")
+    suspend fun validatePinCode(
+        @Body requestDto: ValidPinCodeRequestDto
+    ): ValidPinCodeDto
+
+    @POST("api/v1/remittance/debit/request/")
+    suspend fun requestRemittance(
+        @Header("Authorization") accessToken: String,
+        @Body requestDto: RequestRemittanceRequestDto
+    ): RequestRemittanceDto
 }

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/chats_unread_messages_count_color" />
+    <gradient
+        android:startColor="@color/chats_unread_messages_count_color_1"
+        android:endColor="@color/chats_unread_messages_count_color_2" />
     <corners android:radius="50dp" />
 </shape>

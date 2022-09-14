@@ -41,10 +41,6 @@ class BirthDateFragment : BaseFragment<FragmentBirthDateBinding>(), IBirthDateFr
             binding.editBirthDate.hint = ""
     }
 
-    override fun onShowMessageError(message: String) {
-        showToast(message)
-    }
-
     override fun onClick(v: View?) {
         viewModel.onClick(v)
     }
@@ -59,7 +55,7 @@ class BirthDateFragment : BaseFragment<FragmentBirthDateBinding>(), IBirthDateFr
     private fun initObservers() = with(viewModel) {
         observe(viewModel.btnContinueUiState, ::onBtnContinueUiStateChanged)
         observe(viewModel.showBirthPlaceDialog, ::onShowBirthPlaceDialog)
-        observe(showMsgError, ::onShowMessageError)
+        observe(showMsgError, ::showErrorMessage)
     }
 
     override fun onShowBirthPlaceDialog(options: List<String>) {

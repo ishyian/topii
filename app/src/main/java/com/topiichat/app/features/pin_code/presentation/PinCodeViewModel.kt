@@ -6,17 +6,22 @@ import android.text.method.TransformationMethod
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
+import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.pin_code.domain.ValidPinCode
+import com.topiichat.app.features.pin_code.domain.usecases.ValidPinCodeUseCase
 import com.topiichat.app.features.registration.presentation.RegisterParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 
 class PinCodeViewModel @AssistedInject constructor(
     @Assisted("pinCodeParameters") private val parameters: PinCodeParameters,
+    private val validatePinCode: ValidPinCodeUseCase,
     appRouter: Router
 ) : BaseViewModel(appRouter), IPinCodeViewModel {
 
@@ -134,10 +139,7 @@ class PinCodeViewModel @AssistedInject constructor(
 
     override fun onSuccessValidPinCode(pinCode: String) {
         if (pinCodeCrated.isEmpty()) {
-            _visibilityTextContentTitle.value = true
-            _visibilityTextDescription.value = false
-            _textPinCode.value = ""
-            pinCodeCrated = pinCode
+            validatePinCode(pinCode)
         } else {
             pinCodeCrated = ""
             _visibilityTextContentTitle.value = false
@@ -158,6 +160,24 @@ class PinCodeViewModel @AssistedInject constructor(
         }
     }
 
+    private fun validatePinCode(pinCode: String) {
+        viewModelScope.launch {
+            _showLoader.value = true
+            when (val result = validatePinCode(ValidPinCodeUseCase.Params(pinCode))) {
+                is ResultData.Success -> {
+                    _visibilityTextContentTitle.value = true
+                    _visibilityTextDescription.value = false
+                    _textPinCode.value = ""
+                    pinCodeCrated = pinCode
+                }
+                is ResultData.Fail -> {
+                    _showMsgError.postValue(result.error.message)
+                }
+            }
+            _showLoader.value = false
+        }
+    }
+
     override fun onEmptyValidPinCode() {
         _showMsgError.setValue("pin code is empty")
     }
@@ -175,6 +195,7 @@ class PinCodeViewModel @AssistedInject constructor(
     }
 
     override fun onErrorMatches() {
+        _visibilityTextDescription.value = false
         _visibilityTextError.value = true
         _colorEditTextPinCode.value = R.color.error_color
     }

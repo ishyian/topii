@@ -75,7 +75,7 @@ class ValidPhoneNumberFragment : BaseFragment<FragmentValidPhoneNumberBinding>()
     private fun initObservers() = with(viewModel) {
         observe(showLoader, ::onVisibilityLoader)
         observe(visibilityTextError, ::onVisibilityTextError)
-        observe(showMsgError, ::onShowMessageError)
+        observe(showMsgError, ::showErrorMessage)
         observe(hideKeyboard, ::onHideKeyboardEvent)
     }
 
@@ -83,10 +83,6 @@ class ValidPhoneNumberFragment : BaseFragment<FragmentValidPhoneNumberBinding>()
         with(binding.editText) {
             post { hideKeyboard() }
         }
-    }
-
-    override fun onShowMessageError(message: String) {
-        showToast(message)
     }
 
     override fun onVisibilityTextError(isVisible: Boolean) = with(binding) {

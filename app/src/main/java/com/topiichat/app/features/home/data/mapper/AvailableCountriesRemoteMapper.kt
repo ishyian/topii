@@ -21,7 +21,8 @@ class AvailableCountriesRemoteMapper @Inject constructor() :
                     limitMax = country.limitMax.toDouble(),
                     limitMin = country.limitMin.toDouble(),
                     name = country.name,
-                    preferred = country.preferred
+                    preferred = country.preferred,
+                    dialCountryCode = country.dialCodeNumber
                 )
             } ?: emptyList()
         )

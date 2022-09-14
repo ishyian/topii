@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sfprodisplayregular"
+        android:text="@string/send_payment_concept_remittance_title"
+        android:textColor="@color/send_payment_text_color"
+        android:textSize="@dimen/text15" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_text_contact_name"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/offset50"
+        android:layout_marginTop="@dimen/offset8"
+        android:layout_marginBottom="@dimen/offset8"
+        android:background="@drawable/rounded_border_edittext"
+        android:fontFamily="@font/sfprodisplaymedium"
+        android:paddingHorizontal="@dimen/offset24"
+        android:textAlignment="textStart"
+        android:textColor="@color/send_payment_text_color"
+        android:textSize="@dimen/text15"
+        tools:ignore="SpeakableTextPresentCheck"
+        tools:text="Nombre" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="64dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded_border_edittext"
+            android:focusable="true"
+            android:hint=""
+            android:paddingHorizontal="@dimen/text_permission_padding"
+            android:textColor="@color/titleColor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

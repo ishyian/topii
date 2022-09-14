@@ -18,12 +18,13 @@ class RemittanceHistoryRemoteMapper @Inject constructor() :
             currency = input?.currency ?: "",
             remittances = input?.remittances?.map { remittance ->
                 val converting = remittance.converting
+                val receiving = remittance.receiving
                 if (remittance.action == SEND) {
                     val recipientProfile = remittance.recipient.profile
                     RemittanceDomain(
                         userName = "${recipientProfile.firstName} ${recipientProfile.lastName}",
                         date = LocalDateTime.parse(remittance.createdAt),
-                        amountText = "- ${converting.currency}${converting.amount}",
+                        amountText = "- ${converting?.currency}${converting?.amount}",
                         action = RemittanceType.SEND,
                         avatar = recipientProfile.avatar
                     )
@@ -32,7 +33,7 @@ class RemittanceHistoryRemoteMapper @Inject constructor() :
                     RemittanceDomain(
                         userName = "${senderProfile.firstName} ${senderProfile.lastName}",
                         date = LocalDateTime.parse(remittance.createdAt),
-                        amountText = "+ ${converting.currency}${converting.amount}",
+                        amountText = "+ ${receiving?.currency}${receiving?.amount}",
                         action = RemittanceType.REQUEST,
                         avatar = senderProfile.avatar
                     )

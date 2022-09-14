@@ -5,12 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whiteColor">
+    android:background="@color/chat_header_background">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#F9F9FA"
         app:layout_constraintBottom_toTopOf="@id/rv_messages_list"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,10 +40,10 @@
         android:layout_marginHorizontal="@dimen/offset8"
         android:fontFamily="@font/sfprodisplaybold"
         android:lines="1"
-        android:textColor="#000635"
+        android:textColor="@color/chat_primary_text_color"
         android:textSize="@dimen/text18"
         app:layout_constraintBottom_toBottomOf="@id/image_avatar"
-        app:layout_constraintEnd_toStartOf="@+id/image_kyc"
+        app:layout_constraintEnd_toStartOf="@+id/image_remittance"
         app:layout_constraintStart_toEndOf="@id/image_avatar"
         app:layout_constraintTop_toTopOf="@id/image_avatar"
         tools:text="Carlos Santaella" />
@@ -70,7 +69,7 @@
         app:srcCompat="@drawable/ic_video_call" />
 
     <ImageView
-        android:id="@+id/image_kyc"
+        android:id="@+id/image_remittance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/offset12"
@@ -84,29 +83,31 @@
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginTop="@dimen/offset12"
+        android:layout_marginBottom="@dimen/offset16"
+        android:background="@color/chats_search_background"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/vChatBottomBarrier"
+        app:layout_constraintBottom_toTopOf="@id/barrier_chat_bottom"
         app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/chat_list_item_incoming_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image_avatar" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/image_attach"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginBottom="24dp"
         android:minHeight="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_message_input"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_add" />
 
-    <EditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_message_input"
         android:layout_width="0px"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/offset16"
-        android:layout_marginBottom="@dimen/offset24"
+        android:layout_marginBottom="@dimen/offset16"
         android:background="@drawable/bg_edit_input_message"
         android:fontFamily="@font/sfprodisplaymedium"
         android:maxLength="8192"
@@ -120,18 +121,18 @@
         app:layout_constraintStart_toEndOf="@id/image_attach"
         tools:text="a\" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/image_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/offset12"
-        android:layout_marginBottom="@dimen/offset24"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_message_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_send_message" />
 
     <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/vChatBottomBarrier"
+        android:id="@+id/barrier_chat_bottom"
+        android:elevation="0dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="top"

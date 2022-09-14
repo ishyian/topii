@@ -64,7 +64,7 @@
             app:srcCompat="@drawable/ic_write" />
 
         <ImageView
-            android:id="@+id/image_kyc"
+            android:id="@+id/image_remittance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="14dp"

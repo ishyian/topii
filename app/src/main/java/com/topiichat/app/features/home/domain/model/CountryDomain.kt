@@ -15,7 +15,8 @@ data class CountryDomain(
     val limitMax: Double,
     val limitMin: Double,
     val name: String,
-    val preferred: Boolean
+    val preferred: Boolean,
+    val dialCountryCode: String,
 ) : Domain, Parcelable {
     val countryCode: CountryCode
         get() = CountryCode.values().firstOrNull { it.name == code } ?: CountryCode.UNAVAILABLE

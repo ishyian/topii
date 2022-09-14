@@ -11,7 +11,9 @@ class RecentUsersRemoteMapper @Inject constructor() :
         return input?.recentUsers?.map { user ->
             RecentUserDomain(
                 avatar = user.profile.avatar,
-                recipientId = user.id
+                recipientId = user.id,
+                dialCode = user.dialCountryCode,
+                fullName = "${user.profile.firstName} ${user.profile.lastName}"
             )
         } ?: emptyList()
     }

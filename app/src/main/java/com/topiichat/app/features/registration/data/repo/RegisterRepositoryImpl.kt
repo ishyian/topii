@@ -49,4 +49,13 @@ class RegisterRepositoryImpl(
                 }
         }
     }
+
+    override suspend fun deleteAuthData(): ResultData<EmptyDomain> {
+        return withContext(appDispatchers.storage) {
+            registerCacheDataStore.deleteAuthData()
+                .transformData {
+                    emptyMapper.map(it)
+                }
+        }
+    }
 }

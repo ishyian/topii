@@ -26,6 +26,7 @@ import com.topiichat.app.features.send_remittance.presentation.mapper.RecentUser
 import com.topiichat.app.features.send_remittance.presentation.model.BtnSendEnablingUi
 import com.topiichat.app.features.send_remittance.presentation.model.RecentUserUiModel
 import com.topiichat.app.features.send_remittance.presentation.model.RecentUsersUiModel
+import com.topiichat.app.features.send_remittance.presentation.model.RecipientUiModel
 import com.topiichat.app.features.send_remittance.presentation.model.SendRemittanceUIModel
 import com.topiichat.app.features.send_remittance.presentation.model.changeCheckedStatus
 import dagger.assisted.Assisted
@@ -79,6 +80,9 @@ class SendRemittanceViewModel @AssistedInject constructor(
     private val _btnSendEnabling: MutableLiveData<BtnSendEnablingUi> = MutableLiveData()
     val btnSendEnabling: LiveData<BtnSendEnablingUi> = _btnSendEnabling
 
+    private var _recipientModel = MutableLiveData<RecipientUiModel>()
+    val recipientModel = _recipientModel
+
     private val availableCountries = MutableLiveData<AvailableCountriesDomain>()
     private val currentFxRate = MutableLiveData<FxRateDomain>()
 
@@ -116,10 +120,6 @@ class SendRemittanceViewModel @AssistedInject constructor(
                 is ResultData.Fail -> {
                     _showLoader.value = false
                     _showMsgError.postValue(result.error.message)
-                }
-                is ResultData.NetworkError -> {
-                    _showLoader.value = false
-                    onNetworkError()
                 }
             }
 
@@ -199,7 +199,6 @@ class SendRemittanceViewModel @AssistedInject constructor(
                 is ResultData.Fail -> {
                     _showMsgError.postValue(result.error.message)
                 }
-                is ResultData.NetworkError -> onNetworkError()
             }
             _showReceiverSumLoader.value = false
             _showLoader.value = false
@@ -215,7 +214,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
 
     override fun onSendRemittanceClick() {
         with(parameters.country) {
-            if (sendAmount <= limitMin) {
+            if (sendAmount < limitMin) {
                 _showMsgError.postValue("Sending amount can't be less than $currencyCode $limitMin")
                 return
             }
@@ -238,10 +237,6 @@ class SendRemittanceViewModel @AssistedInject constructor(
                     is ResultData.Fail -> {
                         _showLoader.value = false
                         _showMsgError.postValue(result.error.message)
-                    }
-                    is ResultData.NetworkError -> {
-                        _showLoader.value = false
-                        onNetworkError()
                     }
                 }
             }
@@ -271,9 +266,8 @@ class SendRemittanceViewModel @AssistedInject constructor(
                     )
                 }
                 is ResultData.Fail -> {
-                    _showMsgError.postValue(result.error.message)
+                    navigate(MainScreens.RemittanceError)
                 }
-                is ResultData.NetworkError -> onNetworkError()
             }
             _showLoader.value = false
         }
@@ -284,16 +278,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
     }
 
     override fun onAmountChanged(amount: Double) {
-        /*if (amount < parameters.countryDomain.limitMin) {
-            sendAmount = parameters.countryDomain.limitMin
-            _sendingSum.postValue(sendAmount)
-        }
-        if (amount > parameters.countryDomain.limitMax) {
-            sendAmount = parameters.countryDomain.limitMax
-            _sendingSum.postValue(sendAmount)
-        }*/
         if (amount <= 0.0) {
-            Timber.d("Amount is 0 or less")
             _receiverSum.postValue(0.0)
             _zeroTotalSumSum.postValue(parameters.country.currencyCode)
         }
@@ -324,6 +309,16 @@ class SendRemittanceViewModel @AssistedInject constructor(
         val newModel = recentUsers.value?.changeCheckedStatus(recentUser)
         newModel?.let { _recentUsers.value = it }
         recipientId = recentUser.data.recipientId
+
+        val recipientCountry = availableCountries.value
+            ?.countries
+            ?.firstOrNull { "+${it.dialCountryCode}" == recentUser.data.dialCode }
+        val recipientUiModel = RecipientUiModel(
+            userData = recentUser.data,
+            recipientCountry = recipientCountry
+        )
+        _recipientModel.value = recipientUiModel
+
         onUpdateBtnSend()
     }
 

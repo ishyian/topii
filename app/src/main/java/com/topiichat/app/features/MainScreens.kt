@@ -14,6 +14,8 @@ import com.topiichat.app.features.registration.presentation.RegisterParameters
 import com.topiichat.app.features.remittance.presentation.RemittanceDetailFragment
 import com.topiichat.app.features.remittance.presentation.RemittanceParameters
 import com.topiichat.app.features.remittance_error.presentation.RemittanceErrorFragment
+import com.topiichat.app.features.request_remittance.presentation.RequestRemittanceFragment
+import com.topiichat.app.features.request_remittance.presentation.RequestRemittanceParameters
 import com.topiichat.app.features.send_remittance.presentation.SendRemittanceFragment
 import com.topiichat.app.features.send_remittance.presentation.SendRemittanceParameters
 import com.topiichat.app.features.splash.presentation.SplashFragment
@@ -105,5 +107,15 @@ object MainScreens {
 
     object RemittanceError : SupportAppScreen() {
         override fun getFragment() = RemittanceErrorFragment()
+    }
+
+    class RequestRemittance(
+        private val parameters: RequestRemittanceParameters
+    ) : SupportAppScreen() {
+        override fun getFragment() = RequestRemittanceFragment()
+        override fun getFragmentParams() = FragmentParams(
+            RequestRemittanceFragment::class.java,
+            parcelableParametersBundleOf(parameters)
+        )
     }
 }

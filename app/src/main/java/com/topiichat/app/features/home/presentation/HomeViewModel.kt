@@ -17,6 +17,7 @@ import com.topiichat.app.features.home.presentation.model.HomeRemittanceHistoryU
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.base.domain.model.KYCStatus
 import com.topiichat.app.features.kyc.base.domain.usecases.GetKYCStatusUseCase
+import com.topiichat.app.features.request_remittance.presentation.RequestRemittanceParameters
 import com.topiichat.app.features.send_remittance.presentation.SendRemittanceParameters
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -79,7 +80,6 @@ class HomeViewModel @Inject constructor(
                 is ResultData.Fail -> {
                     onFailRemmitanceHistory(result)
                 }
-                else -> onNetworkError()
             }
             _showTotalSumByMonthLoader.value = false
         }
@@ -110,7 +110,6 @@ class HomeViewModel @Inject constructor(
                 is ResultData.Fail -> {
                     _showMsgError.postValue(result.error.message)
                 }
-                is ResultData.NetworkError -> onNetworkError()
             }
         }
 
@@ -134,5 +133,17 @@ class HomeViewModel @Inject constructor(
 
     override fun onChatsClick() {
         navigate(ChatsScreens.ChatsList)
+    }
+
+    override fun onRequestPaymentClick() {
+        availableCountryFeatures.value?.countryInfo?.let { countryDomain ->
+            navigate(
+                MainScreens.RequestRemittance(
+                    parameters = RequestRemittanceParameters(
+                        countryDomain
+                    )
+                )
+            )
+        }
     }
 }

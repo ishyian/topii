@@ -51,7 +51,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
     }
 
     override fun onRequestPaymentClicked() {
-        // TODO: Change UI according to that
+        viewModel.onRequestPaymentClick()
     }
 
     override fun onChatsClicked() {
@@ -70,7 +70,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
     private fun initObservers() = with(viewModel) {
         observe(content, ::onContentLoaded)
         observe(availableCountryFeatures, ::onAvailableFeaturesLoaded)
-        observe(showMsgError, ::onShowMessageError)
+        observe(showMsgError, ::showErrorMessage)
         observe(showLoader, ::onVisibilityLoader)
         observe(showTotalSumByMonthLoader, ::onTotalSumByMonthLoader)
     }
@@ -93,10 +93,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
                 // Nothing
             }
         }
-    }
-
-    override fun onShowMessageError(message: String) {
-        showToast(message)
     }
 
     override fun onMonthChanged(month: Int) {

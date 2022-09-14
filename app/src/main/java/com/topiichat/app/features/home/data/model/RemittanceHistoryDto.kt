@@ -25,7 +25,7 @@ data class RemittanceHistoryDto(
         @Json(name = "chapiiStatus")
         val chapiiStatus: List<Any>,
         @Json(name = "converting")
-        val converting: Converting,
+        val converting: Converting?,
         @Json(name = "createdAt")
         val createdAt: String,
         @Json(name = "description")
@@ -33,7 +33,7 @@ data class RemittanceHistoryDto(
         @Json(name = "exchangeRate")
         val exchangeRate: String,
         @Json(name = "fee")
-        val fee: Fee,
+        val fee: Fee?,
         @Json(name = "id")
         val id: String,
         @Json(name = "isNew")
@@ -43,13 +43,13 @@ data class RemittanceHistoryDto(
         @Json(name = "purposedCodeLabel")
         val purposedCodeLabel: String?,
         @Json(name = "receiving")
-        val receiving: Receiving,
+        val receiving: Receiving?,
         @Json(name = "recipient")
         val recipient: Recipient,
         @Json(name = "sender")
         val sender: Sender,
         @Json(name = "sending")
-        val sending: Sending,
+        val sending: Sending?,
         @Json(name = "status")
         val status: String,
         @Json(name = "transactionId")

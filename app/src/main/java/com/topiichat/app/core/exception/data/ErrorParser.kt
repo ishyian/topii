@@ -15,16 +15,19 @@ class ErrorParser {
     val defaultError =
         ErrorDomain("Service unavailable", 500, UnknownHostException::class.java)
 
+    val unAuthorizedError =
+        ErrorDomain("Unauthorized", 401, UnknownHostException::class.java)
+
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     private val errorMessageMapper = ErrorMessageMapper()
 
     fun parse(e: Throwable?): ErrorDomain {
-
         return try {
             val httpError = (e as HttpException)
             val parsedBody = httpError.response()?.errorBody()?.string().toString()
             val code = httpError.code()
             Timber.d(e.message())
+            if (code == 401) return unAuthorizedError
             try {
                 val adapter = moshi.adapter(ErrorMessageDto::class.java)
                 val errorMessageDto = adapter.fromJson(parsedBody)

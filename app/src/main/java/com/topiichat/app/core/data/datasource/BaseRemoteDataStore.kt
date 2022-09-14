@@ -2,6 +2,7 @@ package com.topiichat.app.core.data.datasource
 
 import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.exception.data.ErrorParser
+import com.topiichat.app.core.exception.domain.networkConnectionError
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
@@ -17,7 +18,7 @@ abstract class BaseRemoteDataStore : RemoteDataStore {
             ResultData.Success(apiCall.invoke())
         } catch (throwable: Throwable) {
             when (throwable) {
-                is IOException -> ResultData.NetworkError
+                is IOException -> ResultData.Fail(networkConnectionError())
                 is HttpException -> {
                     val errorResponse = errorParser.parse(throwable)
                     ResultData.Fail(error = errorResponse)
@@ -25,7 +26,6 @@ abstract class BaseRemoteDataStore : RemoteDataStore {
                 else -> {
                     Timber.d("error ${throwable.localizedMessage}")
                     Timber.e(throwable)
-                    Timber.d(throwable.cause)
                     ResultData.Fail(error = errorParser.defaultError)
                 }
             }

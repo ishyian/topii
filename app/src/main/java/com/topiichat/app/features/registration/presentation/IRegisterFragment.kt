@@ -5,5 +5,4 @@ import com.topiichat.app.features.registration.presentation.model.BtnRegisterEna
 
 interface IRegisterFragment : IBaseFragment {
     fun onEnablingBtnRegister(btnRegisterEnabling: BtnRegisterEnablingUi)
-    fun onShowMessageError(message: String)
 }

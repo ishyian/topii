@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.topiichat.app.core.presentation.customview.ToolbarView
+        android:id="@+id/toolbar"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        app:isCloseButtonVisible="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:toolbarTitle="@string/request_remittance_title" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/layout_content"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@+id/layout_request_payment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/card_request_payment"
+                layout="@layout/card_request_payment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset22"
+                android:layout_marginTop="@dimen/offset22" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_destination_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset31"
+                android:layout_marginTop="@dimen/offset13"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:text="@string/send_payment_select_recipient"
+                android:textColor="@color/send_payment_subtitle_color"
+                android:textSize="@dimen/text24" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recent_users"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset7"
+                android:layout_marginTop="@dimen/offset13"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                android:paddingVertical="@dimen/offset2"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="2"
+                tools:listitem="@layout/recent_add_user_item" />
+
+            <include
+                android:id="@+id/layout_sender"
+                layout="@layout/view_remittance_destination"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset32"
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/card_sender_contact_data"
+                layout="@layout/view_add_sender_contact_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginHorizontal="@dimen/offset22"
+                android:layout_marginVertical="@dimen/offset22" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset8"
+                android:fontFamily="@font/sfprodisplayregular"
+                android:text="@string/send_payment_concept_remittance_title"
+                android:textColor="@color/send_payment_text_color"
+                android:textSize="@dimen/text15" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/rounded_border_background"
+                app:boxCornerRadiusBottomEnd="@dimen/offset10"
+                app:boxCornerRadiusBottomStart="@dimen/offset10"
+                app:boxCornerRadiusTopEnd="@dimen/offset10"
+                app:boxCornerRadiusTopStart="@dimen/offset10">
+
+                <AutoCompleteTextView
+                    android:id="@+id/edit_text_remittance_concept"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/offset50"
+                    android:layout_marginHorizontal="@dimen/offset24"
+                    android:layout_marginTop="@dimen/offset8"
+                    android:background="@drawable/rounded_border_edittext"
+                    android:editable="false"
+                    android:fontFamily="@font/sfprodisplaymedium"
+                    android:inputType="none"
+                    android:paddingHorizontal="@dimen/offset24"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/send_payment_text_color"
+                    android:textSize="@dimen/text15"
+                    tools:ignore="Deprecated,LabelFor,SpeakableTextPresentCheck"
+                    tools:text="Regalo de Bodas" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset8"
+                android:fontFamily="@font/sfprodisplayregular"
+                android:text="@string/send_payment_notes"
+                android:textColor="@color/send_payment_text_color"
+                android:textSize="@dimen/text15" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edit_text_notes"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/offset50"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset8"
+                android:layout_marginBottom="@dimen/offset15"
+                android:background="@drawable/rounded_border_edittext"
+                android:fontFamily="@font/sfprodisplaymedium"
+                android:paddingHorizontal="@dimen/offset24"
+                android:textAlignment="textStart"
+                android:textColor="@color/send_payment_text_color"
+                android:textSize="@dimen/text15"
+                tools:ignore="SpeakableTextPresentCheck"
+                tools:text="De parte de Carmen y yo" />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_request_payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_request_remittance_layout"
+        app:elevation="@dimen/offset5"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_request"
+            app:layout_constraintStart_toStartOf="@id/btn_request"
+            app:layout_constraintTop_toTopOf="parent"
+            app:thumbTint="@color/switch_thumb_color"
+            app:trackTint="@color/border_pin"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/text_switch_payment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/sfprodisplayregular"
+            android:text="@string/text_switch2_register"
+            android:textAlignment="textStart"
+            android:textColor="@color/titleColor"
+            android:textColorLink="@color/send_payment_switch_link_color"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/switch_payment"
+            app:layout_constraintEnd_toEndOf="@id/btn_request"
+            app:layout_constraintStart_toEndOf="@id/switch_payment"
+            app:layout_constraintTop_toTopOf="@id/switch_payment" />
+
+        <Button
+            android:id="@+id/btn_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="26dp"
+            android:background="@drawable/bg_button"
+            android:fontFamily="@font/sfprodisplaybold"
+            android:text="@string/request_remittance_button_text"
+            android:textAllCaps="false"
+            android:textColor="@color/whiteColor"
+            android:textSize="@dimen/text_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loader" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:constraint_referenced_ids="toolbar, layout_content, layout_request_payment" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
