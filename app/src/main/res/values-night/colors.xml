@@ -15,4 +15,10 @@
     <color name="chats_search_background">#31476D</color>
     <color name="chats_search_border">#071D49</color>
     <color name="chats_list_background">#31476D</color>
+    <color name="chat_header_background">#071D49</color>
+    <color name="chat_primary_text_color">@color/whiteColor</color>
+    <color name="chats_input_text_color">@color/whiteColor</color>
+    <color name="chat_text_message_color">#FAFAFA</color>
+    <color name="chat_text_message_time_color">#FAFAFA</color>
+    <color name="kyc_text_color">@color/whiteColor</color>
 </resources>

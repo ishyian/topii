@@ -86,7 +86,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(), IChatFragment {
         FragmentChatBinding.inflate(inflater, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
-        setupClickListener(imageBack, imageSend, imageAttach, imageKyc, imageCall, imageVideoCall)
+        setupClickListener(imageBack, imageSend, imageAttach, imageRemittance, imageCall, imageVideoCall)
         textRecipientName.text = parameters.from
         editMessageInput.doAfterTextChanged { text -> viewModel.onInputChanged(text.toString()) }
         chatMessageAdapter.registerAdapterDataObserver(firstItemInsertedObserver)
@@ -148,7 +148,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(), IChatFragment {
     }
 
     override fun onClearInput(ignore: Unit) {
-        binding.editMessageInput.text.clear()
+        binding.editMessageInput.text?.clear()
     }
 
     override fun onDestroyView() {

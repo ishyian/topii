@@ -43,7 +43,7 @@ class HomeTotalSumView(
 
     @SuppressLint("SetTextI18n")
     fun renderWith(totalSentSum: Long, totalRequestedSum: Long, currency: String) {
-        binding.textTotalSentSum.text = "$currency $totalSentSum€"
-        binding.textTotalRequestedSum.text = "$currency $totalRequestedSum€"
+        binding.textTotalSentSum.text = "$currency $totalSentSum"
+        binding.textTotalRequestedSum.text = "$currency $totalRequestedSum"
     }
 }

@@ -12,8 +12,6 @@ sealed class ResultData<out T> {
         val error: ErrorDomain
     ) : ResultData<Nothing>()
 
-    object NetworkError : ResultData<Nothing>()
-
     fun <R> transformData(
         map: (T) -> R
     ): ResultData<R> = when (this) {
@@ -22,9 +20,6 @@ sealed class ResultData<out T> {
         }
         is Fail -> {
             Fail(error)
-        }
-        is NetworkError -> {
-            NetworkError
         }
     }
 }

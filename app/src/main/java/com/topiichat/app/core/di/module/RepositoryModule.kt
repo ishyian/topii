@@ -21,6 +21,10 @@ import com.topiichat.app.features.otp.data.mapper.ResendOtpCodeRemoteMapper
 import com.topiichat.app.features.otp.data.mapper.ValidOtpCodeRemoteMapper
 import com.topiichat.app.features.otp.data.repo.OtpCodeRepositoryImpl
 import com.topiichat.app.features.otp.domain.repo.OtpCodeRepository
+import com.topiichat.app.features.pin_code.data.datasource.PinCodeRemoteDataSource
+import com.topiichat.app.features.pin_code.data.mapper.ValidPinCodeRemoteMapper
+import com.topiichat.app.features.pin_code.data.repo.PinCodeRepositoryImpl
+import com.topiichat.app.features.pin_code.domain.repo.PinCodeRepository
 import com.topiichat.app.features.registration.data.datasource.cache.RegisterCacheDataStore
 import com.topiichat.app.features.registration.data.datasource.remote.RegisterRemoteDataStore
 import com.topiichat.app.features.registration.data.mapper.RegisterCacheMapper
@@ -30,6 +34,10 @@ import com.topiichat.app.features.registration.domain.repo.RegisterRepository
 import com.topiichat.app.features.remittance.data.datasource.RemittanceRemoteDataSource
 import com.topiichat.app.features.remittance.data.repo.RemittanceRepositoryImpl
 import com.topiichat.app.features.remittance.domain.repo.RemittanceRepository
+import com.topiichat.app.features.request_remittance.data.datasource.RequestRemittanceRemoteDataSource
+import com.topiichat.app.features.request_remittance.data.mapper.RequestRemittanceRemoteMapper
+import com.topiichat.app.features.request_remittance.data.repo.RequestRemittanceRepositoryImpl
+import com.topiichat.app.features.request_remittance.domain.repo.RequestRemittanceRepository
 import com.topiichat.app.features.send_remittance.data.datasource.SendRemittanceRemoteDataSource
 import com.topiichat.app.features.send_remittance.data.mapper.CardsRemoteMapper
 import com.topiichat.app.features.send_remittance.data.mapper.FxRateRemoteMapper
@@ -201,6 +209,34 @@ object RepositoryModule {
         return RemittanceRepositoryImpl(
             remittanceRemoteDataSource = remittanceRemoteDataSource,
             remittanceRemoteMapper = remittanceRemoteMapper,
+            appDispatchers = appDispatchers
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providesPinCodeRepository(
+        pinCodeRemoteDataSource: PinCodeRemoteDataSource,
+        validPinCodeRemoteMapper: ValidPinCodeRemoteMapper,
+        appDispatchers: AppDispatchers
+    ): PinCodeRepository {
+        return PinCodeRepositoryImpl(
+            pinCodeRemoteDataSource = pinCodeRemoteDataSource,
+            validPinCodeRemoteMapper = validPinCodeRemoteMapper,
+            appDispatchers = appDispatchers
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providesRequestRemittanceRepository(
+        requestRemittanceDataSource: RequestRemittanceRemoteDataSource,
+        requestRemittanceMapper: RequestRemittanceRemoteMapper,
+        appDispatchers: AppDispatchers
+    ): RequestRemittanceRepository {
+        return RequestRemittanceRepositoryImpl(
+            requestRemittanceDataSource = requestRemittanceDataSource,
+            requestRemittanceMapper = requestRemittanceMapper,
             appDispatchers = appDispatchers
         )
     }

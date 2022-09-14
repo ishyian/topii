@@ -81,7 +81,6 @@ class OtpViewModel @AssistedInject constructor(
                 onSuccessValidPinCode()
             }
             is ResultData.Fail -> onFailValidPinCode(ValidOtp.Fail(result.error))
-            is ResultData.NetworkError -> onNetworkError()
         }
     }
 
@@ -132,7 +131,6 @@ class OtpViewModel @AssistedInject constructor(
                 onSuccessSendSms()
             }
             is ResultData.Fail -> onFailSendSms(SendSms.Fail(result.error))
-            is ResultData.NetworkError -> onNetworkError()
         }
         onCounterSendSms()
     }

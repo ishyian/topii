@@ -9,8 +9,10 @@ import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
+import com.bumptech.glide.Glide
 import com.topiichat.app.R
 import com.topiichat.app.core.delegates.parcelableParameters
+import com.topiichat.app.core.extension.addStartCircleDrawableFromUrl
 import com.topiichat.app.core.extension.addStartDrawableFromUrl
 import com.topiichat.app.core.extension.lazyUnsynchronized
 import com.topiichat.app.core.extension.showDropDownWhenClick
@@ -24,6 +26,7 @@ import com.topiichat.app.features.send_remittance.domain.model.RemittancePurpose
 import com.topiichat.app.features.send_remittance.presentation.adapter.RecentUsersAdapter
 import com.topiichat.app.features.send_remittance.presentation.model.BtnSendEnablingUi
 import com.topiichat.app.features.send_remittance.presentation.model.RecentUsersUiModel
+import com.topiichat.app.features.send_remittance.presentation.model.RecipientUiModel
 import com.topiichat.app.features.send_remittance.presentation.model.SendRemittanceUIModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -98,7 +101,7 @@ class SendRemittanceFragment : BaseFragment<FragmentSendRemittanceBinding>(),
 
     override fun onReceiverCountryChanged(receiverCountry: CountryDomain) = with(binding) {
         cardSendPayment.textReceiverCurrencyPicker.text = receiverCountry.currencyCode
-        cardSendPayment.textReceiverCurrencyPicker.addStartDrawableFromUrl(receiverCountry.flagImageUrl)
+        cardSendPayment.textReceiverCurrencyPicker.addStartCircleDrawableFromUrl(receiverCountry.flagImageUrl)
     }
 
     override fun onReceiverSumChanged(amount: Double) = with(binding) {
@@ -112,10 +115,6 @@ class SendRemittanceFragment : BaseFragment<FragmentSendRemittanceBinding>(),
     override fun onVisibilityReceiverSumLoader(isVisibleLoader: Boolean) = with(binding) {
         cardSendPayment.textReceiverSum.isVisible = isVisibleLoader.not()
         cardSendPayment.progressReceiverSum.isVisible = isVisibleLoader
-    }
-
-    override fun onShowMessageError(message: String) {
-        showToast(message)
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = with(binding) {
@@ -161,12 +160,29 @@ class SendRemittanceFragment : BaseFragment<FragmentSendRemittanceBinding>(),
         binding.sendPaymentAmount.renderWith(fxRate)
     }
 
-    private fun onZeroTotalAmount(senderCurrency: String) {
+    override fun onZeroTotalAmount(senderCurrency: String) {
         binding.sendPaymentAmount.zeroAmount(senderCurrency)
     }
 
+    override fun onRecipientSelected(recipientUiModel: RecipientUiModel) = with(binding) {
+        Glide.with(requireContext())
+            .load(recipientUiModel.userData.avatar)
+            .circleCrop()
+            .into(layoutRecipient.imageAvatar)
+
+        layoutRecipient.textRecipientName.text = recipientUiModel.userData.fullName
+        layoutRecipient.textRecipientCountry.text = recipientUiModel.recipientCountry?.name ?: ""
+        layoutRecipient.textRecipientCountry.addStartCircleDrawableFromUrl(
+            recipientUiModel.recipientCountry?.flagImageUrl ?: ""
+        )
+
+        textRecentUsersTitle.isVisible = false
+        rvRecentUsers.isVisible = false
+        layoutRecipient.root.isVisible = true
+    }
+
     private fun initObservers() = with(viewModel) {
-        observe(showMsgError, ::onShowMessageError)
+        observe(showMsgError, ::showErrorMessage)
         observe(showLoader, ::onVisibilityLoader)
         observe(content, ::initCurrencyPickers)
         observe(showReceiverSumLoader, ::onVisibilityReceiverSumLoader)
@@ -178,5 +194,6 @@ class SendRemittanceFragment : BaseFragment<FragmentSendRemittanceBinding>(),
         observe(btnSendEnabling, ::onEnablingBtnSend)
         observe(fxRate, ::onFxRateChanged)
         observe(zeroTotalAmount, ::onZeroTotalAmount)
+        observe(recipientModel, ::onRecipientSelected)
     }
 }

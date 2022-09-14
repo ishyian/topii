@@ -72,4 +72,8 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), View.OnClickListener 
     protected fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
+
+    protected fun showErrorMessage(message: String) {
+        showToast(message)
+    }
 }

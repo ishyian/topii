@@ -24,6 +24,14 @@ class RegisterCacheImpl(
         return@with EmptyDto
     }
 
+    override suspend fun deleteAuthData() = with(pref.edit()) {
+        putString(ACCESS_TOKEN_KEY, null)
+        putString(SENDER_ID_KEY, null)
+        putString(ISO_CODE_KEY, null)
+        apply()
+        return@with EmptyDto
+    }
+
     companion object {
         const val ACCESS_TOKEN_KEY = "access_token_key"
         const val SENDER_ID_KEY = "sender_id_key"

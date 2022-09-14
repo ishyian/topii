@@ -15,8 +15,8 @@ android {
         applicationId "com.fidecorp.chapii"
         minSdk globalConfiguration["androidMinSdkVersion"]
         targetSdk globalConfiguration["androidTargetSdkVersion"]
-        versionCode 14
-        versionName "0.0.14"
+        versionCode 16
+        versionName "0.0.16"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -80,4 +80,7 @@ dependencies {
     for (item in notations.forAndroidTest) {
         androidTestImplementation item
     }
+
+    debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
+    releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.5.2"
 }

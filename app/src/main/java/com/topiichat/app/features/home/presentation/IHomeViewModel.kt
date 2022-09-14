@@ -13,4 +13,5 @@ interface IHomeViewModel {
     fun loadRemmittanceHistory(month: Int)
     fun onFailRemmitanceHistory(failure: ResultData.Fail)
     fun onKYCStatusStatus(status: KYCStatus?)
+    fun onRequestPaymentClick()
 }

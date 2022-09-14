@@ -91,7 +91,7 @@ class ChatsViewModel @AssistedInject constructor(
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.image_kyc -> {
+            R.id.image_remittance -> {
                 onKYCClick()
             }
             R.id.image_back -> {

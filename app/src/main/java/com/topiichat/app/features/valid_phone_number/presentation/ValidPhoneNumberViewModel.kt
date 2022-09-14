@@ -70,7 +70,6 @@ class ValidPhoneNumberViewModel @AssistedInject constructor(
                 }
             }
             is ResultData.Fail -> onFailValidPhoneNumber(ValidPhone.Fail(result.error))
-            is ResultData.NetworkError -> onNetworkError()
         }
     }
 

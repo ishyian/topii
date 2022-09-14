@@ -33,7 +33,7 @@ class ChatsFragment : BaseFragment<FragmentChatsBinding>(), IChatsFragment {
         FragmentChatsBinding.inflate(inflater, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
-        setupClickListener(imageBack, imageKyc)
+        setupClickListener(imageBack, imageRemittance)
 
         val dividerDrawable = requireContext().getDrawableKtx(R.drawable.chats_list_divider)
         val itemDecoration = DividerItemDecoration(

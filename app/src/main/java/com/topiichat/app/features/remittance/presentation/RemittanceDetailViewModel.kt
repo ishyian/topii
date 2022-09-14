@@ -45,7 +45,6 @@ class RemittanceDetailViewModel @AssistedInject constructor(
                 is ResultData.Fail -> {
                     _showMsgError.postValue(result.error.message)
                 }
-                is ResultData.NetworkError -> onNetworkError()
             }
             _showLoader.value = false
         }

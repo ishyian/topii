@@ -23,9 +23,6 @@ abstract class BaseViewModel(private val router: Router) : ViewModel(), IBaseVie
     protected val _showMsgError: SingleLiveData<String> = SingleLiveData()
     val showMsgError: LiveData<String> = _showMsgError
 
-    protected fun onNetworkError() {
-        _showMsgError.setValue("Something wrong with your network connection")
-    }
 
     protected fun navigate(screen: Screen, clearBackStack: Boolean = false) {
         if (clearBackStack) router.newRootScreen(screen)

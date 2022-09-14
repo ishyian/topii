@@ -7,4 +7,5 @@ import com.topiichat.app.features.registration.domain.model.AuthDataDomain
 interface RegisterCache {
     suspend fun fetchAccessToken(): AuthDataDto
     suspend fun saveAccessToken(tokenDomain: AuthDataDomain): EmptyDto
+    suspend fun deleteAuthData(): EmptyDto
 }

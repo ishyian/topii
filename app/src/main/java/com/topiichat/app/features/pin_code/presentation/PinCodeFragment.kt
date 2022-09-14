@@ -60,7 +60,7 @@ class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment
         observe(visibilityTextDescription, ::onVisibilityTextDescription)
         observe(visibilityTextError, ::onVisibilityTextError)
         observe(colorEditTextPinCode, ::onColorEditTextPinCode)
-        observe(showMsgError, ::onShowMessageError)
+        observe(showMsgError, ::showErrorMessage)
     }
 
     override fun onShowPassTransformationMethod(
@@ -93,9 +93,8 @@ class PinCodeFragment : BaseFragment<FragmentPinCodeBinding>(), IPinCodeFragment
         editTextPinCode.setTextColor(ContextCompat.getColor(requireContext(), colorId))
     }
 
-    override fun onShowMessageError(message: String) {
-        showToast(message)
+    override fun onVisibilityLoader(isVisibleLoader: Boolean) = with(binding) {
+        groupContent.isVisible = isVisibleLoader.not()
+        progressBar.isVisible = isVisibleLoader
     }
-
-    override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
 }

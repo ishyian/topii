@@ -61,10 +61,15 @@ class RemittanceDetailFragment : BaseFragment<FragmentRemittanceDetailBinding>()
         val idText = remittance.maskedIdText()
         val recipientName = remittance.recipient.profile.fullName()
 
-        Glide.with(requireContext())
-            .load(remittance.recipient.profile.avatar)
-            .circleCrop()
-            .into(imageAvatar)
+        with(layoutRecipient) {
+            Glide.with(requireContext())
+                .load(remittance.recipient.profile.avatar)
+                .circleCrop()
+                .into(layoutRecipient.imageAvatar)
+            textRecipientName.text = recipientName
+            textRecipientCountry.text = parameters.toCountryName
+            textRecipientCountry.addStartCircleDrawableFromUrl(parameters.countryFlag)
+        }
 
         textRemittanceDate.text = remittance.createdAt.toString(DateFormats.TRANSACTION_ITEM_FORMAT)
         textRemittanceId.text = idText
@@ -78,11 +83,6 @@ class RemittanceDetailFragment : BaseFragment<FragmentRemittanceDetailBinding>()
             .append(getString(R.string.remittance_time_3))
 
         textAmount.text = sendingText
-        textRecipientName.text = recipientName
-
-        textRecipientCountry.text = parameters.toCountryName
-        textRecipientCountry.addStartCircleDrawableFromUrl(parameters.countryFlag)
-
         textRemittanceSummary.text = SpannableStringBuilder()
             .append(getString(R.string.remittance_detail_summary_1))
             .bold { append(" $sendingText ") }

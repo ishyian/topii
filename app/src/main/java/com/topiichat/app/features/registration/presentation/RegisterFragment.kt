@@ -53,7 +53,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(), IRegisterFragm
     private fun initObservers() = with(viewModel) {
         observe(showLoader, ::onVisibilityLoader)
         observe(btnRegisterEnabling, ::onEnablingBtnRegister)
-        observe(showMsgError, ::onShowMessageError)
+        observe(showMsgError, ::showErrorMessage)
     }
 
     override fun onEnablingBtnRegister(
@@ -61,10 +61,6 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(), IRegisterFragm
     ) = with(binding.btnRegister) {
         isEnabled = btnRegisterEnabling.isEnabled
         setBackgroundResource(btnRegisterEnabling.backgroundId)
-    }
-
-    override fun onShowMessageError(message: String) {
-        showToast(message)
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = with(binding) {

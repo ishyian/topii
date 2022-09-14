@@ -28,9 +28,6 @@ class GetCurrentCountryAvailabilityUseCase @Inject constructor(
                 Timber.d("result failed ${result.error.message}")
                 ResultData.Success(CurrentCountryDomain(false, null))
             }
-            is ResultData.NetworkError -> {
-                ResultData.Success(CurrentCountryDomain(false, null))
-            }
         }
     }
 

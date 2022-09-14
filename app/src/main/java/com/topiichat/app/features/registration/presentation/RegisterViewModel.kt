@@ -120,7 +120,6 @@ class RegisterViewModel @AssistedInject constructor(
                 onSuccessRegister(result.data.accessToken, result.data.senderId)
             }
             is ResultData.Fail -> onFailRegister(result.error.message)
-            is ResultData.NetworkError -> onNetworkError()
         }
     }
 

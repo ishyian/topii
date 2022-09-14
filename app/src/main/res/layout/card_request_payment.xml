@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/send_payment_card_background"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp">
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:text="@string/card_request_payment_title"
+            android:textColor="@color/send_payment_text_title_color"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_you_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:text="@string/card_request_payment_subtitle"
+            android:textColor="#803E3E3E"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_title" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_input_sum"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/offset24"
+            android:backgroundTint="@color/send_payment_card_background"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:imeOptions="actionDone"
+            android:includeFontPadding="false"
+            android:inputType="numberDecimal"
+            android:text="0.00"
+            android:textColor="@color/send_payment_subtitle_color"
+            android:textSize="@dimen/text30"
+            app:layout_constraintEnd_toStartOf="@+id/text_request_currency_picker"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_you_send"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/text_request_currency_picker"
+            android:layout_width="@dimen/offset100"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_currency_picker"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/sfprodisplaymedium"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/offset8"
+            android:paddingVertical="@dimen/offset4"
+            android:textColor="#042545"
+            android:textSize="18sp"
+            app:drawableStartCompat="@drawable/ic_euro"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_input_sum"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_input_sum"
+            tools:text="EUR" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

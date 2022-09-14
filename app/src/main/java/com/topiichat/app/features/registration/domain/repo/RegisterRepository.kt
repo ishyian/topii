@@ -15,4 +15,5 @@ interface RegisterRepository {
 
     suspend fun getAuthData(): AuthDataDomain
     suspend fun saveAuthData(authData: AuthDataDomain): ResultData<EmptyDomain>
+    suspend fun deleteAuthData(): ResultData<EmptyDomain>
 }

@@ -3,6 +3,7 @@ package com.topiichat.app.data.core.data
 import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.exception.data.ErrorParser
 import com.topiichat.app.core.exception.domain.ErrorDomain
+import com.topiichat.app.core.exception.domain.networkConnectionError
 import com.topiichat.app.data.core.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -38,7 +39,7 @@ class RemoteDataSourceTest {
     @Test
     fun api_call_network_error() = runTest {
         val result = testRemoteDataSource.safeApiCall { throw IOException() }
-        assertEquals(ResultData.NetworkError, result)
+        assertEquals(ResultData.Fail(networkConnectionError()), result)
     }
 
     @ExperimentalCoroutinesApi

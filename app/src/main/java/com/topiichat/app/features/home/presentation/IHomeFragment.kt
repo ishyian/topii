@@ -5,5 +5,4 @@ import com.topiichat.app.features.home.presentation.model.HomeRemittanceHistoryU
 
 interface IHomeFragment : IBaseFragment {
     fun onContentLoaded(content: HomeRemittanceHistoryUiModel)
-    fun onShowMessageError(message: String)
 }

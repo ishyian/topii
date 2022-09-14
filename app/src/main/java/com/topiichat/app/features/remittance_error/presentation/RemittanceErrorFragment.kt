@@ -23,15 +23,10 @@ class RemittanceErrorFragment : BaseFragment<FragmentRemittanceErrorBinding>(), 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         setupClickListener(btnReturn, imageBack)
-        initObservers()
     }
 
     override fun onClick(v: View?) {
         viewModel.onClick(v)
-    }
-
-    private fun initObservers() = with(viewModel) {
-
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit

@@ -68,7 +68,7 @@ class OtpFragment : BaseFragment<FragmentOtpBinding>(), IOtpFragment {
         observe(showLoader, ::onVisibilityLoader)
         observe(colorPinView, ::onColorPinView)
         observe(visibilityTextError, ::onVisibilityTextError)
-        observe(showMsgError, ::onShowMessageError)
+        observe(showMsgError, ::showErrorMessage)
         observe(btnSendSmsEnabling, ::onEnablingBtnSendSms)
         observe(textSendSmsTimer, ::onTimerTextSendSms)
         observe(hideKeyboard, ::onHideKeyboardEvent)
@@ -86,10 +86,6 @@ class OtpFragment : BaseFragment<FragmentOtpBinding>(), IOtpFragment {
 
     override fun onSendSms() {
         viewModel.onSendSms()
-    }
-
-    override fun onShowMessageError(message: String) {
-        showToast(message)
     }
 
     override fun onColorPinView(colorId: Int) = with(binding) {

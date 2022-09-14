@@ -124,4 +124,9 @@
     <string name="remittance_error_btn_text">Regresar</string>
     <string name="remittance_error_subtitle">Parece que no tienes saldo suficiente para esta transacción.</string>
     <string name="remittance_error_title">Oops! Algo salió mal.</string>
+
+    <string name="request_remittance_title">Solicitar remesa</string>
+    <string name="request_remittance_button_text">Solicitar</string>
+    <string name="card_request_payment_title">Monto a Solicitar</string>
+    <string name="card_request_payment_subtitle">Tu Solicitas</string>
 </resources>

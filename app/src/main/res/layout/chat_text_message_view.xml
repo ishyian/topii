@@ -17,7 +17,7 @@
         android:paddingHorizontal="12dp"
         android:paddingTop="6dp"
         android:paddingBottom="16dp"
-        android:textColor="#120D34"
+        android:textColor="@color/chat_text_message_color"
         android:textSize="14sp"
         tools:text="@tools:sample/lorem[30]" />
 
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sfprodisplayregular"
-            android:textColor="#9BA2C0"
+            android:textColor="@color/chat_text_message_time_color"
             android:textSize="10sp"
             tools:text="23:59" />
 
