@@ -12,6 +12,9 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven {
+            url  "https://alicebiometrics.jfrog.io/artifactory/alicebiometrics-maven-pro-local/"
+        }
     }
 }
 rootProject.name = "TopiiChat"

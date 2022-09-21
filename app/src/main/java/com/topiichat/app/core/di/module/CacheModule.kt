@@ -6,8 +6,6 @@ import com.topiichat.app.features.contacts.data.datasource.ContactsCache
 import com.topiichat.app.features.contacts.data.datasource.ContactsCacheImpl
 import com.topiichat.app.features.registration.data.datasource.cache.RegisterCache
 import com.topiichat.app.features.registration.data.datasource.cache.RegisterCacheImpl
-import com.topiichat.app.features.splash.data.datasource.cache.AuthCache
-import com.topiichat.app.features.splash.data.datasource.cache.AuthCacheImpl
 import contacts.core.Contacts
 import dagger.Module
 import dagger.Provides
@@ -26,13 +24,6 @@ object CacheModule {
         @ApplicationContext context: Context,
     ): SharedPreferences {
         return context.getSharedPreferences(APP_SHARED_PREF, Context.MODE_PRIVATE)
-    }
-
-    @Provides
-    fun providesAuthCache(
-        pref: SharedPreferences
-    ): AuthCache {
-        return AuthCacheImpl(pref)
     }
 
     @Provides

@@ -1,10 +1,14 @@
 package com.topiichat.app
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
+import com.topiichat.app.core.extension.currentFragment
 import com.topiichat.app.features.MainScreens
+import com.topiichat.app.features.kyc.email.data.AliceSdkListener
 import dagger.hilt.android.AndroidEntryPoint
+import org.json.JSONObject
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
@@ -20,9 +24,6 @@ class AppActivity : AppCompatActivity() {
 
     @Inject
     lateinit var router: Router
-
-    private var _navController: NavController? = null
-    val navController get() = _navController ?: error("nav controller exception")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,5 +41,24 @@ class AppActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         navigatorHolder.removeNavigator()
+    }
+
+    @Suppress("Deprecation")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == ONBOARDING_CODE) {
+            val userInfo = data?.getStringExtra("userStatus")
+            userInfo?.let {
+                val userId = JSONObject(it).getString("user_id")
+                val currentFragment = supportFragmentManager.currentFragment
+                if (currentFragment is AliceSdkListener) {
+                    currentFragment.onVerificationSuccess(userId)
+                }
+            }
+        }
+    }
+
+    companion object {
+        const val ONBOARDING_CODE = 34587
     }
 }

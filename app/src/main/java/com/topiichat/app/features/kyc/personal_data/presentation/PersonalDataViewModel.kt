@@ -8,13 +8,15 @@ import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
+import com.topiichat.app.features.kyc.email.presentation.EnterEmailParameters
+import com.topiichat.app.features.kyc.personal_data.domain.PersonalDataDomain
 import com.topiichat.app.features.kyc.personal_data.presentation.model.PersonalData
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import ru.terrakok.cicerone.Router
-import javax.inject.Inject
 
-@HiltViewModel
-class PersonalDataViewModel @Inject constructor(
+class PersonalDataViewModel @AssistedInject constructor(
+    @Assisted private val parameters: PersonalDataParameters,
     appRouter: Router
 ) : BaseViewModel(appRouter), IPersonalDataViewModel {
 
@@ -79,11 +81,27 @@ class PersonalDataViewModel @Inject constructor(
         }
     }
 
-    override fun onContinueClick() {
-        navigate(KYCScreens.EnterEmail)
+    override fun onContinueClick() = with(parameters) {
+        val parameters = EnterEmailParameters(
+            PersonalDataDomain(
+                firstName = name,
+                lastName = lastName,
+                isoCode2 = isoCode2,
+                secondLastName = secondLastName
+            ),
+            registerModel = registerModel
+        )
+        navigate(KYCScreens.EnterEmail(parameters))
     }
 
     override fun onClickClose() {
         backTo(ChatsScreens.ChatsList)
+    }
+
+    @dagger.assisted.AssistedFactory
+    interface AssistedFactory {
+        fun create(
+            parameters: PersonalDataParameters
+        ): PersonalDataViewModel
     }
 }

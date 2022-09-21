@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.textfield.TextInputEditText
@@ -132,3 +133,6 @@ fun AutoCompleteTextView.showDropDownWhenClick() {
         showDropDown()
     }
 }
+
+inline val FragmentManager.currentFragment: Fragment?
+    get() = this.findFragmentById(R.id.container)
