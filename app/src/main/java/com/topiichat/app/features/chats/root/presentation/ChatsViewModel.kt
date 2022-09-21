@@ -3,6 +3,7 @@ package com.topiichat.app.features.chats.root.presentation
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.chats.ChatsScreens
@@ -11,10 +12,14 @@ import com.topiichat.app.features.chats.root.presentation.model.ChatAction
 import com.topiichat.app.features.chats.root.presentation.model.ChatActionUiModel
 import com.topiichat.app.features.chats.root.presentation.model.ChatItemUiModel
 import com.topiichat.app.features.kyc.KYCScreens
+import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataParameters
+import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCase
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 
 class ChatsViewModel @AssistedInject constructor(
+    private val getAuthData: GetAuthDataUseCase,
     appRouter: Router
 ) : BaseViewModel(appRouter), IChatsViewModel {
 
@@ -109,7 +114,10 @@ class ChatsViewModel @AssistedInject constructor(
     }
 
     override fun onKYCClick() {
-        navigate(KYCScreens.PersonalData)
+        viewModelScope.launch {
+            val parameters = PersonalDataParameters(getAuthData().isoCode)
+            navigate(KYCScreens.PersonalData(parameters))
+        }
     }
 
     @dagger.assisted.AssistedFactory

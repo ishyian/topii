@@ -4,6 +4,7 @@ import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.domain.UseCase
 import com.topiichat.app.features.registration.domain.model.RegisterDomain
 import com.topiichat.app.features.registration.domain.repo.RegisterRepository
+import java.util.UUID
 import javax.inject.Inject
 
 class RegisterUseCase @Inject constructor(
@@ -15,7 +16,8 @@ class RegisterUseCase @Inject constructor(
             phoneNumber = params?.phoneNumber ?: "",
             code = params?.code ?: "",
             authyId = params?.authyId ?: "",
-            pinCode = params?.pinCode ?: ""
+            pinCode = params?.pinCode ?: "",
+            aliceUserId = params?.aliceUserId ?: UUID.randomUUID().toString()
         )
     }
 
@@ -23,6 +25,7 @@ class RegisterUseCase @Inject constructor(
         val phoneNumber: String?,
         val code: String?,
         val authyId: String,
-        val pinCode: String
+        val pinCode: String,
+        val aliceUserId: String? = null
     )
 }

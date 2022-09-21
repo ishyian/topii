@@ -15,7 +15,6 @@ import com.topiichat.app.features.valid_phone_number.domain.model.VerifyPhoneDom
 import com.topiichat.app.features.valid_phone_number.domain.usecases.VerifyPhoneNumberUseCase
 import com.topiichat.app.features.valid_phone_number.presentation.model.PhoneNumber
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 
@@ -49,7 +48,6 @@ class ValidPhoneNumberViewModel @AssistedInject constructor(
             _hideKeyboard.value = Unit
             _visibilityTextError.value = false
             _showLoader.value = true
-            delay(200)
             val request = VerifyPhoneNumberUseCase.Params(
                 phoneNumber = phoneNumber.number,
                 code = phoneNumber.code,

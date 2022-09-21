@@ -19,7 +19,6 @@ import com.topiichat.app.features.otp.presentation.model.TextSendSmsTimerUi
 import com.topiichat.app.features.pin_code.presentation.PinCodeParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 
@@ -67,7 +66,6 @@ class OtpViewModel @AssistedInject constructor(
         viewModelScope.launch {
             _visibilityTextError.value = false
             _showLoader.value = true
-            delay(1000)
             val request = ValidOtpUseCase.Params(parameters.authyId, otpCode)
             val result = validPinCode(request)
             onRenderValidPinCode(result)
@@ -160,7 +158,6 @@ class OtpViewModel @AssistedInject constructor(
                     colorId = R.color.error_color,
                     time = sec.toString()
                 )
-                delay(1000)
             }
             _btnSendSmsEnabling.value = BtnSendSmsEnablingUi(
                 isEnabled = true,

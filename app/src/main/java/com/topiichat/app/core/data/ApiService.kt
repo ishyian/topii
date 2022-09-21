@@ -5,6 +5,8 @@ import com.topiichat.app.features.home.data.model.RecentUsersDto
 import com.topiichat.app.features.home.data.model.RemittanceHistoryDto
 import com.topiichat.app.features.home.data.model.RemittanceHistoryRequestDto
 import com.topiichat.app.features.kyc.base.data.model.KYCStatusDto
+import com.topiichat.app.features.kyc.base.data.model.TokenAliceDto
+import com.topiichat.app.features.kyc.base.data.model.TokenAliceRequestDto
 import com.topiichat.app.features.otp.data.model.ResendOtpCodeDto
 import com.topiichat.app.features.otp.data.model.ResendOtpCodeRequestDto
 import com.topiichat.app.features.otp.data.model.ValidOtpCodeDto
@@ -21,7 +23,6 @@ import com.topiichat.app.features.send_remittance.data.model.RemittanceDto
 import com.topiichat.app.features.send_remittance.data.model.RemittancePurposeDto
 import com.topiichat.app.features.send_remittance.data.model.SendPaymentIntentionRequestDto
 import com.topiichat.app.features.send_remittance.data.model.SendRemittanceRequestDto
-import com.topiichat.app.features.splash.data.model.TokenDto
 import com.topiichat.app.features.valid_phone_number.data.model.VerifyPhoneNumberDto
 import com.topiichat.app.features.valid_phone_number.data.model.VerifyPhoneNumberRequestDto
 import retrofit2.http.Body
@@ -32,8 +33,10 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("api/v1/verify/token_alice/")
-    suspend fun getToken(): TokenDto?
+    @POST("api/v1/alice/token_alice/")
+    suspend fun getToken(
+        @Body requestDto: TokenAliceRequestDto
+    ): TokenAliceDto
 
     @POST("api/v1/twilio/verify_phone_number/")
     suspend fun verifyPhoneNumber(

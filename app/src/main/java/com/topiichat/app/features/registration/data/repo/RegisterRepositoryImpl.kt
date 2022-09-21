@@ -26,10 +26,11 @@ class RegisterRepositoryImpl(
         phoneNumber: String,
         code: String,
         authyId: String,
-        pinCode: String
+        pinCode: String,
+        aliceUserId: String
     ): ResultData<RegisterDomain> {
         return withContext(appDispatchers.network) {
-            registerRemoteDataStore.register(phoneNumber, code, authyId, pinCode).transformData {
+            registerRemoteDataStore.register(phoneNumber, code, authyId, pinCode, aliceUserId).transformData {
                 registerRemoteMapper.map(it)
             }
         }

@@ -10,7 +10,8 @@ interface RegisterRepository {
         phoneNumber: String,
         code: String,
         authyId: String,
-        pinCode: String
+        pinCode: String,
+        aliceUserId: String
     ): ResultData<RegisterDomain>
 
     suspend fun getAuthData(): AuthDataDomain

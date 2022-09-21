@@ -12,6 +12,7 @@ import com.topiichat.app.features.home.data.mapper.RecentUsersRemoteMapper
 import com.topiichat.app.features.home.data.mapper.RemittanceHistoryRemoteMapper
 import com.topiichat.app.features.home.data.repo.HomeRepositoryImpl
 import com.topiichat.app.features.home.domain.repo.HomeRepository
+import com.topiichat.app.features.kyc.base.data.TokenAliceRemoteMapper
 import com.topiichat.app.features.kyc.base.data.datasource.KYCRemoteDataSource
 import com.topiichat.app.features.kyc.base.data.mapper.KYCStatusRemoteMapper
 import com.topiichat.app.features.kyc.base.data.repo.KYCRepositoryImpl
@@ -45,12 +46,6 @@ import com.topiichat.app.features.send_remittance.data.mapper.RemittancePurposes
 import com.topiichat.app.features.send_remittance.data.mapper.RemittanceRemoteMapper
 import com.topiichat.app.features.send_remittance.data.repo.SendRemittanceRepositoryImpl
 import com.topiichat.app.features.send_remittance.domain.repo.SendRemittanceRepository
-import com.topiichat.app.features.splash.data.datasource.cache.AuthCacheDataStore
-import com.topiichat.app.features.splash.data.datasource.remote.AuthRemoteDataStore
-import com.topiichat.app.features.splash.data.mapper.TokenCacheMapper
-import com.topiichat.app.features.splash.data.mapper.TokenRemoteMapper
-import com.topiichat.app.features.splash.data.repo.AuthRepositoryImpl
-import com.topiichat.app.features.splash.domain.repo.AuthRepository
 import com.topiichat.app.features.valid_phone_number.data.datasource.ValidPhoneRemoteDataStore
 import com.topiichat.app.features.valid_phone_number.data.mapper.VerifyPhoneRemoteMapper
 import com.topiichat.app.features.valid_phone_number.data.repo.ValidPhoneRepositoryImpl
@@ -64,24 +59,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
-
-    @Singleton
-    @Provides
-    fun provideAuthRepository(
-        authRemoteDataStore: AuthRemoteDataStore,
-        authCacheDataStore: AuthCacheDataStore,
-        emptyMapper: EmptyMapper,
-        tokenRemoteMapper: TokenRemoteMapper,
-        tokenCacheMapper: TokenCacheMapper
-    ): AuthRepository {
-        return AuthRepositoryImpl(
-            authRemoteDataStore = authRemoteDataStore,
-            authCacheDataStore = authCacheDataStore,
-            emptyMapper = emptyMapper,
-            tokenRemoteMapper = tokenRemoteMapper,
-            tokenCacheMapper = tokenCacheMapper
-        )
-    }
 
     @Singleton
     @Provides
@@ -190,11 +167,13 @@ object RepositoryModule {
     fun providesKYCRepository(
         kycRemoteDataSource: KYCRemoteDataSource,
         kycStatusRemoteMapper: KYCStatusRemoteMapper,
+        tokenAliceRemoteMapper: TokenAliceRemoteMapper,
         appDispatchers: AppDispatchers
     ): KYCRepository {
         return KYCRepositoryImpl(
             kycRemoteDataSource = kycRemoteDataSource,
             kycStatusRemoteMapper = kycStatusRemoteMapper,
+            tokenAliceRemoteMapper = tokenAliceRemoteMapper,
             appDispatchers = appDispatchers
         )
     }

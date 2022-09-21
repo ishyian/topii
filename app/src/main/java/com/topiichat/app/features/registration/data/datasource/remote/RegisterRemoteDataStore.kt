@@ -16,7 +16,8 @@ class RegisterRemoteDataStore @Inject constructor(
         phoneNumber: String,
         code: String,
         authyId: String,
-        pinCode: String
+        pinCode: String,
+        aliceUserId: String
     ): ResultData<RegisterDto?> {
         return safeApiCall {
             apiService.register(
@@ -26,7 +27,8 @@ class RegisterRemoteDataStore @Inject constructor(
                         mobileNumber = phoneNumber
                     ),
                     authyId = authyId,
-                    pinCode = pinCode
+                    pinCode = pinCode,
+                    userIdAlice = aliceUserId
                 )
             )
         }

@@ -13,10 +13,12 @@ class GetKYCStatusUseCase @Inject constructor(
 ) : UseCase<GetKYCStatusUseCase.Params, KYCStatus> {
 
     override suspend operator fun invoke(params: Params?): ResultData<KYCStatus> {
-        val tokenResult = getToken()
-        //return kycRepository.getKYCStatus(tokenResult.accessToken)
-        return ResultData.Success(KYCStatus.KYC_VERIFIED)
+        return params?.accessToken?.let {
+            kycRepository.getKYCStatus("Bearer $it")
+        } ?: kycRepository.getKYCStatus(getToken().accessToken)
     }
 
-    object Params
+    data class Params(
+        val accessToken: String? = null
+    )
 }

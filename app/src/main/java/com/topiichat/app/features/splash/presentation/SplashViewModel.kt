@@ -43,7 +43,7 @@ class SplashViewModel @Inject constructor(
         if (result.token.isEmpty()) {
             navigate(MainScreens.Terms, true)
         } else {
-            when (val kycStatusResult = getKYCStatus()) {
+            when (val kycStatusResult = getKYCStatus(GetKYCStatusUseCase.Params())) {
                 is ResultData.Fail -> onFailKYCStatus(kycStatusResult)
                 else -> navigate(MainScreens.Home, true)
             }

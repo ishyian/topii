@@ -5,17 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.viewModels
+import com.topiichat.app.core.delegates.parcelableParameters
+import com.topiichat.app.core.extension.viewModelCreator
 import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentPersonalDataBinding
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
 import com.topiichat.app.features.kyc.personal_data.presentation.model.PersonalData
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), IPersonalDataFragment {
 
-    private val viewModel: PersonalDataViewModel by viewModels()
+    @Inject
+    lateinit var factory: PersonalDataViewModel.AssistedFactory
+    private val viewModel by viewModelCreator {
+        factory.create(parameters)
+    }
+    private val parameters: PersonalDataParameters by parcelableParameters()
 
     override fun initBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentPersonalDataBinding {
         return FragmentPersonalDataBinding.inflate(inflater, container, false)

@@ -8,20 +8,24 @@ import com.topiichat.app.R
 import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
-import com.topiichat.app.features.chats.ChatsScreens
+import com.topiichat.app.features.kyc.KYCScreens
+import com.topiichat.app.features.kyc.base.domain.model.KYCRegisterDomain
+import com.topiichat.app.features.kyc.base.domain.model.KYCStatus
+import com.topiichat.app.features.kyc.base.domain.usecases.GetKYCStatusUseCase
+import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataParameters
 import com.topiichat.app.features.registration.domain.model.RegisterDomain
 import com.topiichat.app.features.registration.domain.usecases.RegisterUseCase
 import com.topiichat.app.features.registration.domain.usecases.SaveAuthDataUseCase
 import com.topiichat.app.features.registration.presentation.model.BtnRegisterEnablingUi
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 
 class RegisterViewModel @AssistedInject constructor(
     @Assisted("registerParameters") private val parameters: RegisterParameters,
     private val register: RegisterUseCase,
+    private val getKYCStatus: GetKYCStatusUseCase,
     private val saveAuthData: SaveAuthDataUseCase,
     appRouter: Router
 ) : BaseViewModel(appRouter), IRegisterViewModel {
@@ -49,25 +53,12 @@ class RegisterViewModel @AssistedInject constructor(
             }
             R.id.btn_register -> {
                 if (parameters.isFromAuth) {
-                    onRegisterRequest()
+                    onRegister()
                 } else {
                     onRegisterKYC()
                 }
             }
         }
-    }
-
-    private fun onRegisterKYC() {
-        viewModelScope.launch {
-            _showLoader.value = true
-            delay(1000)
-            onSuccessRegisterKYC()
-            _showLoader.value = false
-        }
-    }
-
-    private fun onSuccessRegisterKYC() {
-        navigate(ChatsScreens.ChatsList, true)
     }
 
     override fun onCheckedChanged(id: Int?, isChecked: Boolean) {
@@ -98,7 +89,7 @@ class RegisterViewModel @AssistedInject constructor(
         _btnRegisterEnabling.value = btnRegisterEnabling
     }
 
-    override fun onRegisterRequest() {
+    override fun onRegister() {
         viewModelScope.launch {
             val request = RegisterUseCase.Params(
                 phoneNumber = parameters.phoneNumber,
@@ -107,10 +98,8 @@ class RegisterViewModel @AssistedInject constructor(
                 pinCode = parameters.pinCode
             )
             _showLoader.value = true
-            delay(1000)
             val result = register(request)
             onRenderRegister(result)
-            _showLoader.value = false
         }
     }
 
@@ -125,13 +114,70 @@ class RegisterViewModel @AssistedInject constructor(
 
     override fun onSuccessRegister(accessToken: String, senderId: String) {
         viewModelScope.launch {
-            saveAuthData(SaveAuthDataUseCase.Params(accessToken, senderId, parameters.isoCode))
-            navigate(MainScreens.Home, true)
+            when (val kycStatusResult = getKYCStatus(GetKYCStatusUseCase.Params(accessToken))) {
+                is ResultData.Success -> {
+                    if (kycStatusResult.data == KYCStatus.KYC_NOT_VERIFIED) {
+                        onKYCStatusNotVerified()
+                    } else {
+                        saveAuthData(SaveAuthDataUseCase.Params(accessToken, senderId, parameters.isoCode))
+                        navigate(MainScreens.Home, true)
+                    }
+                }
+                is ResultData.Fail -> {
+                    _showMsgError.postValue(kycStatusResult.error.message)
+                }
+            }
+            _showLoader.value = false
         }
     }
 
     override fun onFailRegister(message: String) {
         _showMsgError.setValue(message)
+    }
+
+    override fun onKYCStatusNotVerified() = with(parameters) {
+        val personalDataParameters = PersonalDataParameters(
+            isoCode2 = isoCode,
+            registerModel = KYCRegisterDomain(
+                phoneNumber = phoneNumber,
+                authyId = authyId,
+                code = code,
+                pinCode = pinCode,
+                isoCode2 = isoCode
+            )
+        )
+        navigate(KYCScreens.PersonalData(personalDataParameters))
+    }
+
+    override fun onRegisterKYC() {
+        viewModelScope.launch {
+            val request = RegisterUseCase.Params(
+                phoneNumber = parameters.phoneNumber,
+                code = parameters.code,
+                authyId = parameters.authyId,
+                pinCode = parameters.pinCode,
+                aliceUserId = parameters.aliceUserId
+            )
+            _showLoader.value = true
+            val result = register(request)
+            onRenderKYCRegister(result)
+        }
+    }
+
+    override fun onRenderKYCRegister(result: ResultData<RegisterDomain>) {
+        when (result) {
+            is ResultData.Success -> {
+                onSuccessKYCRegister(result.data.accessToken, result.data.senderId)
+            }
+            is ResultData.Fail -> onFailRegister(result.error.message)
+        }
+    }
+
+    override fun onSuccessKYCRegister(accessToken: String, senderId: String) {
+        viewModelScope.launch {
+            saveAuthData(SaveAuthDataUseCase.Params(accessToken, senderId, parameters.isoCode))
+            navigate(MainScreens.Home, true)
+        }
     }
 
     @dagger.assisted.AssistedFactory

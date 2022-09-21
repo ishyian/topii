@@ -17,6 +17,8 @@ import com.topiichat.app.features.home.presentation.model.HomeRemittanceHistoryU
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.base.domain.model.KYCStatus
 import com.topiichat.app.features.kyc.base.domain.usecases.GetKYCStatusUseCase
+import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataParameters
+import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCase
 import com.topiichat.app.features.request_remittance.presentation.RequestRemittanceParameters
 import com.topiichat.app.features.send_remittance.presentation.SendRemittanceParameters
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +32,7 @@ class HomeViewModel @Inject constructor(
     private val getRemittanceHistory: GetRemittanceHistoryUseCase,
     private val getCurrentCountryAvailability: GetCurrentCountryAvailabilityUseCase,
     private val getKYCStatus: GetKYCStatusUseCase,
+    private val getAuthData: GetAuthDataUseCase,
     private val remittanceUiMapper: HomeRemittanceUiMapper,
     appRouter: Router
 ) : BaseViewModel(appRouter), IHomeViewModel {
@@ -42,6 +45,8 @@ class HomeViewModel @Inject constructor(
 
     private val _showTotalSumByMonthLoader: MutableLiveData<Boolean> = MutableLiveData()
     val showTotalSumByMonthLoader: LiveData<Boolean> = _showTotalSumByMonthLoader
+
+    private val kycStatus: MutableLiveData<KYCStatus> = MutableLiveData()
 
     private var month = LocalDateTime.now().monthValue
     private val year by lazy { LocalDateTime.now().year }
@@ -57,6 +62,14 @@ class HomeViewModel @Inject constructor(
             when (val result = getCurrentCountryAvailability()) {
                 is ResultData.Success -> {
                     _availableCountryFeatures.postValue(result.data)
+                }
+                else -> {
+                    //Nothing
+                }
+            }
+            when (val result = getKYCStatus(GetKYCStatusUseCase.Params())) {
+                is ResultData.Success -> {
+                    kycStatus.postValue(result.data)
                 }
                 else -> {
                     //Nothing
@@ -102,22 +115,11 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onSendPaymentClick() {
-        viewModelScope.launch {
-            when (val result = getKYCStatus()) {
-                is ResultData.Success -> {
-                    onKYCStatusStatus(result.data)
-                }
-                is ResultData.Fail -> {
-                    _showMsgError.postValue(result.error.message)
-                }
+        if (kycStatus.value == KYCStatus.KYC_NOT_VERIFIED) {
+            viewModelScope.launch {
+                val parameters = PersonalDataParameters(getAuthData().isoCode)
+                navigate(KYCScreens.PersonalData(parameters))
             }
-        }
-
-    }
-
-    override fun onKYCStatusStatus(status: KYCStatus?) {
-        if (status == KYCStatus.KYC_NOT_VERIFIED) {
-            navigate(KYCScreens.PersonalData)
         } else {
             availableCountryFeatures.value?.countryInfo?.let { countryDomain ->
                 navigate(
