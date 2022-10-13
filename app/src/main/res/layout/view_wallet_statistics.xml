@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <LinearLayout
+        android:id="@+id/layout_income"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offset24"
+        android:layout_marginTop="@dimen/offset4"
+        android:background="@drawable/bg_balance_income"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/offset16"
+        android:paddingVertical="@dimen/offset8"
+        app:layout_constraintEnd_toStartOf="@id/guideline_half_screen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/offset16"
+            app:srcCompat="@drawable/ic_balance_arrow_top" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wallet_incomes"
+                android:textColor="@color/whiteColor"
+                android:textSize="@dimen/text10" />
+
+            <TextView
+                android:id="@+id/text_income_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/whiteColor"
+                android:textSize="@dimen/text18"
+                tools:text="5.455.21 €" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_transfer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/offset24"
+        android:background="@drawable/bg_balance_transfer"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/offset16"
+        android:paddingVertical="@dimen/offset8"
+        app:layout_constraintBottom_toBottomOf="@+id/layout_income"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline_half_screen"
+        app:layout_constraintTop_toTopOf="@+id/layout_income">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wallet_transfer_funds"
+            android:textColor="@color/whiteColor"
+            android:textSize="@dimen/text13" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_balance_arrow_right" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_expense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offset24"
+        android:layout_marginTop="@dimen/offset20"
+        android:layout_marginBottom="@dimen/offset4"
+        android:background="@drawable/bg_balance_expense"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/offset16"
+        android:paddingVertical="@dimen/offset8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline_half_screen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_income">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/offset16"
+            app:srcCompat="@drawable/ic_balance_arrow_down" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wallet_expense"
+                android:textColor="@color/whiteColor"
+                android:textSize="@dimen/text10" />
+
+            <TextView
+                android:id="@+id/text_expense_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/whiteColor"
+                android:textSize="@dimen/text18"
+                tools:text="5.455.21 €" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/layout_withdraw"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/offset24"
+        android:layout_marginTop="@dimen/offset20"
+        android:background="@drawable/bg_balance_withdraw"
+        android:elevation="@dimen/offset4"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/layout_expense"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline_half_screen"
+        app:layout_constraintTop_toBottomOf="@id/layout_transfer">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/wallet_withdraw"
+            android:textColor="#33000000"
+            android:textSize="@dimen/text13" />
+
+    </FrameLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_half_screen"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+</merge>

@@ -4,6 +4,7 @@ import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.JsonEncodingException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.topiichat.app.core.exception.data.model.ServiceUnavailableException
 import com.topiichat.app.core.exception.domain.ErrorDomain
 import com.topiichat.app.core.exception.mapper.ErrorMessageMapper
 import retrofit2.HttpException
@@ -13,7 +14,7 @@ import java.net.UnknownHostException
 class ErrorParser {
 
     val defaultError =
-        ErrorDomain("Service unavailable", 500, UnknownHostException::class.java)
+        ErrorDomain("Service unavailable", 500, ServiceUnavailableException::class.java)
 
     val unAuthorizedError =
         ErrorDomain("Unauthorized", 401, UnknownHostException::class.java)

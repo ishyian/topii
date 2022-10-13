@@ -19,6 +19,7 @@ object RegisterTestUtils {
         streamToken = null
     )
     val domain = RegisterDomain(
-        accessToken = "token"
+        accessToken = "token",
+        senderId = "senderId"
     )
 }

@@ -98,7 +98,7 @@ class RequestRemittanceViewModel @AssistedInject constructor(
                 }
                 is ResultData.Fail -> {
                     _showLoader.value = false
-                    _showMsgError.postValue(result.error.message)
+                    handleError(result.error)
                 }
             }
             _showLoader.value = false
@@ -160,7 +160,7 @@ class RequestRemittanceViewModel @AssistedInject constructor(
                     onSuccessRequestRemittance()
                 }
                 is ResultData.Fail -> {
-                    onFailRequestRemittance()
+                    handleError(result.error)
                 }
             }
             _showLoader.value = false
@@ -198,11 +198,7 @@ class RequestRemittanceViewModel @AssistedInject constructor(
         )
     }
 
-    private fun onFailRequestRemittance() {
-        onFailRequestRemittance()
-    }
-
-    private fun onSuccessRequestRemittance() {
+    override fun onSuccessRequestRemittance() {
         _showMsgError.postValue("Request sent successfully")
         onClickBack()
     }

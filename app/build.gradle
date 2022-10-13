@@ -15,8 +15,8 @@ android {
         applicationId "com.fidecorp.chapii"
         minSdk globalConfiguration["androidMinSdkVersion"]
         targetSdk globalConfiguration["androidTargetSdkVersion"]
-        versionCode 17
-        versionName "0.0.17"
+        versionCode 20
+        versionName "0.1.12"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

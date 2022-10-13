@@ -1,6 +1,7 @@
 package com.topiichat.app.core.exception.domain
 
-import java.io.IOException
+import com.topiichat.app.core.exception.data.model.ServiceUnavailableException
+import com.topiichat.app.core.exception.data.model.WrongRequestException
 
 data class ErrorDomain(
     val message: String,
@@ -8,5 +9,6 @@ data class ErrorDomain(
     val exceptionClass: Class<*>,
 )
 
-fun emitError(message: String) = ErrorDomain(message, 400, IllegalStateException::class.java)
-fun networkConnectionError() = ErrorDomain("Something wrong with your network connection", 400, IOException::class.java)
+fun emitError(message: String) = ErrorDomain(message, 400, WrongRequestException::class.java)
+fun networkConnectionError() =
+    ErrorDomain("Something wrong with your network connection", 400, ServiceUnavailableException::class.java)

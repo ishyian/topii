@@ -42,7 +42,7 @@ class EnterEmailViewModel @AssistedInject constructor(
     }
 
     override fun onEmailChanged(value: String) {
-        email = value
+        email = value.trim()
         onUpdateContinueBtn()
     }
 
@@ -95,7 +95,7 @@ class EnterEmailViewModel @AssistedInject constructor(
                     )
                 }
                 is ResultData.Fail -> {
-                    _showMsgError.postValue(result.error.message)
+                    handleError(result.error)
                 }
             }
             _showLoader.value = false

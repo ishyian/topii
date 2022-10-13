@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_bottom_sheet_dialog"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="@dimen/offset56"
+        android:layout_height="@dimen/offset6"
+        android:layout_marginTop="@dimen/offset14"
+        android:background="@drawable/bg_bottom_sheet_divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offset16"
+        android:layout_marginTop="@dimen/offset21"
+        android:fontFamily="@font/opensans_bold"
+        android:text="@string/wallet_enter_card"
+        android:textAlignment="center"
+        android:textColor="#17194B"
+        android:textSize="@dimen/text24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_divider" />
+
+    <LinearLayout
+        android:id="@+id/layout_card_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offset16"
+        android:layout_marginTop="@dimen/offset12"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/text_title">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/opensans_semibold"
+            android:text="@string/wallet_card_name_hint"
+            android:textColor="@color/wallet_primary_text_color"
+            android:textSize="@dimen/text12" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_input_card_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/offset50"
+            android:layout_marginTop="@dimen/offset4"
+            android:background="@drawable/bg_wallet_input_card_data_stroked"
+            android:fontFamily="@font/opensans"
+            android:hint="@string/wallet_name_on_credit_card"
+            android:lines="1"
+            android:paddingHorizontal="@dimen/text24"
+            android:textColor="@color/wallet_text_grey"
+            android:textSize="@dimen/text16" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_card_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offset12"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/layout_card_name">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offset16"
+            android:fontFamily="@font/opensans_semibold"
+            android:text="@string/wallet_card_number_title"
+            android:textColor="@color/wallet_primary_text_color"
+            android:textSize="@dimen/text12" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_input_card_number"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/offset50"
+            android:layout_marginHorizontal="@dimen/offset16"
+            android:layout_marginTop="@dimen/offset4"
+            android:layout_marginBottom="@dimen/offset4"
+            android:background="@drawable/bg_wallet_input_card_data"
+            android:elevation="@dimen/offset4"
+            android:fontFamily="@font/opensans"
+            android:hint="@string/wallet_card_number_hint"
+            android:lines="1"
+            android:paddingHorizontal="@dimen/text24"
+            android:textColor="@color/wallet_text_grey"
+            android:textSize="@dimen/text16" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_expiry_date"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offset12"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@id/guideline_half_screen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_card_number">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offset16"
+            android:fontFamily="@font/opensans_semibold"
+            android:text="@string/wallet_expiry_date_title"
+            android:textColor="@color/wallet_primary_text_color"
+            android:textSize="@dimen/text12" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_input_card_expiry_date"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/offset50"
+            android:layout_marginHorizontal="@dimen/offset16"
+            android:layout_marginTop="@dimen/offset4"
+            android:layout_marginBottom="@dimen/offset4"
+            android:background="@drawable/bg_wallet_input_card_data"
+            android:elevation="@dimen/offset4"
+            android:fontFamily="@font/opensans"
+            android:hint="@string/wallet_expiry_date_hint"
+            android:lines="1"
+            android:paddingHorizontal="@dimen/text24"
+            android:textColor="@color/wallet_text_grey"
+            android:textSize="@dimen/text16" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_cvv"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offset12"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline_half_screen"
+        app:layout_constraintTop_toBottomOf="@id/layout_card_number">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/offset16"
+            android:fontFamily="@font/opensans_semibold"
+            android:text="@string/wallet_cvv_title"
+            android:textColor="@color/wallet_primary_text_color"
+            android:textSize="@dimen/text12" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_input_card_cvv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/offset50"
+            android:layout_marginHorizontal="@dimen/offset16"
+            android:layout_marginTop="@dimen/offset4"
+            android:layout_marginBottom="@dimen/offset4"
+            android:background="@drawable/bg_wallet_input_card_data"
+            android:elevation="@dimen/offset4"
+            android:fontFamily="@font/opensans"
+            android:hint="@string/wallet_cvv_hint"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLength="3"
+            android:paddingHorizontal="@dimen/text24"
+            android:textColor="@color/wallet_text_grey"
+            android:textSize="@dimen/text16" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_half_screen"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_default_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offset16"
+        app:layout_constraintEnd_toEndOf="@id/btn_add"
+        app:layout_constraintTop_toBottomOf="@id/layout_expiry_date"
+        app:thumbTint="@color/switch_thumb_color"
+        app:trackTint="@color/border_pin"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/text_view_switch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sfprodisplayregular"
+        android:text="@string/wallet_set_as_default_card"
+        android:textAlignment="textStart"
+        android:textColor="@color/wallet_primary_text_color"
+        android:textSize="@dimen/text16"
+        app:layout_constraintBottom_toBottomOf="@id/switch_default_card"
+        app:layout_constraintStart_toEndOf="@id/switch_default_card"
+        app:layout_constraintStart_toStartOf="@id/btn_add"
+        app:layout_constraintTop_toTopOf="@id/switch_default_card" />
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="@dimen/offset16"
+        android:background="@drawable/bg_button"
+        android:fontFamily="@font/sfprodisplaybold"
+        android:text="@string/wallet_add_card_btn_text"
+        android:textAllCaps="false"
+        android:textColor="@color/whiteColor"
+        android:textSize="@dimen/text_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/switch_default_card" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

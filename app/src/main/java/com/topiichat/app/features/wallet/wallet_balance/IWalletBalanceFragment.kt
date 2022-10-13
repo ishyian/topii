@@ -1,0 +1,11 @@
+package com.topiichat.app.features.wallet.wallet_balance
+
+import com.topiichat.app.core.presentation.platform.IBaseFragment
+import com.topiichat.app.features.home.domain.model.CurrentCountryDomain
+
+interface IWalletBalanceFragment : IBaseFragment {
+    fun onShowBalanceImage(imageId: Int)
+    fun onShowBalance(balance: String)
+    fun showAddCardDialog()
+    fun onAvailableFeaturesLoaded(featuresDomain: CurrentCountryDomain)
+}

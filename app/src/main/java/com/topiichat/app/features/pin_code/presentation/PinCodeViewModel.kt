@@ -171,7 +171,7 @@ class PinCodeViewModel @AssistedInject constructor(
                     pinCodeCrated = pinCode
                 }
                 is ResultData.Fail -> {
-                    _showMsgError.postValue(result.error.message)
+                    handleError(result.error)
                 }
             }
             _showLoader.value = false

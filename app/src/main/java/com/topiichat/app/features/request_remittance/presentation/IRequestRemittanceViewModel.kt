@@ -22,4 +22,5 @@ interface IRequestRemittanceViewModel : IBaseViewModel {
     fun onRequestClick()
     fun onPhoneNumberChanged(phoneNumber: PhoneNumber)
     fun onContactNameChanged(contactName: String)
+    fun onSuccessRequestRemittance()
 }

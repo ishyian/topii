@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/window_background">
+
+    <com.topiichat.app.core.presentation.customview.ToolbarView
+        android:id="@+id/toolbar"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:isCloseButtonVisible="false"
+        app:toolbarTitle="@string/wallet_add_bank_account_title" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/offset10">
+
+            <TextView
+                android:id="@+id/text_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offset14"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:text="@string/wallet_add_bank_account_description"
+                android:textColor="@color/kyc_text_color" />
+
+            <LinearLayout
+                android:id="@+id/layout_owner_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset24"
+                android:background="@drawable/rounded_border_edittext"
+                android:orientation="vertical"
+                android:padding="@dimen/offset12"
+                tools:parentTag="android.widget.LinearLayout">
+
+                <TextView
+                    android:id="@+id/text_owner_name_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.7"
+                    android:fontFamily="@font/sfprodisplaybold"
+                    android:text="@string/wallet_add_account_owner_name_title"
+                    android:textColor="@color/subtitle_otp"
+                    android:textSize="13sp"
+                    tools:ignore="TextContrastCheck" />
+
+                <TextView
+                    android:id="@+id/text_owner_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:alpha="0.7"
+                    android:background="@color/rounded_border_background"
+                    android:fontFamily="@font/sfprodisplayregular"
+                    android:maxLines="1"
+                    android:textColor="@color/subtitle_otp"
+                    android:textSize="15sp"
+                    tools:ignore="TouchTargetSizeCheck"
+                    android:text="John Doe" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_bank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset12"
+                android:background="@drawable/rounded_border_edittext"
+                android:orientation="vertical"
+                android:padding="@dimen/offset12"
+                tools:parentTag="android.widget.LinearLayout">
+
+                <TextView
+                    android:id="@+id/text_bank_name_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sfprodisplaybold"
+                    android:text="@string/wallet_add_account_bank_name_title"
+                    android:textColor="@color/subtitle_otp"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/text_bank_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/rounded_border_background"
+                    android:fontFamily="@font/sfprodisplayregular"
+                    android:maxLines="1"
+                    android:text="@string/wallet_add_account_select_bank"
+                    android:textColor="@color/subtitle_otp"
+                    android:textSize="15sp"
+                    app:drawableEndCompat="@drawable/ic_arrow_down"
+                    app:drawableTint="@color/colorPrimary"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
+
+            <com.topiichat.app.core.presentation.customview.HintEditTextView
+                android:id="@+id/text_iban"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset12"
+                app:hint="@string/wallet_add_account_iban_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_description" />
+
+            <com.topiichat.app.core.presentation.customview.HintEditTextView
+                android:id="@+id/text_bic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset12"
+                app:hint="@string/wallet_add_account_bic_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_description" />
+
+            <Button
+                android:id="@+id/btn_continue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginHorizontal="@dimen/offset16"
+                android:layout_marginTop="@dimen/offset16"
+                android:background="@drawable/bg_button"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:text="@string/kyc_button_continue"
+                android:textAllCaps="false"
+                android:textColor="@color/whiteColor"
+                android:textSize="@dimen/text_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_second_last_name" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
