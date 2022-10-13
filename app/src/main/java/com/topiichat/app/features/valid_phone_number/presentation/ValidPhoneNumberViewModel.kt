@@ -80,7 +80,7 @@ class ValidPhoneNumberViewModel @AssistedInject constructor(
     }
 
     override fun onFailValidPhoneNumber(failValidPhone: ValidPhone.Fail) {
-        _showMsgError.setValue(failValidPhone.error.message)
+        handleError(failValidPhone.error)
     }
 
     override fun onNextAfterValidate(phoneNumber: String, authyId: String, code: String) {

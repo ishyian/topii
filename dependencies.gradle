@@ -31,6 +31,8 @@ ext {
     timberVersion = '5.0.1'
     threeTenVersion = '1.3.1'
     glideVersion = '4.13.2'
+    inputMaskAndroidVersion = '6.1.0'
+    mpAndroidChartVersion = 'v3.1.0'
     junitVersion = '4.13.2'
     junitExtVersion = '1.1.3'
     mockitoVersion = '4.0.0'
@@ -78,6 +80,7 @@ ext {
     materialDatePicker = "com.wdullaer:materialdatetimepicker:$materialDatePickerVersion"
     inputMaskAndroid = "com.redmadrobot:input-mask-android:$inputMaskAndroidVersion"
     cicerone = "com.github.terrakok:cicerone:$ciceroneVersion"
+    mpAndroidChart = "com.github.PhilJay:MPAndroidChart:$mpAndroidChartVersion"
 
     contactsCore = "com.github.vestrel00.contacts-android:core:$contactsVersion"
     contactsAsync = "com.github.vestrel00.contacts-android:async:$contactsVersion"
@@ -89,6 +92,7 @@ ext {
     glideCompiler = "com.github.bumptech.glide:compiler:$glideVersion"
 
     aliceSdk = "com.alicebiometrics.onboarding:AliceOnboarding:+"
+    inputMask = "com.github.RedMadRobot:input-mask-android:$inputMaskAndroidVersion"
 
     junit = "junit:junit:$junitVersion"
     mockito = "org.mockito.kotlin:mockito-kotlin:$mockitoVersion"
@@ -133,7 +137,9 @@ ext {
                     timber,
                     javaTime,
                     glide,
-                    aliceSdk
+                    aliceSdk,
+                    inputMask,
+                    mpAndroidChart
             ],
 
             forKapt          : [

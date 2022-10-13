@@ -4,6 +4,8 @@ import com.topiichat.app.core.delegates.parcelableParametersBundleOf
 import com.topiichat.app.features.activate_permission.presentation.PermissionFragment
 import com.topiichat.app.features.contacts.presentation.ContactsFragment
 import com.topiichat.app.features.contacts.presentation.ContactsParameters
+import com.topiichat.app.features.error.presentation.ErrorFragment
+import com.topiichat.app.features.error.presentation.ErrorParameters
 import com.topiichat.app.features.home.presentation.HomeFragment
 import com.topiichat.app.features.otp.presentation.OtpFragment
 import com.topiichat.app.features.otp.presentation.OtpParameters
@@ -115,6 +117,16 @@ object MainScreens {
         override fun getFragment() = RequestRemittanceFragment()
         override fun getFragmentParams() = FragmentParams(
             RequestRemittanceFragment::class.java,
+            parcelableParametersBundleOf(parameters)
+        )
+    }
+
+    class Error(
+        private val parameters: ErrorParameters
+    ) : SupportAppScreen() {
+        override fun getFragment() = ErrorFragment()
+        override fun getFragmentParams() = FragmentParams(
+            ErrorFragment::class.java,
             parcelableParametersBundleOf(parameters)
         )
     }

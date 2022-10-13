@@ -12,6 +12,7 @@
     <color name="don_t_enabled_color">#D6DAE8</color>
     <color name="green">#0D671C</color>
     <color name="gray">#D7D7D7</color>
+    <color name="ripple_active">#F3F3F3</color>
 
     <color name="window_background">#FAFAFA</color>
     <color name="onboard_background_color">#FFFFFF</color>
@@ -73,4 +74,7 @@
     <color name="chat_primary_text_color">#000635</color>
     <color name="chat_text_message_color">#120D34</color>
     <color name="chat_text_message_time_color">#9BA2C0</color>
+    <color name="wallet_card_added_subtitle">#8D91A9</color>
+    <color name="wallet_text_grey">#8D91A9</color>
+    <color name="wallet_primary_text_color">#17194B</color>
 </resources>

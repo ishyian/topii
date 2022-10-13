@@ -87,7 +87,7 @@ object NetworkModule {
                 val request: Request = chain
                     .request()
                     .newBuilder()
-                    .addHeader("app-version", "0.1.11")
+                    .addHeader("app-version", BuildConfig.VERSION_NAME)
                     .build()
                 chain.proceed(request)
             }

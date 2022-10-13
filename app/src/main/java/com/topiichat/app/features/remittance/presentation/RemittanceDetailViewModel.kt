@@ -43,7 +43,7 @@ class RemittanceDetailViewModel @AssistedInject constructor(
                     _remittanceDetail.postValue(result.data)
                 }
                 is ResultData.Fail -> {
-                    _showMsgError.postValue(result.error.message)
+                    handleError(result.error)
                 }
             }
             _showLoader.value = false

@@ -59,7 +59,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
     }
 
     override fun onWalletClicked() {
-        // Nothing for now
+        viewModel.onWalletClick()
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = with(binding) {

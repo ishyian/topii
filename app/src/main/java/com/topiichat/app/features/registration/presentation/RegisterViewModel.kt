@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
 import com.topiichat.app.core.domain.ResultData
+import com.topiichat.app.core.exception.domain.ErrorDomain
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.kyc.KYCScreens
@@ -108,7 +109,7 @@ class RegisterViewModel @AssistedInject constructor(
             is ResultData.Success -> {
                 onSuccessRegister(result.data.accessToken, result.data.senderId)
             }
-            is ResultData.Fail -> onFailRegister(result.error.message)
+            is ResultData.Fail -> onFailRegister(result.error)
         }
     }
 
@@ -131,8 +132,8 @@ class RegisterViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onFailRegister(message: String) {
-        _showMsgError.setValue(message)
+    override fun onFailRegister(error: ErrorDomain) {
+        handleError(error)
     }
 
     override fun onKYCStatusNotVerified() = with(parameters) {
@@ -169,7 +170,7 @@ class RegisterViewModel @AssistedInject constructor(
             is ResultData.Success -> {
                 onSuccessKYCRegister(result.data.accessToken, result.data.senderId)
             }
-            is ResultData.Fail -> onFailRegister(result.error.message)
+            is ResultData.Fail -> onFailRegister(result.error)
         }
     }
 

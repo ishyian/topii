@@ -21,6 +21,7 @@ import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataPar
 import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCase
 import com.topiichat.app.features.request_remittance.presentation.RequestRemittanceParameters
 import com.topiichat.app.features.send_remittance.presentation.SendRemittanceParameters
+import com.topiichat.app.features.wallet.WalletScreens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
@@ -99,7 +100,7 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onFailRemmitanceHistory(failure: ResultData.Fail) {
-        _showMsgError.postValue(failure.error.message)
+        handleError(failure.error)
     }
 
     override fun onClick(view: View?) {
@@ -147,5 +148,9 @@ class HomeViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    override fun onWalletClick() {
+        navigate(WalletScreens.WalletBalance)
     }
 }

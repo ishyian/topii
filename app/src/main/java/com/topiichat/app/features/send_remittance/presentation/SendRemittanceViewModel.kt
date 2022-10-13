@@ -119,7 +119,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
                 }
                 is ResultData.Fail -> {
                     _showLoader.value = false
-                    _showMsgError.postValue(result.error.message)
+                    handleError(result.error)
                 }
             }
 
@@ -197,7 +197,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
                     onSuccessFxRate(result.data, updateOnlyReceiverSum)
                 }
                 is ResultData.Fail -> {
-                    _showMsgError.postValue(result.error.message)
+                    handleError(result.error)
                 }
             }
             _showReceiverSumLoader.value = false
@@ -236,7 +236,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
                     }
                     is ResultData.Fail -> {
                         _showLoader.value = false
-                        _showMsgError.postValue(result.error.message)
+                        handleError(result.error)
                     }
                 }
             }

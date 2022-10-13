@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/window_background">
+
+    <com.topiichat.app.core.presentation.customview.ToolbarView
+        android:id="@+id/toolbar"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        app:isCloseButtonVisible="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:toolbarTitle="@string/wallet_balance_title" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image_add_credit_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/offset16"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_add_credit_card" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/layout_content"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layout_balance_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/offset8"
+                android:layout_marginTop="@dimen/offset40"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/offset8"
+                    android:text="@string/wallet_my_balance"
+                    android:textColor="#6F6FFF"
+                    android:textSize="@dimen/text18" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/btn_show_balance"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/ic_password_not" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/text_balance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offset14"
+                android:background="#D9D9D9"
+                android:fontFamily="@font/montserrat_bold"
+                android:paddingVertical="@dimen/offset36"
+                android:text="@string/wallet_hidden_balance"
+                android:textAlignment="center"
+                android:textColor="#6F6FFF"
+                android:textSize="@dimen/text32"
+                app:layout_constraintTop_toBottomOf="@+id/layout_balance_button"
+                tools:ignore="TextContrastCheck" />
+
+            <com.topiichat.app.features.wallet.wallet_balance.statistics.WalletStatisticsView
+                android:id="@+id/view_statistics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/offset36" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset36"
+                android:layout_marginTop="@dimen/offset14"
+                android:fontFamily="@font/opensans_bold"
+                android:text="@string/wallet_analytics"
+                android:textColor="#3E3E3E"
+                android:textSize="@dimen/text18" />
+
+            <RadioGroup
+                android:id="@+id/group_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/offset45"
+                android:layout_marginHorizontal="@dimen/offset36"
+                android:layout_marginTop="@dimen/offset4"
+                android:background="@drawable/bg_wallet_tabs"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:padding="@dimen/offset3"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <RadioButton
+                    android:id="@+id/wallet_tab"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_wallet_tabs_button"
+                    android:button="@null"
+                    android:checked="true"
+                    android:fontFamily="@font/sfprodisplaymedium"
+                    android:gravity="center"
+                    android:text="@string/wallet_wallet_tab"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="@dimen/text12"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <RadioButton
+                    android:id="@+id/cards_tab"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_wallet_tabs_button"
+                    android:button="@null"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/sfprodisplaymedium"
+                    android:gravity="center"
+                    android:paddingEnd="@dimen/offset20"
+                    android:text="@string/wallet_cards_tab"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="@dimen/text12"
+                    android:visibility="gone"
+                    tools:ignore="RtlSymmetry,TouchTargetSizeCheck"
+                    tools:visibility="visible" />
+            </RadioGroup>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset16"
+                android:layout_marginTop="@dimen/offset14"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_33"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.33" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_66"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.66" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_bold"
+                    android:text="@string/day"
+                    android:textColor="@color/wallet_primary_text_color"
+                    android:textSize="@dimen/text12"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_bold"
+                    android:text="@string/week"
+                    android:textColor="@color/wallet_primary_text_color"
+                    android:textSize="@dimen/text12"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_33"
+                    app:layout_constraintStart_toStartOf="@id/guideline_33"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_bold"
+                    android:text="@string/month"
+                    android:textColor="@color/wallet_primary_text_color"
+                    android:textSize="@dimen/text12"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_66"
+                    app:layout_constraintStart_toStartOf="@id/guideline_66"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_bold"
+                    android:text="@string/year"
+                    android:textColor="@color/wallet_primary_text_color"
+                    android:textSize="@dimen/text12"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/wallet_chart"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/offset150"
+                android:layout_marginTop="@dimen/offset14" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loader" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:constraint_referenced_ids="toolbar, image_add_credit_card, layout_content" />
+</androidx.constraintlayout.widget.ConstraintLayout>
