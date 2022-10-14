@@ -44,4 +44,6 @@
     <color name="add_recipient_bg_color">#31476D</color>
     <color name="send_payment_add_recipient_text_color">@color/whiteColor</color>
     <color name="send_payment_text_color">@color/whiteColor</color>
+    <color name="remittance_detail_primary_text_color">@color/whiteColor</color>
+    <color name="remittance_detail_secondary_text_color">@color/whiteColor</color>
 </resources>
