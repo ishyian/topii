@@ -80,4 +80,8 @@
     <color name="text_home_transactions_header_color">#042545</color>
     <color name="home_total_sum_month_color">#60708F</color>
     <color name="home_total_sum_progress_color">#0521F5</color>
+    <color name="send_payment_card_subtitle">#803E3E3E</color>
+    <color name="send_payment_currency_text_color">#042545</color>
+    <color name="send_payment_add_recipient_text_color">#0521F5</color>
+    <color name="send_payment_amount_text_title">#99999E</color>
 </resources>
