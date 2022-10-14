@@ -69,6 +69,7 @@
         android:id="@+id/rv_transactions"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        tools:listitem="@layout/home_transaction_item"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_transactions_list"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

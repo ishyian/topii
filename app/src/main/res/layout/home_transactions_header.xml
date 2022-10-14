@@ -15,7 +15,7 @@
         android:layout_marginBottom="@dimen/offset24"
         android:fontFamily="@font/sfprodisplaymedium"
         android:text="@string/home_transactions_header_title"
-        android:textColor="#042545"
+        android:textColor="@color/text_home_transactions_header_color"
         android:textSize="@dimen/text18"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
