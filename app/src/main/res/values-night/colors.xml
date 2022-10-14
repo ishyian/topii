@@ -31,4 +31,7 @@
     <color name="home_transaction_user_name">@color/whiteColor</color>
     <color name="home_transaction_date">@color/whiteColor</color>
     <color name="home_transaction_sum_expense">@color/whiteColor</color>
+    <color name="home_total_sum_month_color">@color/whiteColor</color>
+    <color name="home_total_sum_border_color">#CCCCCC</color>
+    <color name="home_total_sum_progress_color">@color/whiteColor</color>
 </resources>

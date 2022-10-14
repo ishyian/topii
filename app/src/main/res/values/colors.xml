@@ -78,4 +78,6 @@
     <color name="wallet_text_grey">#8D91A9</color>
     <color name="wallet_primary_text_color">#17194B</color>
     <color name="text_home_transactions_header_color">#042545</color>
+    <color name="home_total_sum_month_color">#60708F</color>
+    <color name="home_total_sum_progress_color">#0521F5</color>
 </resources>
