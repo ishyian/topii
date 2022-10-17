@@ -56,7 +56,6 @@
                     android:id="@+id/text_owner_name_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:alpha="0.7"
                     android:fontFamily="@font/sfprodisplaybold"
                     android:text="@string/wallet_add_account_owner_name_title"
                     android:textColor="@color/subtitle_otp"
