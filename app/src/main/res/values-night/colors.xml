@@ -20,6 +20,7 @@
     <color name="chats_input_text_color">@color/whiteColor</color>
     <color name="chat_text_message_color">#FAFAFA</color>
     <color name="chat_text_message_time_color">#FAFAFA</color>
+    <color name="chats_attachment_option_text_color">@color/whiteColor</color>
     <color name="kyc_text_color">@color/whiteColor</color>
 
     <color name="history_header_item_background">#31476D</color>
