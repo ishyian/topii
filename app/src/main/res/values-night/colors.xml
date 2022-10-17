@@ -46,4 +46,5 @@
     <color name="send_payment_text_color">@color/whiteColor</color>
     <color name="remittance_detail_primary_text_color">@color/whiteColor</color>
     <color name="remittance_detail_secondary_text_color">@color/whiteColor</color>
+    <color name="remittance_detail_dark_text_color">@color/whiteColor</color>
 </resources>
