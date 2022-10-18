@@ -98,7 +98,7 @@
                 android:layout_marginTop="@dimen/offset14"
                 android:fontFamily="@font/opensans_bold"
                 android:text="@string/wallet_analytics"
-                android:textColor="#3E3E3E"
+                android:textColor="@color/remittance_detail_dark_text_color"
                 android:textSize="@dimen/text18" />
 
             <RadioGroup
