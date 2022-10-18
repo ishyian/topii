@@ -48,4 +48,6 @@
     <color name="remittance_detail_primary_text_color">@color/whiteColor</color>
     <color name="remittance_detail_secondary_text_color">@color/whiteColor</color>
     <color name="remittance_detail_dark_text_color">@color/whiteColor</color>
+    <color name="wallet_primary_text_color">@color/whiteColor</color>
+    <color name="wallet_text_grey">@color/whiteColor</color>
 </resources>
