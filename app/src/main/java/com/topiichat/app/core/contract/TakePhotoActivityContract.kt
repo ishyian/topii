@@ -9,9 +9,9 @@ import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.RequiresPermission
 import androidx.core.net.toUri
+import com.topiichat.app.core.extension.createCameraIntent
+import com.topiichat.app.core.extension.getCameraIntent
 import com.topiichat.app.core.extension.toPublicUri
-import com.topiichat.app.core.utils.createCameraIntent
-import com.topiichat.app.core.utils.getCameraIntent
 import java.io.File
 
 class TakePhotoActivityContract : ActivityResultContract<String, Uri?>() {

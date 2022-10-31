@@ -1,4 +1,4 @@
-package com.topiichat.app.core.utils
+package com.topiichat.app.core.extension
 
 import android.Manifest
 import android.content.Intent

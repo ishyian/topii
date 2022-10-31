@@ -65,6 +65,8 @@ android {
 dependencies {
     def notations = rootProject.ext.appDependencies
 
+    implementation project(':chat')
+
     for (item in notations.forImplementation) {
         implementation item
     }

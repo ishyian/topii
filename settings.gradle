@@ -15,8 +15,10 @@ dependencyResolutionManagement {
         maven {
             url  "https://alicebiometrics.jfrog.io/artifactory/alicebiometrics-maven-pro-local/"
         }
+        jcenter()
     }
 }
 rootProject.name = "TopiiChat"
 include ':app'
 include ':TopiiChat-SDK'
+include ':chat'

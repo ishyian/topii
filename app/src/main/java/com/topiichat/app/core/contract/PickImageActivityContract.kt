@@ -7,7 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.RequiresPermission
-import com.topiichat.app.core.utils.createGalleryIntent
+import com.topiichat.app.core.extension.createGalleryIntent
 
 class PickImageActivityContract : ActivityResultContract<Unit, Uri?>() {
 
