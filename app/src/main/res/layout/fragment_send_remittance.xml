@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/window_background">
 
     <com.topiichat.app.core.presentation.customview.ToolbarView
         android:id="@+id/toolbar"
@@ -86,7 +87,6 @@
                 android:id="@+id/menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/rounded_border_background"
                 app:boxCornerRadiusBottomEnd="@dimen/offset10"
                 app:boxCornerRadiusBottomStart="@dimen/offset10"
                 app:boxCornerRadiusTopEnd="@dimen/offset10"

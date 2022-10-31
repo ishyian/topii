@@ -40,7 +40,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/whiteColor"
+            android:background="@drawable/bg_remittance_error"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageView

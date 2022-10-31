@@ -57,6 +57,7 @@ ext {
     hiltCompiler = "com.google.dagger:hilt-android-compiler:$hiltVersion"
 
     retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    retrofitGson = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     retrofitAdapter = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofitAdapterVersion"
     loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$loggingInterceptorVersion"
     moshiConverter = "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
@@ -139,7 +140,8 @@ ext {
                     glide,
                     aliceSdk,
                     inputMask,
-                    mpAndroidChart
+                    mpAndroidChart,
+                    retrofitGson
             ],
 
             forKapt          : [

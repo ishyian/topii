@@ -20,5 +20,34 @@
     <color name="chats_input_text_color">@color/whiteColor</color>
     <color name="chat_text_message_color">#FAFAFA</color>
     <color name="chat_text_message_time_color">#FAFAFA</color>
+    <color name="chats_attachment_option_text_color">@color/whiteColor</color>
     <color name="kyc_text_color">@color/whiteColor</color>
+
+    <color name="history_header_item_background">#31476D</color>
+    <color name="home_header_item_icon_selected_color">@color/whiteColor</color>
+    <color name="home_header_item_icon_disabled_color">#33FFFFFF</color>
+    <color name="home_header_item_icon_color">@color/whiteColor</color>
+    <color name="home_transaction_list_background">#142A54</color>
+    <color name="text_home_transactions_header_color">@color/whiteColor</color>
+    <color name="home_transaction_user_name">@color/whiteColor</color>
+    <color name="home_transaction_date">@color/whiteColor</color>
+    <color name="home_transaction_sum_expense">@color/whiteColor</color>
+    <color name="home_total_sum_month_color">@color/whiteColor</color>
+    <color name="home_total_sum_border_color">#CCCCCC</color>
+    <color name="home_total_sum_progress_color">@color/whiteColor</color>
+
+    <color name="send_payment_card_background">#31476D</color>
+    <color name="send_payment_text_title_color">@color/whiteColor</color>
+    <color name="send_payment_card_subtitle">#80B1BED8</color>
+    <color name="send_payment_subtitle_color">@color/whiteColor</color>
+    <color name="send_payment_currency_text_color">@color/whiteColor</color>
+    <color name="add_recipient_stroke_color">#CCCCCC</color>
+    <color name="add_recipient_bg_color">#31476D</color>
+    <color name="send_payment_add_recipient_text_color">@color/whiteColor</color>
+    <color name="send_payment_text_color">@color/whiteColor</color>
+    <color name="remittance_detail_primary_text_color">@color/whiteColor</color>
+    <color name="remittance_detail_secondary_text_color">@color/whiteColor</color>
+    <color name="remittance_detail_dark_text_color">@color/whiteColor</color>
+    <color name="wallet_primary_text_color">@color/whiteColor</color>
+    <color name="wallet_text_grey">@color/whiteColor</color>
 </resources>
