@@ -48,6 +48,13 @@ ext {
     guavaVersion = '31.1-android'
     bouncyCastleVersion = '1.64'
     openGpgVersion = '10.0'
+    libSignalVersion = '2.6.2'
+    webRtcVersion = '100.0.0'
+    transCoderVersion = '0.9.1'
+    zxingVersion = '3.3.3'
+    shortCutBadgerVersion = '1.1.22@aar'
+    emoji2Version = "1.2.0"
+    miniDnsVersion = '0.2.4'
 
     coreKtx = "androidx.core:core-ktx:$coreKtxVersion"
     appCompat = "androidx.appcompat:appcompat:$appCompatVersion"
@@ -111,6 +118,14 @@ ext {
     guava = "com.google.guava:guava:$guavaVersion"
     bouncyCastle = "org.bouncycastle:bcmail-jdk15on:$bouncyCastleVersion"
     openGpg = "org.sufficientlysecure:openpgp-api:$openGpgVersion"
+    libSignal = "org.whispersystems:signal-protocol-java:$libSignalVersion"
+    webRtc = "ch.threema:webrtc-android:$webRtcVersion"
+    transCoder = "com.otaliastudios:transcoder:$transCoderVersion"
+    zxing =  "com.google.zxing:core:$zxingVersion"
+    shortCutBadger = "me.leolin:ShortcutBadger:$shortCutBadgerVersion"
+    emoji2 = "androidx.emoji2:emoji2:$emoji2Version"
+    emojiBundled = "androidx.emoji2:emoji2-bundled:$emoji2Version"
+    miniDns = "de.measite.minidns:minidns-hla:$miniDnsVersion"
 
     junit = "junit:junit:$junitVersion"
     mockito = "org.mockito.kotlin:mockito-kotlin:$mockitoVersion"
@@ -166,7 +181,15 @@ ext {
                     speedDial,
                     guava,
                     bouncyCastle,
-                    openGpg
+                    openGpg,
+                    libSignal,
+                    webRtc,
+                    transCoder,
+                    zxing,
+                    shortCutBadger,
+                    emoji2,
+                    emojiBundled,
+                    miniDns
             ],
 
             forKapt          : [
