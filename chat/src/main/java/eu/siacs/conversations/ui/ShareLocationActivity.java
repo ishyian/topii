@@ -11,6 +11,8 @@ import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.math.DoubleMath;
+import com.yourbestigor.chat.R;
+import com.yourbestigor.chat.databinding.ActivityShareLocationBinding;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.GeoPoint;
@@ -20,8 +22,6 @@ import java.math.RoundingMode;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
-import eu.siacs.conversations.databinding.ActivityShareLocationBinding;
 import eu.siacs.conversations.ui.util.LocationHelper;
 import eu.siacs.conversations.ui.widget.Marker;
 import eu.siacs.conversations.ui.widget.MyLocation;

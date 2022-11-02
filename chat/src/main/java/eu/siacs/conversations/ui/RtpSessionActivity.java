@@ -29,6 +29,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
+import com.yourbestigor.chat.R;
+import com.yourbestigor.chat.databinding.ActivityRtpSessionBinding;
 
 import org.webrtc.RendererCommon;
 import org.webrtc.SurfaceViewRenderer;
@@ -46,8 +48,6 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
-import eu.siacs.conversations.databinding.ActivityRtpSessionBinding;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
@@ -211,13 +211,11 @@ public class RtpSessionActivity extends XmppActivity
     }
 
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_help:
-                launchHelpInBrowser();
-                break;
-            case R.id.action_goto_chat:
-                switchToConversation();
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_help) {
+            launchHelpInBrowser();
+        } else if (itemId == R.id.action_goto_chat) {
+            switchToConversation();
         }
         return super.onOptionsItemSelected(item);
     }

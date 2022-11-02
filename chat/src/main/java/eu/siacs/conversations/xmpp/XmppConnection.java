@@ -12,6 +12,7 @@ import android.util.Pair;
 import android.util.SparseArray;
 
 import com.google.common.base.Strings;
+import com.yourbestigor.chat.R;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -57,7 +58,6 @@ import javax.net.ssl.X509TrustManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.XmppDomainVerifier;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.crypto.sasl.ChannelBinding;

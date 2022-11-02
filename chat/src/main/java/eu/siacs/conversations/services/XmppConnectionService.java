@@ -128,6 +128,7 @@ import eu.siacs.conversations.utils.ExceptionHelper;
 import eu.siacs.conversations.utils.MimeUtils;
 import eu.siacs.conversations.utils.PhoneHelper;
 import eu.siacs.conversations.utils.QuickLoader;
+import eu.siacs.conversations.utils.Random;
 import eu.siacs.conversations.utils.ReplacingSerialSingleThreadExecutor;
 import eu.siacs.conversations.utils.ReplacingTaskManager;
 import eu.siacs.conversations.utils.Resolver;
@@ -165,9 +166,6 @@ import eu.siacs.conversations.xmpp.stanzas.IqPacket;
 import eu.siacs.conversations.xmpp.stanzas.MessagePacket;
 import eu.siacs.conversations.xmpp.stanzas.PresencePacket;
 import me.leolin.shortcutbadger.ShortcutBadger;
-
-import static eu.siacs.conversations.utils.Compatibility.s;
-import static eu.siacs.conversations.utils.Random.SECURE_RANDOM;
 
 public class XmppConnectionService extends Service {
 
@@ -449,7 +447,7 @@ public class XmppConnectionService extends Service {
                     Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": went into offline state during low ping mode. reconnecting now");
                     reconnectAccount(account, true, false);
                 } else {
-                    final int timeToReconnect = SECURE_RANDOM.nextInt(10) + 2;
+                    final int timeToReconnect = Random.SECURE_RANDOM.nextInt(10) + 2;
                     scheduleWakeUpCall(timeToReconnect, account.getUuid().hashCode());
                 }
             } else if (account.getStatus() == Account.State.REGISTRATION_SUCCESSFUL) {
@@ -1404,7 +1402,7 @@ public class XmppConnectionService extends Service {
         final Intent intent = new Intent(this, EventReceiver.class);
         intent.setAction(ACTION_POST_CONNECTIVITY_CHANGE);
         try {
-            final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, s()
+            final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, Compatibility.s()
                     ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
                     : PendingIntent.FLAG_UPDATE_CURRENT);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -1452,7 +1450,7 @@ public class XmppConnectionService extends Service {
         final Intent intent = new Intent(this, EventReceiver.class);
         intent.setAction(ACTION_IDLE_PING);
         try {
-            final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, s()
+            final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, Compatibility.s()
                     ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
                     : PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToWake, pendingIntent);

@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.xmpp.Jid;
 
 public class JabberIdContact extends AbstractPhoneContact {

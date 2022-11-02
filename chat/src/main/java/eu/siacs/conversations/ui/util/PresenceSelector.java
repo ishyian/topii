@@ -33,12 +33,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Pair;
 
+import com.yourbestigor.chat.R;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.appcompat.app.AlertDialog;
-import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Presences;

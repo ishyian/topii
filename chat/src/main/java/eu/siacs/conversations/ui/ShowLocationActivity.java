@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.yourbestigor.chat.R;
+import com.yourbestigor.chat.databinding.ActivityShowLocationBinding;
+
 import org.jetbrains.annotations.NotNull;
 import org.osmdroid.util.GeoPoint;
 
@@ -24,8 +27,6 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
-import eu.siacs.conversations.databinding.ActivityShowLocationBinding;
 import eu.siacs.conversations.ui.util.LocationHelper;
 import eu.siacs.conversations.ui.util.UriHelper;
 import eu.siacs.conversations.ui.widget.Marker;
@@ -171,35 +172,35 @@ public class ShowLocationActivity extends LocationActivity implements LocationLi
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_copy_location:
-                final ClipboardManager clipboard =
-                        (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                if (clipboard != null) {
-                    final ClipData clip =
-                            ClipData.newPlainText("location", createGeoUri().toString());
-                    clipboard.setPrimaryClip(clip);
-                    Toast.makeText(this, R.string.url_copied_to_clipboard, Toast.LENGTH_SHORT)
-                            .show();
-                }
-                return true;
-            case R.id.action_share_location:
-                final Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, createGeoUri().toString());
-                shareIntent.setType("text/plain");
-                try {
-                    startActivity(Intent.createChooser(shareIntent, getText(R.string.share_with)));
-                } catch (final ActivityNotFoundException e) {
-                    // This should happen only on faulty androids because normally chooser is always
-                    // available
-                    Toast.makeText(
-                                    this,
-                                    R.string.no_application_found_to_open_file,
-                                    Toast.LENGTH_SHORT)
-                            .show();
-                }
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_copy_location) {
+            final ClipboardManager clipboard =
+                    (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            if (clipboard != null) {
+                final ClipData clip =
+                        ClipData.newPlainText("location", createGeoUri().toString());
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(this, R.string.url_copied_to_clipboard, Toast.LENGTH_SHORT)
+                        .show();
+            }
+            return true;
+        } else if (itemId == R.id.action_share_location) {
+            final Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, createGeoUri().toString());
+            shareIntent.setType("text/plain");
+            try {
+                startActivity(Intent.createChooser(shareIntent, getText(R.string.share_with)));
+            } catch (final ActivityNotFoundException e) {
+                // This should happen only on faulty androids because normally chooser is always
+                // available
+                Toast.makeText(
+                                this,
+                                R.string.no_application_found_to_open_file,
+                                Toast.LENGTH_SHORT)
+                        .show();
+            }
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

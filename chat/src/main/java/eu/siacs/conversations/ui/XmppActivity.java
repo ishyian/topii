@@ -10,7 +10,6 @@ import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.ServiceConnection;
@@ -35,7 +34,6 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.text.Html;
-import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -45,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
+import com.yourbestigor.chat.R;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -55,14 +54,10 @@ import java.util.concurrent.RejectedExecutionException;
 import androidx.annotation.BoolRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.databinding.DataBindingUtil;
 import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.PgpEngine;
-import eu.siacs.conversations.databinding.DialogQuickeditBinding;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
@@ -77,7 +72,6 @@ import eu.siacs.conversations.services.XmppConnectionService.XmppConnectionBinde
 import eu.siacs.conversations.ui.util.MenuDoubleTabUtil;
 import eu.siacs.conversations.ui.util.PresenceSelector;
 import eu.siacs.conversations.ui.util.SettingsUtils;
-import eu.siacs.conversations.ui.util.SoftKeyboardUtils;
 import eu.siacs.conversations.utils.AccountUtils;
 import eu.siacs.conversations.utils.Compatibility;
 import eu.siacs.conversations.utils.ExceptionHelper;
@@ -351,22 +345,17 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                break;
-            case R.id.action_accounts:
-                AccountUtils.launchManageAccounts(this);
-                break;
-            case R.id.action_account:
-                AccountUtils.launchManageAccount(this);
-                break;
-            case android.R.id.home:
-                finish();
-                break;
-            case R.id.action_show_qr_code:
-                showQrCode();
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+        } else if (itemId == R.id.action_accounts) {
+            AccountUtils.launchManageAccounts(this);
+        } else if (itemId == R.id.action_account) {
+            AccountUtils.launchManageAccount(this);
+        } else if (itemId == android.R.id.home) {
+            finish();
+        } else if (itemId == R.id.action_show_qr_code) {
+            showQrCode();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -442,6 +431,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         }
     }
 
+    @SuppressLint("MissingPermission")
     protected boolean isAffectedByDataSaver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -520,12 +510,12 @@ public abstract class XmppActivity extends ActionBarActivity {
     }
 
     public void switchToContactDetails(Contact contact, String messageFingerprint) {
-        Intent intent = new Intent(this, ContactDetailsActivity.class);
+        /*Intent intent = new Intent(this, ContactDetailsActivity.class);
         intent.setAction(ContactDetailsActivity.ACTION_VIEW_CONTACT);
         intent.putExtra(EXTRA_ACCOUNT, contact.getAccount().getJid().asBareJid().toEscapedString());
         intent.putExtra("contact", contact.getJid().toEscapedString());
         intent.putExtra("fingerprint", messageFingerprint);
-        startActivity(intent);
+        startActivity(intent);*/
     }
 
     public void switchToAccount(Account account, String fingerprint) {
@@ -565,7 +555,7 @@ public abstract class XmppActivity extends ActionBarActivity {
     }
 
     protected void inviteToConversation(Conversation conversation) {
-        startActivityForResult(ChooseContactActivity.create(this, conversation), REQUEST_INVITE_TO_CONVERSATION);
+        //startActivityForResult(ChooseContactActivity.create(this, conversation), REQUEST_INVITE_TO_CONVERSATION);
     }
 
     protected void announcePgp(final Account account, final Conversation conversation, Intent intent, final Runnable onSuccess) {
@@ -702,7 +692,7 @@ public abstract class XmppActivity extends ActionBarActivity {
                            final @StringRes int hint,
                            boolean password,
                            boolean permitEmpty) {
-        Builder builder = new Builder(this);
+        /*Builder builder = new Builder(this);
         DialogQuickeditBinding binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.dialog_quickedit, null, false);
         if (password) {
             binding.inputEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -740,7 +730,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         dialog.setCanceledOnTouchOutside(false);
         dialog.setOnDismissListener(dialog1 -> {
             SoftKeyboardUtils.hideSoftKeyboard(binding.inputEditText);
-        });
+        });*/
     }
 
     protected boolean hasStoragePermission(int requestCode) {
@@ -913,11 +903,11 @@ public abstract class XmppActivity extends ActionBarActivity {
 
         public static ConferenceInvite parse(Intent data) {
             ConferenceInvite invite = new ConferenceInvite();
-            invite.uuid = data.getStringExtra(ChooseContactActivity.EXTRA_CONVERSATION);
+            /*invite.uuid = data.getStringExtra(ChooseContactActivity.EXTRA_CONVERSATION);
             if (invite.uuid == null) {
                 return null;
             }
-            invite.jids.addAll(ChooseContactActivity.extractJabberIds(data));
+            invite.jids.addAll(ChooseContactActivity.extractJabberIds(data));*/
             return invite;
         }
 

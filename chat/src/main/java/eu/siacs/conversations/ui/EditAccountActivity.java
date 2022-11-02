@@ -32,6 +32,9 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.common.base.CharMatcher;
+import com.yourbestigor.chat.R;
+import com.yourbestigor.chat.databinding.ActivityEditAccountBinding;
+import com.yourbestigor.chat.databinding.DialogPresenceBinding;
 
 import org.openintents.openpgp.util.OpenPgpUtils;
 
@@ -46,11 +49,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.databinding.DataBindingUtil;
 import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.crypto.axolotl.XmppAxolotlSession;
-import eu.siacs.conversations.databinding.ActivityEditAccountBinding;
-import eu.siacs.conversations.databinding.DialogPresenceBinding;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Presence;
 import eu.siacs.conversations.entities.PresenceTemplate;
@@ -123,9 +123,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         @Override
         public void onClick(final View view) {
             if (mAccount != null) {
-                final Intent intent = new Intent(getApplicationContext(), PublishProfilePictureActivity.class);
+                /*final Intent intent = new Intent(getApplicationContext(), PublishProfilePictureActivity.class);
                 intent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().asBareJid().toEscapedString());
-                startActivity(intent);
+                startActivity(intent);*/
             }
         }
     };
@@ -451,16 +451,16 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 }
                 intent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().asBareJid().toEscapedString());
             } else {
-                intent = new Intent(getApplicationContext(), PublishProfilePictureActivity.class);
+                /*intent = new Intent(getApplicationContext(), PublishProfilePictureActivity.class);
                 intent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().asBareJid().toEscapedString());
-                intent.putExtra("setup", true);
+                intent.putExtra("setup", true);*/
             }
             if (wasFirstAccount) {
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             }
-            StartConversationActivity.addInviteUri(intent, getIntent());
-            startActivity(intent);
-            finish();
+            //StartConversationActivity.addInviteUri(intent, getIntent());
+            //startActivity(intent);
+            //finish();
         });
     }
 
@@ -850,39 +850,29 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         if (MenuDoubleTabUtil.shouldIgnoreTap()) {
             return false;
         }
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                deleteAccountAndReturnIfNecessary();
-                break;
-            case R.id.action_show_block_list:
-                final Intent showBlocklistIntent = new Intent(this, BlocklistActivity.class);
-                showBlocklistIntent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().toEscapedString());
-                startActivity(showBlocklistIntent);
-                break;
-            case R.id.action_server_info_show_more:
-                changeMoreTableVisibility(!item.isChecked());
-                break;
-            case R.id.action_share_barcode:
-                shareBarcode();
-                break;
-            case R.id.action_share_http:
-                shareLink(true);
-                break;
-            case R.id.action_share_uri:
-                shareLink(false);
-                break;
-            case R.id.action_change_password_on_server:
-                gotoChangePassword(null);
-                break;
-            case R.id.action_mam_prefs:
-                editMamPrefs();
-                break;
-            case R.id.action_renew_certificate:
-                renewCertificate();
-                break;
-            case R.id.action_change_presence:
-                changePresence();
-                break;
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            deleteAccountAndReturnIfNecessary();
+        } else if (itemId == R.id.action_show_block_list) {
+           /* final Intent showBlocklistIntent = new Intent(this, BlocklistActivity.class);
+            showBlocklistIntent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().toEscapedString());
+            startActivity(showBlocklistIntent);*/
+        } else if (itemId == R.id.action_server_info_show_more) {
+            changeMoreTableVisibility(!item.isChecked());
+        } else if (itemId == R.id.action_share_barcode) {
+            shareBarcode();
+        } else if (itemId == R.id.action_share_http) {
+            shareLink(true);
+        } else if (itemId == R.id.action_share_uri) {
+            shareLink(false);
+        } else if (itemId == R.id.action_change_password_on_server) {
+            gotoChangePassword(null);
+        } else if (itemId == R.id.action_mam_prefs) {
+            editMamPrefs();
+        } else if (itemId == R.id.action_renew_certificate) {
+            renewCertificate();
+        } else if (itemId == R.id.action_change_presence) {
+            changePresence();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -904,12 +894,12 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     }
 
     private void gotoChangePassword(String newPassword) {
-        final Intent changePasswordIntent = new Intent(this, ChangePasswordActivity.class);
+        /*final Intent changePasswordIntent = new Intent(this, ChangePasswordActivity.class);
         changePasswordIntent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().toEscapedString());
         if (newPassword != null) {
             changePasswordIntent.putExtra("password", newPassword);
         }
-        startActivity(changePasswordIntent);
+        startActivity(changePasswordIntent);*/
     }
 
     private void renewCertificate() {

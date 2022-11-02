@@ -68,7 +68,6 @@ import eu.siacs.conversations.xmpp.pep.PublishOptions;
 import eu.siacs.conversations.xmpp.stanzas.IqPacket;
 import eu.siacs.conversations.xmpp.stanzas.MessagePacket;
 
-import static eu.siacs.conversations.utils.Random.SECURE_RANDOM;
 
 public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 
@@ -500,7 +499,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             PrivateKey x509PrivateKey = KeyChain.getPrivateKey(mXmppConnectionService, account.getPrivateKeyAlias());
             X509Certificate[] chain = KeyChain.getCertificateChain(mXmppConnectionService, account.getPrivateKeyAlias());
             Signature verifier = Signature.getInstance("sha256WithRSA");
-            verifier.initSign(x509PrivateKey, SECURE_RANDOM);
+            verifier.initSign(x509PrivateKey, eu.siacs.conversations.utils.Random.SECURE_RANDOM);
             verifier.update(axolotlPublicKey.serialize());
             byte[] signature = verifier.sign();
             IqPacket packet = mXmppConnectionService.getIqGenerator().publishVerification(signature, chain, getOwnDeviceId());

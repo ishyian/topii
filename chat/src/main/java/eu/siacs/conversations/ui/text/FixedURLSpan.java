@@ -41,9 +41,10 @@ import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.Toast;
 
+import com.yourbestigor.chat.R;
+
 import java.util.Arrays;
 
-import eu.siacs.conversations.R;
 import eu.siacs.conversations.ui.ConversationsActivity;
 
 

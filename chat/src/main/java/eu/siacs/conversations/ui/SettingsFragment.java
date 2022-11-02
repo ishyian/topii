@@ -9,8 +9,9 @@ import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 import android.widget.ListView;
 
+import com.yourbestigor.chat.R;
+
 import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
 import eu.siacs.conversations.utils.Compatibility;
 
 public class SettingsFragment extends PreferenceFragment {

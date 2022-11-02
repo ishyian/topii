@@ -48,6 +48,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.yourbestigor.chat.R;
+import com.yourbestigor.chat.databinding.ActivityConversationsBinding;
+
 import org.openintents.openpgp.util.OpenPgpApi;
 
 import java.util.Arrays;
@@ -60,23 +63,19 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.OmemoSetting;
-import eu.siacs.conversations.databinding.ActivityConversationsBinding;
-import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
-import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected;
 import eu.siacs.conversations.ui.interfaces.OnConversationArchived;
 import eu.siacs.conversations.ui.interfaces.OnConversationRead;
 import eu.siacs.conversations.ui.interfaces.OnConversationSelected;
 import eu.siacs.conversations.ui.interfaces.OnConversationsListItemUpdated;
-import eu.siacs.conversations.ui.util.ActionBarUtil;
 import eu.siacs.conversations.ui.util.ActivityResult;
 import eu.siacs.conversations.ui.util.ConversationMenuConfigurator;
 import eu.siacs.conversations.ui.util.MenuDoubleTabUtil;
 import eu.siacs.conversations.ui.util.PendingItem;
+import eu.siacs.conversations.utils.ActionBarUtil;
 import eu.siacs.conversations.utils.ExceptionHelper;
 import eu.siacs.conversations.utils.SignupUtils;
 import eu.siacs.conversations.utils.XmppUri;
@@ -475,33 +474,32 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         if (MenuDoubleTabUtil.shouldIgnoreTap()) {
             return false;
         }
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                FragmentManager fm = getFragmentManager();
-                if (fm.getBackStackEntryCount() > 0) {
-                    try {
-                        fm.popBackStack();
-                    } catch (IllegalStateException e) {
-                        Log.w(Config.LOGTAG, "Unable to pop back stack after pressing home button");
-                    }
-                    return true;
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            FragmentManager fm = getFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                try {
+                    fm.popBackStack();
+                } catch (IllegalStateException e) {
+                    Log.w(Config.LOGTAG, "Unable to pop back stack after pressing home button");
                 }
-                break;
-            case R.id.action_scan_qr_code:
-                UriHandlerActivity.scan(this);
                 return true;
-            case R.id.action_search_all_conversations:
-                startActivity(new Intent(this, SearchActivity.class));
+            }
+        } else if (itemId == R.id.action_scan_qr_code) {
+            UriHandlerActivity.scan(this);
+            return true;
+        } else if (itemId == R.id.action_search_all_conversations) {
+            startActivity(new Intent(this, SearchActivity.class));
+            return true;
+        } else if (itemId == R.id.action_search_this_conversation) {
+            final Conversation conversation = ConversationFragment.getConversation(this);
+            if (conversation == null) {
                 return true;
-            case R.id.action_search_this_conversation:
-                final Conversation conversation = ConversationFragment.getConversation(this);
-                if (conversation == null) {
-                    return true;
-                }
-                final Intent intent = new Intent(this, SearchActivity.class);
-                intent.putExtra(SearchActivity.EXTRA_CONVERSATION_UUID, conversation.getUuid());
-                startActivity(intent);
-                return true;
+            }
+            final Intent intent = new Intent(this, SearchActivity.class);
+            intent.putExtra(SearchActivity.EXTRA_CONVERSATION_UUID, conversation.getUuid());
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -627,7 +625,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     }
 
     private void openConversationDetails(final Conversation conversation) {
-        if (conversation.getMode() == Conversational.MODE_MULTI) {
+        /*if (conversation.getMode() == Conversational.MODE_MULTI) {
             ConferenceDetailsActivity.open(this, conversation);
         } else {
             final Contact contact = conversation.getContact();
@@ -636,7 +634,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             } else {
                 switchToContactDetails(contact);
             }
-        }
+        }*/
     }
 
     @Override

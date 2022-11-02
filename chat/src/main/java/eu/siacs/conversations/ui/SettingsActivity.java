@@ -20,6 +20,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
+import com.yourbestigor.chat.R;
 
 import java.io.File;
 import java.security.KeyStoreException;
@@ -32,7 +33,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.OmemoSetting;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.persistance.FileBackend;

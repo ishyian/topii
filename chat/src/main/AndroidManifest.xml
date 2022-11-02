@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.yourbestigor.chat">
 
-    <uses-permission name="android.permission.RECORD_AUDIO" />
-    <uses-permission name="android.permission.RECORD_AUDIO" />
-    <uses-permission name="android.permission.VIBRATE" />
 </manifest>

@@ -466,7 +466,7 @@ public class WebRTCWrapper {
     }
 
     private static void logDescription(final SessionDescription sessionDescription) {
-        for (final String line : sessionDescription.description.split(SessionDescription.LINE_DIVIDER)) {
+        for (final String line : sessionDescription.description.split(eu.siacs.conversations.xmpp.jingle.SessionDescription.LINE_DIVIDER)) {
             Log.d(EXTENDED_LOGGING_TAG, line);
         }
     }
