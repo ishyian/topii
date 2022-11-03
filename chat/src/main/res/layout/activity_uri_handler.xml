@@ -24,7 +24,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
             android:gravity="center_horizontal"
-            android:textAppearance="@style/TextAppearance.Conversations.Body2"
             android:textColor="@color/white87"
             android:visibility="invisible" />
 

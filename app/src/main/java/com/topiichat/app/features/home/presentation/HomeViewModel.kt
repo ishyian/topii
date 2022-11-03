@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
-import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.home.domain.model.CurrentCountryDomain
 import com.topiichat.app.features.home.domain.model.RemittanceDomain
 import com.topiichat.app.features.home.domain.usecase.GetCurrentCountryAvailabilityUseCase
@@ -135,7 +134,7 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onChatsClick() {
-        navigate(ChatsScreens.ChatsList)
+        navigate(MainScreens.WelcomeConversations)
     }
 
     override fun onRequestPaymentClick() {
