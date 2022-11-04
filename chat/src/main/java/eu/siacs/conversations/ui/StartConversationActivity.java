@@ -322,7 +322,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
             }
             int id = actionItem.getId();
             if (id == R.id.discover_public_channels) {
-                //startActivity(new Intent(this, ChannelDiscoveryActivity.class));
+                startActivity(new Intent(this, ChannelDiscoveryActivity.class));
             } else if (id == R.id.join_public_channel) {
                 showJoinConferenceDialog(prefilled);
             } else if (id == R.id.create_private_group_chat) {
