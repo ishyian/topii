@@ -81,6 +81,7 @@
         <activity android:name="eu.siacs.conversations.ui.SearchActivity" />
         <activity android:name="eu.siacs.conversations.ui.StartConversationActivity" />
         <activity android:name="eu.siacs.conversations.ui.ChannelDiscoveryActivity" />
+        <activity android:name=".features.chats.activity.ChatsActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

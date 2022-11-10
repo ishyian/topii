@@ -37,6 +37,7 @@ import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
+import timber.log.Timber;
 
 public class UriHandlerActivity extends AppCompatActivity {
 
@@ -111,8 +112,10 @@ public class UriHandlerActivity extends AppCompatActivity {
     }
 
     private boolean handleUri(final Uri uri, final boolean scanned) {
+        Timber.d(uri.toString());
         final Intent intent;
         final XmppUri xmppUri = new XmppUri(uri);
+        Timber.d(xmppUri.toString());
         final List<Jid> accounts = DatabaseBackend.getInstance(this).getAccountJids(true);
 
         if (SignupUtils.isSupportTokenRegistry() && xmppUri.isValidJid()) {

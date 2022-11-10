@@ -818,7 +818,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     }
 
     @Override
-    protected void onBackendConnected() {
+    public void onBackendConnected() {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             xmppConnectionService.getQuickConversationsService().considerSyncBackground(false);

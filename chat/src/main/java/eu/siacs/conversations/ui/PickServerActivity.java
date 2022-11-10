@@ -22,7 +22,7 @@ public class PickServerActivity extends XmppActivity {
     }
 
     @Override
-    void onBackendConnected() {
+    public void onBackendConnected() {
 
     }
 

@@ -36,7 +36,7 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher {
     }
 
     @Override
-    void onBackendConnected() {
+    public void onBackendConnected() {
 
     }
 

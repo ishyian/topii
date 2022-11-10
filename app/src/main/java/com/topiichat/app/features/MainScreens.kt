@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.topiichat.app.core.delegates.parcelableParametersBundleOf
 import com.topiichat.app.features.activate_permission.presentation.PermissionFragment
+import com.topiichat.app.features.chats.activity.ChatsActivity
 import com.topiichat.app.features.contacts.presentation.ContactsFragment
 import com.topiichat.app.features.contacts.presentation.ContactsParameters
 import com.topiichat.app.features.error.presentation.ErrorFragment
@@ -25,7 +26,6 @@ import com.topiichat.app.features.send_remittance.presentation.SendRemittancePar
 import com.topiichat.app.features.splash.presentation.SplashFragment
 import com.topiichat.app.features.terms.presentation.TermsFragment
 import com.topiichat.app.features.valid_phone_number.presentation.ValidPhoneNumberFragment
-import eu.siacs.conversations.ui.WelcomeActivity
 import ru.terrakok.cicerone.android.support.FragmentParams
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
@@ -136,7 +136,7 @@ object MainScreens {
 
     object WelcomeConversations : SupportAppScreen() {
         override fun getActivityIntent(context: Context): Intent {
-            return Intent(context, WelcomeActivity::class.java)
+            return Intent(context, ChatsActivity::class.java)
         }
     }
 }

@@ -790,7 +790,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    protected void onBackendConnected() {
+    public void onBackendConnected() {
         boolean init = true;
         if (mSavedInstanceAccount != null) {
             try {

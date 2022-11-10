@@ -425,7 +425,7 @@ public class RtpSessionActivity extends XmppActivity
     }
 
     @Override
-    void onBackendConnected() {
+    public void onBackendConnected() {
         final Intent intent = getIntent();
         final String action = intent.getAction();
         final Account account = extractAccount(intent);

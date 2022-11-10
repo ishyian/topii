@@ -87,7 +87,7 @@ public class SettingsActivity extends XmppActivity implements OnSharedPreference
     }
 
     @Override
-    void onBackendConnected() {
+    public void onBackendConnected() {
     }
 
     @Override

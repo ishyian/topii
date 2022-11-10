@@ -85,7 +85,7 @@ public class WelcomeActivity extends XmppActivity implements XmppConnectionServi
     }
 
     @Override
-    void onBackendConnected() {
+    public void onBackendConnected() {
 
     }
 

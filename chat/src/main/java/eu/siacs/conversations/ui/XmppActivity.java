@@ -281,7 +281,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         builder.create().show();
     }
 
-    abstract void onBackendConnected();
+    public abstract void onBackendConnected();
 
     protected void registerListeners() {
         if (this instanceof XmppConnectionService.OnConversationUpdate) {
