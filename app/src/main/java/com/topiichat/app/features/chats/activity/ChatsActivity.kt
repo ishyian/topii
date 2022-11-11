@@ -40,18 +40,16 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.KeyEvent
-import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
+import com.topiichat.app.R
 import com.topiichat.app.core.util.AccountUtil.createMockAccount
+import com.topiichat.app.databinding.ActivityChatsBinding
 import com.topiichat.app.features.chats.NewConversationFragment
 import com.topiichat.app.features.chats.root.presentation.ChatsFragment
-import com.yourbestigor.chat.R
-import com.yourbestigor.chat.databinding.ActivityConversationsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.Config
 import eu.siacs.conversations.crypto.OmemoSetting
@@ -63,9 +61,7 @@ import eu.siacs.conversations.services.XmppConnectionService.OnConversationUpdat
 import eu.siacs.conversations.services.XmppConnectionService.OnRosterUpdate
 import eu.siacs.conversations.services.XmppConnectionService.OnShowErrorToast
 import eu.siacs.conversations.ui.ConversationFragment
-import eu.siacs.conversations.ui.ConversationsOverviewFragment
 import eu.siacs.conversations.ui.EditAccountActivity
-import eu.siacs.conversations.ui.SearchActivity
 import eu.siacs.conversations.ui.StartConversationActivity
 import eu.siacs.conversations.ui.UriHandlerActivity
 import eu.siacs.conversations.ui.XmppActivity
@@ -79,10 +75,8 @@ import eu.siacs.conversations.ui.util.ConversationMenuConfigurator
 import eu.siacs.conversations.ui.util.MenuDoubleTabUtil
 import eu.siacs.conversations.ui.util.PendingItem
 import eu.siacs.conversations.utils.AccountUtils
-import eu.siacs.conversations.utils.ActionBarUtil
 import eu.siacs.conversations.utils.ExceptionHelper
 import eu.siacs.conversations.utils.SignupUtils
-import eu.siacs.conversations.utils.XmppUri
 import eu.siacs.conversations.xmpp.Jid
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist
 import org.openintents.openpgp.util.OpenPgpApi
@@ -95,15 +89,13 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     OnAffiliationChanged {
     private val pendingViewIntent = PendingItem<Intent?>()
     private val postponedActivityResult = PendingItem<ActivityResult>()
-    private lateinit var binding: ActivityConversationsBinding
+    private lateinit var binding: ActivityChatsBinding
     private var activityPaused = true
     private val redirectInProcess = AtomicBoolean(false)
 
     override fun refreshUiReal() {
         invalidateOptionsMenu()
-        for (@IdRes id in FRAGMENT_ID_NOTIFICATION_ORDER) {
-            refreshFragment(id)
-        }
+        refreshFragment(R.id.chats_container)
     }
 
     override fun onBackendConnected() {
@@ -111,28 +103,9 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
             return
         }
         xmppConnectionService.notificationService.setIsInForeground(true)
-        val intent = pendingViewIntent.pop()
-        if (intent != null) {
-            if (processViewIntent(intent)) {
-                if (binding!!.secondaryFragment != null) {
-                    notifyFragmentOfBackendConnected(R.id.main_fragment)
-                }
-                invalidateActionBarTitle()
-                return
-            }
-        }
-        for (@IdRes id in FRAGMENT_ID_NOTIFICATION_ORDER) {
-            notifyFragmentOfBackendConnected(id)
-        }
+        notifyFragmentOfBackendConnected(R.id.chats_container)
         val activityResult = postponedActivityResult.pop()
         activityResult?.let { handleActivityResult(it) }
-        invalidateActionBarTitle()
-        if (binding!!.secondaryFragment != null && ConversationFragment.getConversation(this) == null) {
-            val conversation = ConversationsOverviewFragment.getSuggestion(this)
-            if (conversation != null) {
-                openConversation(conversation, null)
-            }
-        }
         showDialogsIfMainIsOverview()
     }
 
@@ -151,7 +124,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
             intent.putExtra("jid", account!!.jid.asBareJid().toString())
             intent.putExtra("init", true)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            Toast.makeText(this, R.string.secure_password_generated, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, com.yourbestigor.chat.R.string.secure_password_generated, Toast.LENGTH_SHORT).show()
             runOnUiThread {
                 startActivity(intent)
                 if (noAnimation) {
@@ -166,7 +139,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         if (xmppConnectionService == null) {
             return
         }
-        val fragment = supportFragmentManager.findFragmentById(R.id.main_fragment)
+        val fragment = supportFragmentManager.findFragmentById(R.id.chats_container)
         if (fragment is ChatsFragment) {
             if (ExceptionHelper.checkForCrash(this)) {
                 return
@@ -194,9 +167,14 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
             )
         ) {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle(R.string.battery_optimizations_enabled)
-            builder.setMessage(getString(R.string.battery_optimizations_enabled_dialog, getString(R.string.app_name)))
-            builder.setPositiveButton(R.string.next) { dialog: DialogInterface?, which: Int ->
+            builder.setTitle(com.yourbestigor.chat.R.string.battery_optimizations_enabled)
+            builder.setMessage(
+                getString(
+                    com.yourbestigor.chat.R.string.battery_optimizations_enabled_dialog,
+                    getString(R.string.app_name)
+                )
+            )
+            builder.setPositiveButton(com.yourbestigor.chat.R.string.next) { dialog: DialogInterface?, which: Int ->
                 val intent = Intent(
                     Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
                 )
@@ -205,7 +183,11 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
                 try {
                     startActivityForResult(intent, REQUEST_BATTERY_OP)
                 } catch (e: ActivityNotFoundException) {
-                    Toast.makeText(this, R.string.device_does_not_support_battery_op, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        com.yourbestigor.chat.R.string.device_does_not_support_battery_op,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             builder.setOnDismissListener { dialog: DialogInterface? -> setNeverAskForBatteryOptimizationsAgain() }
@@ -315,16 +297,12 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         super.onCreate(savedInstanceState)
         ConversationMenuConfigurator.reloadFeatures(this)
         OmemoSetting.load(this)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_conversations)
-        setSupportActionBar(binding.toolbar)
-        configureActionBar(supportActionBar)
-        this.fragmentManager.addOnBackStackChangedListener { invalidateActionBarTitle() }
-        this.fragmentManager.addOnBackStackChangedListener { showDialogsIfMainIsOverview() }
+        binding = ActivityChatsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        this.supportFragmentManager.addOnBackStackChangedListener { showDialogsIfMainIsOverview() }
         initializeFragments()
-        invalidateActionBarTitle()
-        val intent: Intent?
-        intent = if (savedInstanceState == null) {
-            getIntent()
+        val intent: Intent? = if (savedInstanceState == null) {
+            intent
         } else {
             savedInstanceState.getParcelable("intent")
         }
@@ -332,22 +310,6 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
             pendingViewIntent.push(intent)
             setIntent(createLauncherIntent(this))
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.activity_conversations, menu)
-        val qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code)
-        if (qrCodeScanMenuItem != null) {
-            if (isCameraFeatureAvailable) {
-                val fragment = supportFragmentManager.findFragmentById(R.id.main_fragment)
-                val visible = (resources.getBoolean(R.bool.show_qr_code_scan)
-                    && fragment is ChatsFragment)
-                qrCodeScanMenuItem.isVisible = visible
-            } else {
-                qrCodeScanMenuItem.isVisible = false
-            }
-        }
-        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onConversationSelected(conversation: Conversation) {
@@ -378,14 +340,14 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         val fragmentManager = supportFragmentManager
         executePendingTransactions(fragmentManager)
         val mainNeedsRefresh = false;
-        val mainFragment = fragmentManager.findFragmentById(R.id.main_fragment)
+        val mainFragment = fragmentManager.findFragmentById(R.id.chats_container)
         val conversationFragment: NewConversationFragment
         if (mainFragment is NewConversationFragment) {
             conversationFragment = mainFragment
         } else {
             conversationFragment = NewConversationFragment();
             val fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.main_fragment, conversationFragment);
+            fragmentTransaction.replace(R.id.chats_container, conversationFragment);
             fragmentTransaction.addToBackStack(null);
             try {
                 fragmentTransaction.commit();
@@ -397,22 +359,8 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         }
         conversationFragment.reInit(conversation, extras ?: Bundle());
         if (mainNeedsRefresh) {
-            refreshFragment(R.id.main_fragment);
-        } else {
-            invalidateActionBarTitle();
+            refreshFragment(R.id.chats_container);
         }
-    }
-
-    fun onXmppUriClicked(uri: Uri?): Boolean {
-        val xmppUri = XmppUri(uri)
-        if (xmppUri.isValidJid && !xmppUri.hasFingerprints()) {
-            val conversation = xmppConnectionService.findUniqueConversationByJid(xmppUri)
-            if (conversation != null) {
-                openConversation(conversation, null)
-                return true
-            }
-        }
-        return false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -430,18 +378,6 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
                 }
                 return true
             }
-        } else if (itemId == R.id.action_scan_qr_code) {
-            UriHandlerActivity.scan(this)
-            return true
-        } else if (itemId == R.id.action_search_all_conversations) {
-            startActivity(Intent(this, SearchActivity::class.java))
-            return true
-        } else if (itemId == R.id.action_search_this_conversation) {
-            val conversation = ConversationFragment.getConversation(this) ?: return true
-            val intent = Intent(this, SearchActivity::class.java)
-            intent.putExtra(SearchActivity.EXTRA_CONVERSATION_UUID, conversation.uuid)
-            startActivity(intent)
-            return true
         }
         return super.onOptionsItemSelected(item)
     }
@@ -464,13 +400,6 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
 
     override fun onStart() {
         super.onStart()
-        /*val theme = findTheme()
-        if (mTheme != theme) {
-            mSkipBackgroundBinding = true
-            recreate()
-        } else {
-            mSkipBackgroundBinding = false
-        }*/
         redirectInProcess.set(false)
     }
 
@@ -500,64 +429,14 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     private fun initializeFragments() {
         val fragmentManager = supportFragmentManager
         val transaction = fragmentManager.beginTransaction()
-        val mainFragment = fragmentManager.findFragmentById(R.id.main_fragment)
-        val secondaryFragment = fragmentManager.findFragmentById(R.id.secondary_fragment)
-        if (mainFragment != null) {
-            /*if (binding.secondaryFragment != null) {
-                if (mainFragment instanceof ConversationFragment) {
-                    getFragmentManager().popBackStack();
-                    transaction.remove(mainFragment);
-                    transaction.commit();
-                    fragmentManager.executePendingTransactions();
-                    transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.secondary_fragment, mainFragment);
-                    transaction.replace(R.id.main_fragment, new ChatsFragment());
-                    transaction.commit();
-                    return;
-                }
-            } else {
-                if (secondaryFragment instanceof ConversationFragment) {
-                    transaction.remove(secondaryFragment);
-                    transaction.commit();
-                    getFragmentManager().executePendingTransactions();
-                    transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.main_fragment, secondaryFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-                    return;
-                }
-            }*/
-        } else {
-            transaction.replace(R.id.main_fragment, ChatsFragment())
-        }
-        /*if (binding.secondaryFragment != null && secondaryFragment == null) {
-            transaction.replace(R.id.secondary_fragment, new ConversationFragment());
-        }*/transaction.commit()
-    }
-
-    private fun invalidateActionBarTitle() {
-        val actionBar = supportActionBar ?: return
-        val fragmentManager = supportFragmentManager
-        val mainFragment = fragmentManager.findFragmentById(R.id.main_fragment)
-        if (mainFragment is ChatsFragment) {
-            /*final Conversation conversation = ((ChatsFragment) mainFragment).getConversation();
-            if (conversation != null) {
-                actionBar.setTitle(conversation.getName());
-                actionBar.setDisplayHomeAsUpEnabled(true);
-                ActionBarUtil.setActionBarOnClickListener(
-                        binding.toolbar,
-                        (v) -> openConversationDetails(conversation)
-                );
-                return;
-            }*/
-        }
-        //actionBar.setTitle(R.string.app_name)
-        actionBar.setDisplayHomeAsUpEnabled(false)
-        ActionBarUtil.resetActionBarOnClickListeners(binding!!.toolbar)
+        val mainFragment = fragmentManager.findFragmentById(R.id.chats_container)
+        if (mainFragment == null)
+            transaction.replace(R.id.chats_container, ChatsFragment())
+        transaction.commit()
     }
 
     private fun openConversationDetails(conversation: Conversation) {
-        /*if (conversation.getMode() == Conversational.MODE_MULTI) {
+        /*if (conversation.getMode() == Conversaftional.MODE_MULTI) {
             ConferenceDetailsActivity.open(this, conversation);
         } else {
             final Contact contact = conversation.getContact();
@@ -574,7 +453,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
             return
         }
         val fragmentManager = supportFragmentManager
-        val mainFragment = fragmentManager.findFragmentById(R.id.main_fragment)
+        val mainFragment = fragmentManager.findFragmentById(R.id.container)
         /*if (mainFragment instanceof ConversationFragment) {
             try {
                 fragmentManager.popBackStack();
@@ -584,19 +463,10 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
             }
             return;
         }*/
-        val secondaryFragment = fragmentManager.findFragmentById(R.id.secondary_fragment)
-        /*if (secondaryFragment instanceof ConversationFragment) {
-            if (((ConversationFragment) secondaryFragment).getConversation() == conversation) {
-                Conversation suggestion = ConversationsOverviewFragment.getSuggestion(this, conversation);
-                if (suggestion != null) {
-                    openConversation(suggestion, null);
-                }
-            }
-        }*/
     }
 
     override fun onConversationsListItemUpdated() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.main_fragment)
+        val fragment = supportFragmentManager.findFragmentById(R.id.chats_container)
         //TODO
         if (fragment is ChatsFragment) {
             fragment.refresh()
@@ -658,9 +528,6 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         const val REQUEST_OPEN_MESSAGE = 0x9876
         const val REQUEST_PLAY_PAUSE = 0x5432
 
-        //secondary fragment (when holding the conversation, must be initialized before refreshing the overview fragment
-        @IdRes
-        private val FRAGMENT_ID_NOTIFICATION_ORDER = intArrayOf(R.id.secondary_fragment, R.id.main_fragment)
         private fun isViewOrShareIntent(i: Intent?): Boolean {
             Log.d(Config.LOGTAG, "action: " + i?.action)
             return i != null && VIEW_AND_SHARE_ACTIONS.contains(i.action) && i.hasExtra(EXTRA_CONVERSATION)
