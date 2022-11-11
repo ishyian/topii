@@ -1,10 +1,8 @@
-package eu.siacs.conversations.ui;
+package com.topiichat.app.features.chats;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -47,6 +45,7 @@ import android.widget.Toast;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.topiichat.app.features.chats.activity.ChatsActivity;
 import com.yourbestigor.chat.R;
 import com.yourbestigor.chat.databinding.FragmentConversationBinding;
 
@@ -67,9 +66,12 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.inputmethod.InputConnectionCompat;
 import androidx.core.view.inputmethod.InputContentInfoCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.crypto.axolotl.FingerprintStatus;
@@ -91,6 +93,15 @@ import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.services.MessageArchiveService;
 import eu.siacs.conversations.services.QuickConversationsService;
 import eu.siacs.conversations.services.XmppConnectionService;
+import eu.siacs.conversations.ui.BaseXmppFragment;
+import eu.siacs.conversations.ui.BlockContactDialog;
+import eu.siacs.conversations.ui.ConversationsActivity;
+import eu.siacs.conversations.ui.RtpSessionActivity;
+import eu.siacs.conversations.ui.SearchActivity;
+import eu.siacs.conversations.ui.TrustKeysActivity;
+import eu.siacs.conversations.ui.UiCallback;
+import eu.siacs.conversations.ui.UiInformableCallback;
+import eu.siacs.conversations.ui.XmppActivity;
 import eu.siacs.conversations.ui.adapter.MediaPreviewAdapter;
 import eu.siacs.conversations.ui.adapter.MessageAdapter;
 import eu.siacs.conversations.ui.util.ActivityResult;
@@ -137,7 +148,7 @@ import static eu.siacs.conversations.utils.PermissionUtils.allGranted;
 import static eu.siacs.conversations.utils.PermissionUtils.getFirstDenied;
 import static eu.siacs.conversations.utils.PermissionUtils.writeGranted;
 
-public class ConversationFragment extends XmppFragment
+public class NewConversationFragment extends BaseXmppFragment
         implements EditMessage.KeyboardListener,
         MessageAdapter.OnContactPictureLongClicked,
         MessageAdapter.OnContactPictureClicked {
@@ -162,13 +173,13 @@ public class ConversationFragment extends XmppFragment
 
     public static final String RECENTLY_USED_QUICK_ACTION = "recently_used_quick_action";
     public static final String STATE_CONVERSATION_UUID =
-            ConversationFragment.class.getName() + ".uuid";
+            NewConversationFragment.class.getName() + ".uuid";
     public static final String STATE_SCROLL_POSITION =
-            ConversationFragment.class.getName() + ".scroll_position";
+            NewConversationFragment.class.getName() + ".scroll_position";
     public static final String STATE_PHOTO_URI =
-            ConversationFragment.class.getName() + ".media_previews";
+            NewConversationFragment.class.getName() + ".media_previews";
     public static final String STATE_MEDIA_PREVIEWS =
-            ConversationFragment.class.getName() + ".take_photo_uri";
+            NewConversationFragment.class.getName() + ".take_photo_uri";
     private static final String STATE_LAST_MESSAGE_UUID = "state_last_message_uuid";
 
     private final List<Message> messageList = new ArrayList<>();
@@ -187,7 +198,7 @@ public class ConversationFragment extends XmppFragment
     private Conversation conversation;
     private FragmentConversationBinding binding;
     private Toast messageLoaderToast;
-    private ConversationsActivity activity;
+    private ChatsActivity activity;
     private boolean reInitRequiredOnStart = true;
     private final OnClickListener clickToMuc =
             new OnClickListener() {
@@ -260,7 +271,7 @@ public class ConversationFragment extends XmppFragment
                         int visibleItemCount,
                         int totalItemCount) {
                     toggleScrollDownButton(view);
-                    synchronized (ConversationFragment.this.messageList) {
+                    synchronized (NewConversationFragment.this.messageList) {
                         if (firstVisibleItem < 5
                                 && conversation != null
                                 && conversation.messagesLoaded.compareAndSet(true, false)
@@ -279,7 +290,7 @@ public class ConversationFragment extends XmppFragment
                                         @Override
                                         public void onMoreMessagesLoaded(
                                                 final int c, final Conversation conversation) {
-                                            if (ConversationFragment.this.conversation
+                                            if (NewConversationFragment.this.conversation
                                                     != conversation) {
                                                 conversation.messagesLoaded.set(true);
                                                 return;
@@ -314,9 +325,9 @@ public class ConversationFragment extends XmppFragment
                                                                             childPos);
                                                             final int pxOffset =
                                                                     (v == null) ? 0 : v.getTop();
-                                                            ConversationFragment.this.conversation
+                                                            NewConversationFragment.this.conversation
                                                                     .populateWithMessages(
-                                                                            ConversationFragment
+                                                                            NewConversationFragment
                                                                                     .this
                                                                                     .messageList);
                                                             try {
@@ -353,7 +364,7 @@ public class ConversationFragment extends XmppFragment
                                                         if (messageLoaderToast != null) {
                                                             messageLoaderToast.cancel();
                                                         }
-                                                        if (ConversationFragment.this.conversation
+                                                        if (NewConversationFragment.this.conversation
                                                                 != conversation) {
                                                             return;
                                                         }
@@ -566,41 +577,41 @@ public class ConversationFragment extends XmppFragment
     private boolean firstWord = false;
     private Message mPendingDownloadableMessage;
 
-    private static ConversationFragment findConversationFragment(Activity activity) {
-        Fragment fragment = activity.getFragmentManager().findFragmentById(R.id.main_fragment);
-        if (fragment instanceof ConversationFragment) {
-            return (ConversationFragment) fragment;
+    private static NewConversationFragment findConversationFragment(AppCompatActivity activity) {
+        Fragment fragment = activity.getSupportFragmentManager().findFragmentById(R.id.main_fragment);
+        if (fragment instanceof NewConversationFragment) {
+            return (NewConversationFragment) fragment;
         }
-        fragment = activity.getFragmentManager().findFragmentById(R.id.secondary_fragment);
-        if (fragment instanceof ConversationFragment) {
-            return (ConversationFragment) fragment;
+        fragment = activity.getSupportFragmentManager().findFragmentById(R.id.secondary_fragment);
+        if (fragment instanceof NewConversationFragment) {
+            return (NewConversationFragment) fragment;
         }
         return null;
     }
 
-    public static void startStopPending(Activity activity) {
-        ConversationFragment fragment = findConversationFragment(activity);
+    public static void startStopPending(AppCompatActivity activity) {
+        NewConversationFragment fragment = findConversationFragment(activity);
         if (fragment != null) {
             fragment.messageListAdapter.startStopPending();
         }
     }
 
-    public static void downloadFile(Activity activity, Message message) {
-        ConversationFragment fragment = findConversationFragment(activity);
+    public static void downloadFile(AppCompatActivity activity, Message message) {
+        NewConversationFragment fragment = findConversationFragment(activity);
         if (fragment != null) {
             fragment.startDownloadable(message);
         }
     }
 
-    public static void registerPendingMessage(Activity activity, Message message) {
-        ConversationFragment fragment = findConversationFragment(activity);
+    public static void registerPendingMessage(AppCompatActivity activity, Message message) {
+        NewConversationFragment fragment = findConversationFragment(activity);
         if (fragment != null) {
             fragment.pendingMessage.push(message);
         }
     }
 
-    public static void openPendingMessage(Activity activity) {
-        ConversationFragment fragment = findConversationFragment(activity);
+    public static void openPendingMessage(AppCompatActivity activity) {
+        NewConversationFragment fragment = findConversationFragment(activity);
         if (fragment != null) {
             Message message = fragment.pendingMessage.pop();
             if (message != null) {
@@ -609,33 +620,33 @@ public class ConversationFragment extends XmppFragment
         }
     }
 
-    public static Conversation getConversation(Activity activity) {
+    public static Conversation getConversation(AppCompatActivity activity) {
         return getConversation(activity, R.id.secondary_fragment);
     }
 
-    private static Conversation getConversation(Activity activity, @IdRes int res) {
-        final Fragment fragment = activity.getFragmentManager().findFragmentById(res);
-        if (fragment instanceof ConversationFragment) {
-            return ((ConversationFragment) fragment).getConversation();
+    private static Conversation getConversation(AppCompatActivity activity, @IdRes int res) {
+        final Fragment fragment = activity.getSupportFragmentManager().findFragmentById(res);
+        if (fragment instanceof NewConversationFragment) {
+            return ((NewConversationFragment) fragment).getConversation();
         } else {
             return null;
         }
     }
 
-    public static ConversationFragment get(Activity activity) {
-        FragmentManager fragmentManager = activity.getFragmentManager();
+    public static NewConversationFragment get(AppCompatActivity activity) {
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.main_fragment);
-        if (fragment instanceof ConversationFragment) {
-            return (ConversationFragment) fragment;
+        if (fragment instanceof NewConversationFragment) {
+            return (NewConversationFragment) fragment;
         } else {
             fragment = fragmentManager.findFragmentById(R.id.secondary_fragment);
-            return fragment instanceof ConversationFragment
-                    ? (ConversationFragment) fragment
+            return fragment instanceof NewConversationFragment
+                    ? (NewConversationFragment) fragment
                     : null;
         }
     }
 
-    public static Conversation getConversationReliable(Activity activity) {
+    public static Conversation getConversationReliable(AppCompatActivity activity) {
         final Conversation conversation = getConversation(activity, R.id.secondary_fragment);
         if (conversation != null) {
             return conversation;
@@ -825,7 +836,7 @@ public class ConversationFragment extends XmppFragment
                     @Override
                     public void error(final int error, final Message message) {
                         hidePrepareFileToast(prepareFileToast);
-                        final ConversationsActivity activity = ConversationFragment.this.activity;
+                        final ChatsActivity activity = NewConversationFragment.this.activity;
                         if (activity == null) {
                             return;
                         }
@@ -1115,8 +1126,8 @@ public class ConversationFragment extends XmppFragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         Log.d(Config.LOGTAG, "ConversationFragment.onAttach()");
-        if (activity instanceof ConversationsActivity) {
-            this.activity = (ConversationsActivity) activity;
+        if (activity instanceof ChatsActivity) {
+            this.activity = (ChatsActivity) activity;
         } else {
             throw new IllegalStateException(
                     "Trying to attach fragment to activity that is not the ConversationsActivity");
@@ -1220,7 +1231,7 @@ public class ConversationFragment extends XmppFragment
         binding.messagesView.setOnScrollListener(mOnScrollListener);
         binding.messagesView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         //mediaPreviewAdapter = new MediaPreviewAdapter(this);
-        binding.mediaPreview.setAdapter(mediaPreviewAdapter);
+        //binding.mediaPreview.setAdapter(mediaPreviewAdapter);
         messageListAdapter = new MessageAdapter((XmppActivity) getActivity(), this.messageList);
         messageListAdapter.setOnContactPictureClicked(this);
         messageListAdapter.setOnContactPictureLongClicked(this);
@@ -1815,7 +1826,6 @@ public class ConversationFragment extends XmppFragment
                 } else {
                     res = R.string.no_storage_permission;
                 }
-
             }
         }
         if (writeGranted(grantResults, permissions)) {
@@ -2239,8 +2249,8 @@ public class ConversationFragment extends XmppFragment
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
         final Activity activity = getActivity();
-        if (activity instanceof ConversationsActivity) {
-            ((ConversationsActivity) activity).clearPendingViewIntent();
+        if (activity instanceof ChatsActivity) {
+            ((ChatsActivity) activity).clearPendingViewIntent();
         }
         super.startActivityForResult(intent, requestCode);
     }
@@ -3550,13 +3560,5 @@ public class ConversationFragment extends XmppFragment
             }
         }
         activity.switchToAccount(message.getConversation().getAccount(), fingerprint);
-    }
-
-    private Activity requireActivity() {
-        final Activity activity = getActivity();
-        if (activity == null) {
-            throw new IllegalStateException("Activity not attached");
-        }
-        return activity;
     }
 }

@@ -84,7 +84,7 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     public static final String EXTRA_ACCOUNT = "account";
     protected static final int REQUEST_ANNOUNCE_PGP = 0x0101;
-    protected static final int REQUEST_INVITE_TO_CONVERSATION = 0x0102;
+    public static final int REQUEST_INVITE_TO_CONVERSATION = 0x0102;
     protected static final int REQUEST_CHOOSE_PGP_ID = 0x0103;
     protected static final int REQUEST_BATTERY_OP = 0x49ff;
     public XmppConnectionService xmppConnectionService;
@@ -96,8 +96,8 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     protected int mTheme;
     protected boolean mUsingEnterKey = false;
-    protected boolean mUseTor = false;
-    protected Toast mToast;
+    public boolean mUseTor = false;
+    public Toast mToast;
     public Runnable onOpenPGPKeyPublished = () -> Toast.makeText(XmppActivity.this, R.string.openpgp_has_been_published, Toast.LENGTH_SHORT).show();
     protected ConferenceInvite mPendingConferenceInvite = null;
     protected ServiceConnection mConnection = new ServiceConnection() {
@@ -169,13 +169,13 @@ public abstract class XmppActivity extends ActionBarActivity {
         return null;
     }
 
-    protected void hideToast() {
+    public void hideToast() {
         if (mToast != null) {
             mToast.cancel();
         }
     }
 
-    protected void replaceToast(String msg) {
+    public void replaceToast(String msg) {
         replaceToast(msg, true);
     }
 
@@ -185,7 +185,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         mToast.show();
     }
 
-    protected final void refreshUi() {
+    public final void refreshUi() {
         final long diff = SystemClock.elapsedRealtime() - mLastUiRefresh;
         if (diff > Config.REFRESH_UI_INTERVAL) {
             mRefreshUiHandler.removeCallbacks(mRefreshUiRunnable);
@@ -403,7 +403,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         setTheme(this.mTheme);
     }
 
-    protected boolean isCameraFeatureAvailable() {
+    public boolean isCameraFeatureAvailable() {
         return this.isCameraFeatureAvailable;
     }
 
@@ -451,7 +451,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         return QuickConversationsService.isConversations() && getBooleanPreference("use_tor", R.bool.use_tor);
     }
 
-    protected SharedPreferences getPreferences() {
+    public SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
@@ -542,7 +542,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         }
     }
 
-    protected void delegateUriPermissionsToService(Uri uri) {
+    public void delegateUriPermissionsToService(Uri uri) {
         Intent intent = new Intent(this, XmppConnectionService.class);
         intent.setAction(Intent.ACTION_SEND);
         intent.setData(uri);
@@ -558,7 +558,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         //startActivityForResult(ChooseContactActivity.create(this, conversation), REQUEST_INVITE_TO_CONVERSATION);
     }
 
-    protected void announcePgp(final Account account, final Conversation conversation, Intent intent, final Runnable onSuccess) {
+    public void announcePgp(final Account account, final Conversation conversation, Intent intent, final Runnable onSuccess) {
         if (account.getPgpId() == 0) {
             choosePgpSignId(account);
         } else {
@@ -682,7 +682,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         quickEdit(previousValue, callback, hint, false, permitEmpty);
     }
 
-    protected void quickPasswordEdit(String previousValue, OnValueEdited callback) {
+    public void quickPasswordEdit(String previousValue, OnValueEdited callback) {
         quickEdit(previousValue, callback, R.string.password, true, false);
     }
 
@@ -836,7 +836,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         showQrCode(getShareableUri());
     }
 
-    protected void showQrCode(final String uri) {
+    public void showQrCode(final String uri) {
         if (uri == null || uri.isEmpty()) {
             return;
         }
@@ -893,7 +893,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         }
     }
 
-    protected interface OnValueEdited {
+    public interface OnValueEdited {
         String onValueEdited(String value);
     }
 

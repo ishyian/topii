@@ -6,6 +6,7 @@
     android:background="?attr/colorPrimary"
     android:minHeight="?attr/actionBarSize"
     android:elevation="@dimen/toolbar_elevation"
+    android:visibility="gone"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:popupTheme="?popupOverlayStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
