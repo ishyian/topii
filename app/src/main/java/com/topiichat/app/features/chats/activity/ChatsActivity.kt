@@ -48,7 +48,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import com.topiichat.app.core.util.AccountUtil.createMockAccount
-import com.topiichat.app.features.chats.activity.ChatsActivity
 import com.topiichat.app.features.chats.root.presentation.ChatsFragment
 import com.yourbestigor.chat.R
 import com.yourbestigor.chat.databinding.ActivityConversationsBinding
@@ -96,8 +95,9 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     private val pendingViewIntent = PendingItem<Intent?>()
     private val postponedActivityResult = PendingItem<ActivityResult>()
     private lateinit var binding: ActivityConversationsBinding
-    private var mActivityPaused = true
-    private val mRedirectInProcess = AtomicBoolean(false)
+    private var activityPaused = true
+    private val redirectInProcess = AtomicBoolean(false)
+
     override fun refreshUiReal() {
         invalidateOptionsMenu()
         for (@IdRes id in FRAGMENT_ID_NOTIFICATION_ORDER) {
@@ -144,7 +144,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
             return false
         }
         val isConversationsListEmpty = xmppConnectionService.isConversationsListEmpty(ignore)
-        if (isConversationsListEmpty && mRedirectInProcess.compareAndSet(false, true)) {
+        if (isConversationsListEmpty && redirectInProcess.compareAndSet(false, true)) {
             val account = createMockAccount(xmppConnectionService)
             val intent = Intent(this, EditAccountActivity::class.java)
             intent.putExtra("jid", account!!.jid.asBareJid().toString())
@@ -158,7 +158,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
                 }
             }
         }
-        return mRedirectInProcess.get()
+        return redirectInProcess.get()
     }
 
     private fun showDialogsIfMainIsOverview() {
@@ -475,7 +475,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         } else {
             mSkipBackgroundBinding = false
         }
-        mRedirectInProcess.set(false)
+        redirectInProcess.set(false)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -492,13 +492,13 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     override fun onPause() {
-        mActivityPaused = true
+        activityPaused = true
         super.onPause()
     }
 
     public override fun onResume() {
         super.onResume()
-        mActivityPaused = false
+        activityPaused = false
     }
 
     private fun initializeFragments() {
@@ -613,10 +613,10 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     override fun onConversationRead(conversation: Conversation, upToUuid: String) {
-        if (!mActivityPaused && pendingViewIntent.peek() == null) {
+        if (!activityPaused && pendingViewIntent.peek() == null) {
             xmppConnectionService.sendReadMarker(conversation, upToUuid)
         } else {
-            Log.d(Config.LOGTAG, "ignoring read callback. mActivityPaused=$mActivityPaused")
+            Log.d(Config.LOGTAG, "ignoring read callback. mActivityPaused=$activityPaused")
         }
     }
 
