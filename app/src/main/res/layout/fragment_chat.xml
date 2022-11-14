@@ -78,7 +78,7 @@
         app:layout_constraintTop_toTopOf="@id/image_avatar"
         app:srcCompat="@drawable/ic_kyc" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <ListView
         android:id="@+id/rv_messages_list"
         android:layout_width="0px"
         android:layout_height="0px"
@@ -102,7 +102,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_add" />
 
-    <androidx.appcompat.widget.AppCompatEditText
+    <eu.siacs.conversations.ui.widget.EditMessage
         android:id="@+id/edit_message_input"
         android:layout_width="0px"
         android:layout_height="wrap_content"

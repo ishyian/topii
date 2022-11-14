@@ -46,6 +46,7 @@ import android.widget.Toast;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.topiichat.app.features.chats.activity.ChatsActivity;
+import com.topiichat.app.features.chats.new_chat.MediaPreview2Adapter;
 import com.yourbestigor.chat.R;
 import com.yourbestigor.chat.databinding.FragmentConversationBinding;
 
@@ -102,7 +103,6 @@ import eu.siacs.conversations.ui.TrustKeysActivity;
 import eu.siacs.conversations.ui.UiCallback;
 import eu.siacs.conversations.ui.UiInformableCallback;
 import eu.siacs.conversations.ui.XmppActivity;
-import eu.siacs.conversations.ui.adapter.MediaPreviewAdapter;
 import eu.siacs.conversations.ui.adapter.MessageAdapter;
 import eu.siacs.conversations.ui.util.ActivityResult;
 import eu.siacs.conversations.ui.util.Attachment;
@@ -193,7 +193,7 @@ public class NewConversationFragment extends BaseXmppFragment
     private final PendingItem<Message> pendingMessage = new PendingItem<>();
     public Uri mPendingEditorContent = null;
     protected MessageAdapter messageListAdapter;
-    private MediaPreviewAdapter mediaPreviewAdapter;
+    private MediaPreview2Adapter mediaPreviewAdapter;
     private String lastMessageUuid = null;
     private Conversation conversation;
     private FragmentConversationBinding binding;
@@ -1230,7 +1230,7 @@ public class NewConversationFragment extends BaseXmppFragment
         binding.scrollToBottomButton.setOnClickListener(this.mScrollButtonListener);
         binding.messagesView.setOnScrollListener(mOnScrollListener);
         binding.messagesView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
-        //mediaPreviewAdapter = new MediaPreviewAdapter(this);
+        //mediaPreviewAdapter = new MediaPreview2Adapter(this);
         //binding.mediaPreview.setAdapter(mediaPreviewAdapter);
         messageListAdapter = new MessageAdapter((XmppActivity) getActivity(), this.messageList);
         messageListAdapter.setOnContactPictureClicked(this);
@@ -1829,11 +1829,14 @@ public class NewConversationFragment extends BaseXmppFragment
             }
         }
         if (writeGranted(grantResults, permissions)) {
+            Log.d("zm64", "granted");
             if (activity != null && activity.xmppConnectionService != null) {
                 activity.xmppConnectionService.getBitmapCache().evictAll();
                 activity.xmppConnectionService.restartFileObserver();
             }
             refresh();
+        } else {
+            Log.d("zm64", "not granted");
         }
     }
 
@@ -2730,6 +2733,7 @@ public class NewConversationFragment extends BaseXmppFragment
     @Override
     public void refresh() {
         if (this.binding == null) {
+            Log.d("zm64", "binding null");
             Log.d(
                     Config.LOGTAG,
                     "ConversationFragment.refresh() skipped updated because view binding was null");
@@ -2738,17 +2742,21 @@ public class NewConversationFragment extends BaseXmppFragment
         if (this.conversation != null
                 && this.activity != null
                 && this.activity.xmppConnectionService != null) {
+            Log.d("zm64", "conv not null");
             if (!activity.xmppConnectionService.isConversationStillOpen(this.conversation)) {
+                Log.d("zm64", "conv not open");
                 activity.onConversationArchived(this.conversation);
                 return;
-            }
-        }
+            } else Log.d("zm64", "conv open");
+        } else Log.d("zm64", "conv null");
+
         this.refresh(true);
     }
 
     private void refresh(boolean notifyConversationRead) {
         synchronized (this.messageList) {
             if (this.conversation != null) {
+                Log.d("zm64", "conversation != null");
                 conversation.populateWithMessages(this.messageList);
                 updateSnackBar(conversation);
                 updateStatusMessages();
@@ -2758,6 +2766,7 @@ public class NewConversationFragment extends BaseXmppFragment
                             conversation.getReceivedMessagesCountSinceUuid(lastMessageUuid));
                 }
                 this.messageListAdapter.notifyDataSetChanged();
+                Log.d("zm64", "dataset change");
                 updateChatMsgHint();
                 if (notifyConversationRead && activity != null) {
                     binding.messagesView.post(this::fireReadEvent);
@@ -2803,6 +2812,8 @@ public class NewConversationFragment extends BaseXmppFragment
         if (this.conversation.getStatus() != Conversation.STATUS_ARCHIVED
                 && participating
                 && this.conversation.setNextMessage(msg)) {
+
+            Log.d("zm96", "storeNextMessage");
             this.activity.xmppConnectionService.updateConversation(this.conversation);
             return true;
         }

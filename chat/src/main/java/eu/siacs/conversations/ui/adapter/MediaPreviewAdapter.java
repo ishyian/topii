@@ -173,9 +173,9 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
         }
     }
 
-    private static class BitmapWorkerTask extends AsyncTask<Attachment, Void, Bitmap> {
+    public static class BitmapWorkerTask extends AsyncTask<Attachment, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
-        private Attachment attachment = null;
+        public Attachment attachment = null;
 
         BitmapWorkerTask(ImageView imageView) {
             imageViewReference = new WeakReference<>(imageView);

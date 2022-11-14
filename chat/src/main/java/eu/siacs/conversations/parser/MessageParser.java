@@ -127,6 +127,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
     }
 
     private Message parseAxolotlChat(Element axolotlMessage, Jid from, Conversation conversation, int status, final boolean checkedForDuplicates, boolean postpone) {
+        Log.d("Topii", "parseAxolotlChat");
         final AxolotlService service = conversation.getAccount().getAxolotlService();
         final XmppAxolotlMessage xmppAxolotlMessage;
         try {
@@ -136,6 +137,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             return null;
         }
         if (xmppAxolotlMessage.hasPayload()) {
+            Log.d("Topii", "hasPayload");
             final XmppAxolotlMessage.XmppAxolotlPlaintextMessage plaintextMessage;
             try {
                 plaintextMessage = service.processReceivingPayloadMessage(xmppAxolotlMessage, postpone);
@@ -158,10 +160,13 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                 return new Message(conversation, "", Message.ENCRYPTION_AXOLOTL_FAILED, status);
             }
             if (plaintextMessage != null) {
+                Log.d("Topii", "plainText != null");
                 Message finishedMessage = new Message(conversation, plaintextMessage.getPlaintext(), Message.ENCRYPTION_AXOLOTL, status);
                 finishedMessage.setFingerprint(plaintextMessage.getFingerprint());
                 Log.d(Config.LOGTAG, AxolotlService.getLogprefix(finishedMessage.getConversation().getAccount()) + " Received Message with session fingerprint: " + plaintextMessage.getFingerprint());
                 return finishedMessage;
+            } else {
+                Log.d("Topii", "plainText == null");
             }
         } else {
             Log.d(Config.LOGTAG, conversation.getAccount().getJid().asBareJid() + ": received OMEMO key transport message");
@@ -358,6 +363,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 
     @Override
     public void onMessagePacketReceived(Account account, MessagePacket original) {
+        Log.d("Topii", "received");
         if (handleErrorMessage(account, original)) {
             return;
         }
@@ -532,8 +538,10 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                 final boolean checkedForDuplicates = liveMessage || (serverMsgId != null && remoteMsgId != null && !conversation.possibleDuplicate(serverMsgId, remoteMsgId));
 
                 if (origin != null) {
+                    Log.d("Topii", "origin != null");
                     message = parseAxolotlChat(axolotlEncrypted, origin, conversation, status, checkedForDuplicates, query != null);
                 } else {
+                    Log.d("Topii", "origin == null");
                     Message trial = null;
                     for (Jid fallback : fallbacksBySourceId) {
                         trial = parseAxolotlChat(axolotlEncrypted, fallback, conversation, status, checkedForDuplicates && fallbacksBySourceId.size() == 1, query != null);

@@ -91,8 +91,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(), IChatFragment {
         editMessageInput.doAfterTextChanged { text -> viewModel.onInputChanged(text.toString()) }
         chatMessageAdapter.registerAdapterDataObserver(firstItemInsertedObserver)
         rvMessagesList.run {
-            addOnScrollListener(onScrollListener)
-            adapter = chatMessageAdapter
+            //addOnScrollListener(onScrollListener)
+            //adapter = chatMessageAdapter
         }
         initObservers()
     }
@@ -153,7 +153,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(), IChatFragment {
 
     override fun onDestroyView() {
         chatMessageAdapter.unregisterAdapterDataObserver(firstItemInsertedObserver)
-        binding.rvMessagesList.removeOnScrollListener(onScrollListener)
+        //binding.rvMessagesList.removeOnScrollListener(onScrollListener)
         super.onDestroyView()
     }
 }

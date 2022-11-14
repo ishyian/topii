@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.topiichat.app.R
 import com.topiichat.app.core.extension.getDrawableKtx
 import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseFragment
+import com.topiichat.app.core.presentation.platform.BaseChatFragment
 import com.topiichat.app.databinding.FragmentChatsBinding
 import com.topiichat.app.features.chats.activity.ChatsActivity
 import com.topiichat.app.features.chats.root.presentation.adapter.ChatsAdapter
@@ -27,7 +27,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChatsFragment : BaseFragment<FragmentChatsBinding>(), IChatsFragment, OnBackendConnected {
+class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, OnBackendConnected {
 
     @Inject
     lateinit var factory: ChatsViewModel.AssistedFactory

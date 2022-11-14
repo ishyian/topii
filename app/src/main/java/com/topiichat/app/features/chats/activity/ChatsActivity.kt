@@ -49,6 +49,7 @@ import com.topiichat.app.R
 import com.topiichat.app.core.util.AccountUtil.createMockAccount
 import com.topiichat.app.databinding.ActivityChatsBinding
 import com.topiichat.app.features.chats.NewConversationFragment
+import com.topiichat.app.features.chats.new_chat.NewChatFragment
 import com.topiichat.app.features.chats.root.presentation.ChatsFragment
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.Config
@@ -60,7 +61,7 @@ import eu.siacs.conversations.services.XmppConnectionService.OnAffiliationChange
 import eu.siacs.conversations.services.XmppConnectionService.OnConversationUpdate
 import eu.siacs.conversations.services.XmppConnectionService.OnRosterUpdate
 import eu.siacs.conversations.services.XmppConnectionService.OnShowErrorToast
-import eu.siacs.conversations.ui.ConversationFragment
+import eu.siacs.conversations.ui.BaseXmppFragment
 import eu.siacs.conversations.ui.EditAccountActivity
 import eu.siacs.conversations.ui.StartConversationActivity
 import eu.siacs.conversations.ui.UriHandlerActivity
@@ -207,7 +208,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     private fun refreshFragment(@IdRes id: Int) {
         val fragment = supportFragmentManager.findFragmentById(id)
         //TODO
-        if (fragment is ChatsFragment) {
+        if (fragment is BaseXmppFragment) {
             fragment.refresh()
         }
     }
@@ -231,9 +232,11 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
                 when (requestCode) {
                     REQUEST_OPEN_MESSAGE -> {
                         refreshUiReal()
-                        ConversationFragment.openPendingMessage(this)
+                        NewChatFragment.openPendingMessage(this)
                     }
-                    REQUEST_PLAY_PAUSE -> ConversationFragment.startStopPending(this)
+                    REQUEST_PLAY_PAUSE -> NewChatFragment.startStopPending(
+                        this
+                    )
                 }
             }
         }
@@ -258,9 +261,9 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     private fun handleNegativeActivityResult(requestCode: Int) {
-        val conversation = ConversationFragment.getConversationReliable(this)
+        val conversation = com.topiichat.app.features.chats.new_chat.NewChatFragment.getConversationReliable(this)
         when (requestCode) {
-            ConversationFragment.REQUEST_DECRYPT_PGP -> {
+            com.topiichat.app.features.chats.new_chat.NewChatFragment.REQUEST_DECRYPT_PGP -> {
                 if (conversation == null) {
                     return
                 }
@@ -271,13 +274,13 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     private fun handlePositiveActivityResult(requestCode: Int, data: Intent) {
-        val conversation = ConversationFragment.getConversationReliable(this)
+        val conversation = NewChatFragment.getConversationReliable(this)
         if (conversation == null) {
             Log.d(Config.LOGTAG, "conversation not found")
             return
         }
         when (requestCode) {
-            ConversationFragment.REQUEST_DECRYPT_PGP -> conversation.account.pgpDecryptionService.continueDecryption(
+            NewChatFragment.REQUEST_DECRYPT_PGP -> conversation.account.pgpDecryptionService.continueDecryption(
                 data
             )
             REQUEST_CHOOSE_PGP_ID -> {
@@ -314,7 +317,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
 
     override fun onConversationSelected(conversation: Conversation) {
         clearPendingViewIntent()
-        if (ConversationFragment.getConversation(this) === conversation) {
+        if (NewChatFragment.getConversation(this) === conversation) {
             Log.d(Config.LOGTAG, "ignore onConversationSelected() because conversation is already open")
             return
         }
@@ -341,11 +344,11 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         executePendingTransactions(fragmentManager)
         val mainNeedsRefresh = false;
         val mainFragment = fragmentManager.findFragmentById(R.id.chats_container)
-        val conversationFragment: NewConversationFragment
-        if (mainFragment is NewConversationFragment) {
+        val conversationFragment: NewChatFragment
+        if (mainFragment is NewChatFragment) {
             conversationFragment = mainFragment
         } else {
-            conversationFragment = NewConversationFragment();
+            conversationFragment = NewChatFragment();
             val fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.chats_container, conversationFragment);
             fragmentTransaction.addToBackStack(null);
@@ -384,7 +387,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
 
     override fun onKeyDown(keyCode: Int, keyEvent: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_DPAD_UP && keyEvent.isCtrlPressed) {
-            val conversationFragment = ConversationFragment.get(this)
+            val conversationFragment = com.topiichat.app.features.chats.new_chat.NewChatFragment.get(this)
             if (conversationFragment != null && conversationFragment.onArrowUpCtrlPressed()) {
                 return true
             }
@@ -448,21 +451,21 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         }*/
     }
 
-    override fun onConversationArchived(conversation: Conversation) {
+    override fun onConversationArchived(conversation: Conversation?) {
         if (performRedirectIfNecessary(conversation, false)) {
             return
         }
         val fragmentManager = supportFragmentManager
         val mainFragment = fragmentManager.findFragmentById(R.id.container)
-        /*if (mainFragment instanceof ConversationFragment) {
+        if (mainFragment is NewConversationFragment) {
             try {
                 fragmentManager.popBackStack();
-            } catch (final IllegalStateException e) {
+            } catch (e: IllegalStateException) {
                 Log.w(Config.LOGTAG, "state loss while popping back state after archiving conversation", e);
                 //this usually means activity is no longer active; meaning on the next open we will run through this again
             }
             return;
-        }*/
+        }
     }
 
     override fun onConversationsListItemUpdated() {
