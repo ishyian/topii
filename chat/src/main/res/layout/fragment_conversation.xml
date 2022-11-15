@@ -90,7 +90,7 @@
                     android:orientation="horizontal"
                     android:paddingTop="8dp"
                     android:requiresFadingEdge="horizontal"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/media_preview">
 

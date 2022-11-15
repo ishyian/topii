@@ -128,7 +128,22 @@
         android:layout_marginEnd="@dimen/offset12"
         app:layout_constraintBottom_toBottomOf="@+id/edit_message_input"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/media_preview"
         app:srcCompat="@drawable/ic_send_message" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/media_preview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:requiresFadingEdge="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/image_send"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/edit_message_input"
+        tools:listitem="@layout/media_preview" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier_chat_bottom"

@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.topiichat.app.R
 import com.topiichat.app.core.extension.getDrawableKtx
 import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseChatFragment
 import com.topiichat.app.databinding.FragmentChatsBinding
 import com.topiichat.app.features.chats.activity.ChatsActivity
+import com.topiichat.app.features.chats.base.BaseChatFragment
 import com.topiichat.app.features.chats.root.presentation.adapter.ChatsAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.entities.Conversation

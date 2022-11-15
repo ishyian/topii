@@ -424,7 +424,7 @@ public class FileBackend {
         message.setBody(body.toString());
     }
 
-    /*public Bitmap getPreviewForUri(Attachment attachment, int size, boolean cacheOnly) {
+    public Bitmap getPreviewForUri(Attachment attachment, int size, boolean cacheOnly) {
         final String key = "attachment_" + attachment.getUuid().toString() + "_" + size;
         final LruCache<String, Bitmap> cache = mXmppConnectionService.getBitmapCache();
         Bitmap bitmap = cache.get(key);
@@ -466,7 +466,7 @@ public class FileBackend {
             cache.put(key, bitmap);
         }
         return bitmap;
-    }*/
+    }
 
     public void updateMediaScanner(File file) {
         updateMediaScanner(file, null);

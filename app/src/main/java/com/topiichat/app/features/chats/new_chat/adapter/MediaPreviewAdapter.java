@@ -1,4 +1,4 @@
-package eu.siacs.conversations.ui.adapter;
+package com.topiichat.app.features.chats.new_chat.adapter;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.topiichat.app.features.chats.new_chat.NewChatFragment;
 import com.yourbestigor.chat.R;
 import com.yourbestigor.chat.databinding.MediaPreviewBinding;
 
@@ -26,17 +27,17 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import eu.siacs.conversations.persistance.FileBackend;
-import eu.siacs.conversations.ui.ConversationFragment;
 import eu.siacs.conversations.ui.XmppActivity;
+import eu.siacs.conversations.ui.adapter.MediaAdapter;
 import eu.siacs.conversations.ui.util.Attachment;
 
 public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapter.MediaPreviewViewHolder> {
 
     private final ArrayList<Attachment> mediaPreviews = new ArrayList<>();
 
-    private final ConversationFragment conversationFragment;
+    private final NewChatFragment conversationFragment;
 
-    public MediaPreviewAdapter(ConversationFragment fragment) {
+    public MediaPreviewAdapter(NewChatFragment fragment) {
         this.conversationFragment = fragment;
     }
 

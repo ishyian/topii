@@ -48,7 +48,7 @@ import androidx.fragment.app.FragmentManager
 import com.topiichat.app.R
 import com.topiichat.app.core.util.AccountUtil.createMockAccount
 import com.topiichat.app.databinding.ActivityChatsBinding
-import com.topiichat.app.features.chats.NewConversationFragment
+import com.topiichat.app.features.chats.base.BaseChatFragment
 import com.topiichat.app.features.chats.new_chat.NewChatFragment
 import com.topiichat.app.features.chats.root.presentation.ChatsFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,7 +61,6 @@ import eu.siacs.conversations.services.XmppConnectionService.OnAffiliationChange
 import eu.siacs.conversations.services.XmppConnectionService.OnConversationUpdate
 import eu.siacs.conversations.services.XmppConnectionService.OnRosterUpdate
 import eu.siacs.conversations.services.XmppConnectionService.OnShowErrorToast
-import eu.siacs.conversations.ui.BaseXmppFragment
 import eu.siacs.conversations.ui.EditAccountActivity
 import eu.siacs.conversations.ui.StartConversationActivity
 import eu.siacs.conversations.ui.UriHandlerActivity
@@ -208,7 +207,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     private fun refreshFragment(@IdRes id: Int) {
         val fragment = supportFragmentManager.findFragmentById(id)
         //TODO
-        if (fragment is BaseXmppFragment) {
+        if (fragment is BaseChatFragment<*>) {
             fragment.refresh()
         }
     }
@@ -457,7 +456,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         }
         val fragmentManager = supportFragmentManager
         val mainFragment = fragmentManager.findFragmentById(R.id.container)
-        if (mainFragment is NewConversationFragment) {
+        if (mainFragment is NewChatFragment) {
             try {
                 fragmentManager.popBackStack();
             } catch (e: IllegalStateException) {

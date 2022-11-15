@@ -48,12 +48,15 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.inputmethod.InputConnectionCompat
+import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.common.base.Optional
 import com.google.common.collect.ImmutableList
 import com.topiichat.app.databinding.DialogAddAttachmentBinding
 import com.topiichat.app.databinding.FragmentChatBinding
 import com.topiichat.app.features.chats.activity.ChatsActivity
+import com.topiichat.app.features.chats.base.BaseChatFragment
+import com.topiichat.app.features.chats.new_chat.adapter.MediaPreviewAdapter
 import com.yourbestigor.chat.R
 import eu.siacs.conversations.Config
 import eu.siacs.conversations.crypto.axolotl.AxolotlService
@@ -73,7 +76,6 @@ import eu.siacs.conversations.http.HttpDownloadConnection
 import eu.siacs.conversations.persistance.FileBackend
 import eu.siacs.conversations.services.QuickConversationsService
 import eu.siacs.conversations.services.XmppConnectionService.OnMoreMessagesLoaded
-import eu.siacs.conversations.ui.BaseXmppFragment
 import eu.siacs.conversations.ui.BlockContactDialog
 import eu.siacs.conversations.ui.RtpSessionActivity
 import eu.siacs.conversations.ui.SearchActivity
@@ -126,7 +128,8 @@ import java.util.Collections
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 
-class NewChatFragment : BaseXmppFragment(), EditMessage.KeyboardListener, OnContactPictureLongClicked,
+class NewChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.KeyboardListener,
+    OnContactPictureLongClicked,
     OnContactPictureClicked {
     private val messageList: MutableList<Message> = ArrayList()
     private val postponedActivityResult = PendingItem<ActivityResult>()
@@ -138,15 +141,19 @@ class NewChatFragment : BaseXmppFragment(), EditMessage.KeyboardListener, OnCont
     private val pendingLastMessageUuid = PendingItem<String>()
     private val pendingMessage = PendingItem<Message>()
     var mPendingEditorContent: Uri? = null
-    protected var messageListAdapter: MessageAdapter? = null
-    private var mediaPreviewAdapter: MediaPreview2Adapter? = null
+    private var messageListAdapter: MessageAdapter? = null
+    private var mediaPreviewAdapter: MediaPreviewAdapter? = null
     private var lastMessageUuid: String? = null
     var conversation: Conversation? = null
         private set
-    private var binding: FragmentChatBinding? = null
     private var messageLoaderToast: Toast? = null
     private var chatsActivity: ChatsActivity? = null
     private var reInitRequiredOnStart = true
+
+    override fun initBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentChatBinding {
+        return FragmentChatBinding.inflate(inflater, container, false)
+    }
+
     private val clickToMuc = View.OnClickListener {
         //ConferenceDetailsActivity.open(getActivity(), conversation);
     }
@@ -367,7 +374,7 @@ class NewChatFragment : BaseXmppFragment(), EditMessage.KeyboardListener, OnCont
             hideSnackbar()
         }
     }
-    protected var clickToDecryptListener = View.OnClickListener {
+    private var clickToDecryptListener = View.OnClickListener {
         val pendingIntent = conversation!!.account.pgpDecryptionService.pendingIntent
         if (pendingIntent != null) {
             try {
@@ -566,10 +573,8 @@ class NewChatFragment : BaseXmppFragment(), EditMessage.KeyboardListener, OnCont
             })
     }
 
-    fun attachEditorContentToConversation(uri: Uri?) {
-        mediaPreviewAdapter!!.addMediaPreviews(
-            Attachment.of(activity, uri, Attachment.Type.FILE)
-        )
+    private fun attachEditorContentToConversation(uri: Uri?) {
+        mediaPreviewAdapter?.addMediaPreviews(Attachment.of(activity, uri, Attachment.Type.FILE))
         toggleInputMethod()
     }
 
@@ -643,7 +648,7 @@ class NewChatFragment : BaseXmppFragment(), EditMessage.KeyboardListener, OnCont
             && trustKeysIfNeeded(requestCode))
     }
 
-    protected fun trustKeysIfNeeded(requestCode: Int): Boolean {
+    private fun trustKeysIfNeeded(requestCode: Int): Boolean {
         val axolotlService = conversation!!.account.axolotlService
         val targets = axolotlService.getCryptoTargets(conversation)
         val hasUnaccepted = !conversation!!.acceptedCryptoTargets.containsAll(targets)
@@ -828,10 +833,11 @@ class NewChatFragment : BaseXmppFragment(), EditMessage.KeyboardListener, OnCont
         }
     }
 
-    fun toggleInputMethod() {
+    fun toggleInputMethod() = with(binding) {
         val hasAttachments = mediaPreviewAdapter!!.hasAttachments()
-        binding!!.editMessageInput.visibility = if (hasAttachments) View.GONE else View.VISIBLE
-        //binding.mediaPreview.setVisibility(hasAttachments ? View.VISIBLE : View.GONE);
+        editMessageInput.visibility = if (hasAttachments) View.GONE else View.VISIBLE
+        imageAttach.visibility = if (hasAttachments) View.GONE else View.VISIBLE
+        mediaPreview.isVisible = hasAttachments
         updateSendButton()
     }
 
@@ -938,35 +944,36 @@ class NewChatFragment : BaseXmppFragment(), EditMessage.KeyboardListener, OnCont
         super.onCreateOptionsMenu(menu, menuInflater)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentChatBinding.inflate(inflater, container, false)
-        binding!!.root.setOnClickListener(null) // TODO why the fuck did we do this?
-        binding!!.editMessageInput.addTextChangedListener(
-            MessageEditorStyler(binding!!.editMessageInput)
-        )
-        binding!!.editMessageInput.setOnEditorActionListener(mEditorActionListener)
-        binding!!.editMessageInput.setRichContentListener(arrayOf("image/*"), mEditorContentListener)
-        binding!!.imageSend.setOnClickListener(mSendButtonListener)
-        binding!!.imageAttach.setOnClickListener {
-            showAttachmentsDialog()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+        root.setOnClickListener(null) // TODO why the fuck did we do this?
+
+        editMessageInput.apply {
+            addTextChangedListener(MessageEditorStyler(this))
+            setOnEditorActionListener(mEditorActionListener)
+            setRichContentListener(arrayOf("image/*"), mEditorContentListener)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                customInsertionActionModeCallback = EditMessageActionModeCallback(this)
+            }
         }
+
+        imageSend.setOnClickListener(mSendButtonListener)
+        imageAttach.setOnClickListener { showAttachmentsDialog() }
+
+        messageListAdapter = MessageAdapter(requireActivity() as XmppActivity, messageList)
+        messageListAdapter?.setOnContactPictureClicked(this@NewChatFragment)
+        messageListAdapter?.setOnContactPictureLongClicked(this@NewChatFragment)
+
+        rvMessagesList.apply {
+            setOnScrollListener(mOnScrollListener)
+            transcriptMode = ListView.TRANSCRIPT_MODE_NORMAL
+            adapter = messageListAdapter
+        }
+        registerForContextMenu(rvMessagesList)
+
+        mediaPreviewAdapter = MediaPreviewAdapter(this@NewChatFragment)
+        mediaPreview.adapter = mediaPreviewAdapter
+
         //binding.scrollToBottomButton.setOnClickListener(this.mScrollButtonListener);
-        binding!!.rvMessagesList.setOnScrollListener(mOnScrollListener)
-        binding!!.rvMessagesList.transcriptMode = ListView.TRANSCRIPT_MODE_NORMAL
-        mediaPreviewAdapter = MediaPreview2Adapter(this);
-        //binding.mediaPreview.setAdapter(mediaPreviewAdapter);
-        messageListAdapter = MessageAdapter(activity as XmppActivity?, messageList)
-        messageListAdapter!!.setOnContactPictureClicked(this)
-        messageListAdapter!!.setOnContactPictureLongClicked(this)
-        binding!!.rvMessagesList.adapter = messageListAdapter
-        registerForContextMenu(binding!!.rvMessagesList)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            binding!!.editMessageInput.customInsertionActionModeCallback =
-                EditMessageActionModeCallback(binding!!.editMessageInput);
-        }
-        return binding!!.root
     }
 
     private fun showAttachmentsDialog() {
@@ -2124,7 +2131,7 @@ class NewChatFragment : BaseXmppFragment(), EditMessage.KeyboardListener, OnCont
         this.conversation!!.messagesLoaded.set(true)
         Log.d(Config.LOGTAG, "scrolledToBottomAndNoPending=$scrolledToBottomAndNoPending")
         if (hasExtras || scrolledToBottomAndNoPending) {
-            resetUnreadMessagesCount()
+            //resetUnreadMessagesCount()
             synchronized(messageList) {
                 Log.d(Config.LOGTAG, "jump to first unread message")
                 val first = conversation.firstUnreadMessage
@@ -2472,12 +2479,12 @@ class NewChatFragment : BaseXmppFragment(), EditMessage.KeyboardListener, OnCont
         mSendingPgpMessage.set(false)
     }
 
-    fun getMaxHttpUploadSize(conversation: Conversation): Long {
+    private fun getMaxHttpUploadSize(conversation: Conversation): Long {
         val connection = conversation.account.xmppConnection
         return connection?.features?.maxHttpUploadSize ?: -1
     }
 
-    private fun updateEditablity() {
+    private fun updateEditablity() = with(binding) {
         val canWrite = (conversation!!.mode == Conversation.MODE_SINGLE || conversation!!.mucOptions.participating()
             || conversation!!.nextCounterpart != null)
         binding!!.editMessageInput.isFocusable = canWrite
