@@ -36,7 +36,7 @@ object AccountUtil {
 * After restart of application you can navigate to chats and invite another XMPP account to start
   conversation.
 * All prepare flow to test you can see in
-  this [screencast]("https://drive.google.com/file/d/1fCQPxitHFo4GJr-hjLU-0o-qV8shbaRM/view?usp=share_link")
+  this https://drive.google.com/file/d/1fCQPxitHFo4GJr-hjLU-0o-qV8shbaRM/view?usp=share_link"
   .
 
 ## Technology stack
