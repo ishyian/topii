@@ -1,8 +1,8 @@
 package com.topiichat.app.features.chats.root.presentation
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +15,11 @@ import com.topiichat.app.databinding.FragmentChatsBinding
 import com.topiichat.app.features.chats.activity.ChatsActivity
 import com.topiichat.app.features.chats.base.BaseChatFragment
 import com.topiichat.app.features.chats.root.presentation.adapter.ChatsAdapter
+import com.topiichat.app.features.chats.root.presentation.adapter.ChatsListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.entities.Conversation
 import eu.siacs.conversations.ui.ConversationsOverviewFragment
+import eu.siacs.conversations.ui.StartConversationActivity
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected
 import eu.siacs.conversations.ui.interfaces.OnConversationSelected
 import eu.siacs.conversations.ui.util.PendingActionHelper
@@ -40,6 +42,9 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
     private var mSwipeEscapeVelocity = 0f
     private val pendingActionHelper = PendingActionHelper()
 
+    private val chatsActionsAdapter by lazy {
+        ChatsListAdapter(viewModel::onChatActionClick)
+    }
     private lateinit var chatsListAdapter: ChatsAdapter
 
     override fun initBinding(inflater: LayoutInflater, container: ViewGroup?) =
@@ -55,10 +60,7 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
             if (activity is OnConversationSelected) {
                 (activity as OnConversationSelected).onConversationSelected(conversation)
             } else {
-                Log.w(
-                    ConversationsOverviewFragment::class.java.canonicalName,
-                    "Activity does not implement OnConversationSelected"
-                )
+                Timber.w("Activity does not implement OnConversationSelected")
             }
         }
         //this.touchHelper = ItemTouchHelper(this.callback)
@@ -70,6 +72,11 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
         )
         dividerDrawable?.let {
             itemDecoration.setDrawable(it)
+        }
+
+        rvChatsActions.run {
+            addItemDecoration(itemDecoration)
+            adapter = chatsActionsAdapter
         }
 
         rvChatsList.run {
@@ -87,16 +94,22 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
 
     private fun initObservers() = with(viewModel) {
         observe(content, ::onContentLoaded)
+        observe(startChat, ::onStartChat)
+    }
+
+    override fun onStartChat(ignore: Boolean) {
+        startActivity(Intent(requireContext(), StartConversationActivity::class.java))
     }
 
     override fun onContentLoaded(content: List<Any>) {
-        //chatsListAdapter.items = content
+        chatsActionsAdapter.items = content
     }
 
     override fun onBackendConnected() {
         refresh()
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState == null) {

@@ -95,16 +95,39 @@
         app:layout_constraintTop_toBottomOf="@id/text_view_content_title"
         tools:ignore="TouchTargetSizeCheck" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_chats_list"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/chats_list_background"
-        android:overScrollMode="never"
-        android:paddingStart="12dp"
-        android:paddingEnd="4dp"
-        android:visibility="visible"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_chats_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/chats_list_background"
+                android:overScrollMode="never"
+                android:paddingStart="12dp"
+                android:paddingEnd="4dp"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_chats_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:paddingStart="12dp"
+                android:paddingEnd="4dp"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/layout_chats_empty"

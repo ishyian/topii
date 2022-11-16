@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.wefika.flowlayout.FlowLayout;
 import com.yourbestigor.chat.R;
 import com.yourbestigor.chat.databinding.ContactBinding;
 
@@ -62,20 +61,6 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         }
         view.setBackground(StyledAttributes.getDrawable(view.getContext(), R.attr.list_item_background));
 
-        List<ListItem.Tag> tags = item.getTags(activity);
-        if (tags.size() == 0 || !this.showDynamicTags) {
-            viewHolder.tags.setVisibility(View.GONE);
-        } else {
-            viewHolder.tags.setVisibility(View.VISIBLE);
-            viewHolder.tags.removeAllViewsInLayout();
-            for (ListItem.Tag tag : tags) {
-                TextView tv = (TextView) inflater.inflate(R.layout.list_item_tag, viewHolder.tags, false);
-                tv.setText(tag.getName());
-                tv.setBackgroundColor(tag.getColor());
-                tv.setOnClickListener(this.onTagTvClick);
-                viewHolder.tags.addView(tv);
-            }
-        }
         final Jid jid = item.getJid();
         if (jid != null) {
             viewHolder.jid.setVisibility(View.VISIBLE);
@@ -101,7 +86,6 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         private TextView name;
         private TextView jid;
         private ImageView avatar;
-        private FlowLayout tags;
 
         private ViewHolder() {
 
@@ -112,7 +96,6 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
             viewHolder.name = binding.contactDisplayName;
             viewHolder.jid = binding.contactJid;
             viewHolder.avatar = binding.contactPhoto;
-            viewHolder.tags = binding.tags;
             binding.getRoot().setTag(viewHolder);
             return viewHolder;
         }

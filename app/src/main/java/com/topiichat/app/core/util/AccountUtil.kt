@@ -11,7 +11,7 @@ object AccountUtil {
 
     fun createMockAccount(xmppConnectionService: XmppConnectionService): Account? {
         try {
-            val username = "igorSample"
+            val username = "theigorsample"
             val domain = "conversations.im"
             val fixedUsername: Boolean = true
             val jid: Jid = Jid.ofLocalAndDomainEscaped(username, domain) //Create jId

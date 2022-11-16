@@ -509,7 +509,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        /*EnterJidDialog dialog = EnterJidDialog.newInstance(
+        EnterJidDialog dialog = EnterJidDialog.newInstance(
                 mActivatedAccounts,
                 getString(R.string.add_contact),
                 getString(R.string.add),
@@ -548,7 +548,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                 return true;
             }
         });
-        dialog.show(ft, FRAGMENT_TAG_DIALOG);*/
+        dialog.show(ft, FRAGMENT_TAG_DIALOG);
     }
 
     @SuppressLint("InflateParams")
@@ -617,7 +617,8 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
 
     protected void switchToConversationDoNotAppend(Contact contact, String body) {
         Conversation conversation = xmppConnectionService.findOrCreateConversation(contact.getAccount(), contact.getJid(), false, true);
-        switchToConversationDoNotAppend(conversation, body);
+        //switchToConversationDoNotAppend(conversation, body);
+        finish();
     }
 
     @Override
@@ -1014,11 +1015,11 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     }
 
     private void navigateBack() {
-        if (!createdByViewIntent && xmppConnectionService != null && !xmppConnectionService.isConversationsListEmpty(null)) {
+        /*if (!createdByViewIntent && xmppConnectionService != null && !xmppConnectionService.isConversationsListEmpty(null)) {
             Intent intent = new Intent(this, ConversationsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
-        }
+        }*/
         finish();
     }
 

@@ -26,6 +26,9 @@ class ChatsViewModel @AssistedInject constructor(
     private val _content: MutableLiveData<List<Any>> = MutableLiveData()
     val content: LiveData<List<Any>> = _content
 
+    private val _startChat: MutableLiveData<Boolean> = MutableLiveData()
+    val startChat: LiveData<Boolean> = _startChat
+
     init {
         _content.value = listOf(
             ChatActionUiModel(
@@ -36,60 +39,6 @@ class ChatsViewModel @AssistedInject constructor(
             ),
             ChatActionUiModel(
                 action = ChatAction.INVITE_FRIENDS
-            ),
-            ChatItemUiModel(
-                message = "Hola! Esto es un mensaje",
-                from = "Alberto García",
-                date = "14:54",
-                unreadCount = 3
-            ),
-            ChatItemUiModel(
-                message = "Hola! Esto es un mensaje",
-                from = "Robert Fox",
-                date = "14:54",
-                unreadCount = 0
-            ),
-            ChatItemUiModel(
-                message = "Hola! Esto es un mensaje",
-                from = "Leslie Alexander",
-                date = "14:54",
-                unreadCount = 200
-            ),
-            ChatItemUiModel(
-                message = "Hola! Esto es un mensaje",
-                from = "Alberto García",
-                date = "14:54",
-                unreadCount = 3
-            ),
-            ChatItemUiModel(
-                message = "Hola! Esto es un mensaje",
-                from = "Robert Fox",
-                date = "14:54",
-                unreadCount = 0
-            ),
-            ChatItemUiModel(
-                message = "Hola! Esto es un mensaje",
-                from = "Leslie Alexander",
-                date = "14:54",
-                unreadCount = 200
-            ),
-            ChatItemUiModel(
-                message = "Hola! Esto es un mensaje",
-                from = "Alberto García",
-                date = "14:54",
-                unreadCount = 3
-            ),
-            ChatItemUiModel(
-                message = "Hola! Esto es un mensaje",
-                from = "Robert Fox",
-                date = "14:54",
-                unreadCount = 0
-            ),
-            ChatItemUiModel(
-                message = "Hola! Esto es un mensaje",
-                from = "Leslie Alexander",
-                date = "14:54",
-                unreadCount = 200
             )
         )
     }
@@ -110,7 +59,7 @@ class ChatsViewModel @AssistedInject constructor(
     }
 
     override fun onChatActionClick(action: ChatAction) {
-        //TODO: Implement actions
+        _startChat.postValue(true)
     }
 
     override fun onKYCClick() {
