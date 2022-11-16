@@ -244,7 +244,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val activityResult = ActivityResult.of(requestCode, resultCode, data)
-        if (xmppConnectionService != null) {
+        if (xmppConnectionService != null && activityResult.data != null) {
             handleActivityResult(activityResult)
         } else {
             postponedActivityResult.push(activityResult)
@@ -252,7 +252,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     private fun handleActivityResult(activityResult: ActivityResult) {
-        if (activityResult.resultCode == RESULT_OK) {
+        if (activityResult.resultCode == RESULT_OK && activityResult.data != null) {
             handlePositiveActivityResult(activityResult.requestCode, activityResult.data)
         } else {
             handleNegativeActivityResult(activityResult.requestCode)
@@ -260,9 +260,9 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     private fun handleNegativeActivityResult(requestCode: Int) {
-        val conversation = com.topiichat.app.features.chats.new_chat.NewChatFragment.getConversationReliable(this)
+        val conversation = NewChatFragment.getConversationReliable(this)
         when (requestCode) {
-            com.topiichat.app.features.chats.new_chat.NewChatFragment.REQUEST_DECRYPT_PGP -> {
+            NewChatFragment.REQUEST_DECRYPT_PGP -> {
                 if (conversation == null) {
                     return
                 }
