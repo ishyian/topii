@@ -57,6 +57,7 @@ import com.topiichat.app.databinding.FragmentChatBinding
 import com.topiichat.app.features.chats.activity.ChatsActivity
 import com.topiichat.app.features.chats.base.BaseChatFragment
 import com.topiichat.app.features.chats.new_chat.adapter.MediaPreviewAdapter
+import com.topiichat.app.features.chats.new_chat.adapter.MessageAdapter
 import com.yourbestigor.chat.R
 import eu.siacs.conversations.Config
 import eu.siacs.conversations.crypto.axolotl.AxolotlService
@@ -84,9 +85,6 @@ import eu.siacs.conversations.ui.UiCallback
 import eu.siacs.conversations.ui.UiInformableCallback
 import eu.siacs.conversations.ui.XmppActivity
 import eu.siacs.conversations.ui.XmppActivity.ConferenceInvite
-import eu.siacs.conversations.ui.adapter.MessageAdapter
-import eu.siacs.conversations.ui.adapter.MessageAdapter.OnContactPictureClicked
-import eu.siacs.conversations.ui.adapter.MessageAdapter.OnContactPictureLongClicked
 import eu.siacs.conversations.ui.util.ActivityResult
 import eu.siacs.conversations.ui.util.Attachment
 import eu.siacs.conversations.ui.util.ConversationMenuConfigurator
@@ -129,8 +127,8 @@ import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 
 class NewChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.KeyboardListener,
-    OnContactPictureLongClicked,
-    OnContactPictureClicked {
+    MessageAdapter.OnContactPictureLongClicked,
+    MessageAdapter.OnContactPictureClicked {
     private val messageList: MutableList<Message> = ArrayList()
     private val postponedActivityResult = PendingItem<ActivityResult>()
     private val pendingConversationsUuid = PendingItem<String>()
@@ -946,6 +944,8 @@ class NewChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Key
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         root.setOnClickListener(null) // TODO why the fuck did we do this?
+        textRecipientName.text = conversation?.name
+        imageBack.setOnClickListener { requireActivity().onBackPressed() }
 
         editMessageInput.apply {
             addTextChangedListener(MessageEditorStyler(this))
@@ -2164,9 +2164,6 @@ class NewChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Key
     }
 
     private fun hideUnreadMessagesCount() {
-        if (binding == null) {
-            return
-        }
         //this.binding.scrollToBottomButton.setEnabled(false);
         //this.binding.scrollToBottomButton.hide();
         //this.binding.unreadCountCustomView.setVisibility(View.GONE);

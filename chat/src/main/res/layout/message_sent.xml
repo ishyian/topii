@@ -24,7 +24,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:scaleType="fitXY"
-            app:riv_corner_radius="2dp" />
+            app:riv_corner_radius="25dp" />
 
         <View
             android:id="@+id/placeholder"
@@ -38,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="-4dp"
+        android:layout_marginEnd="16dp"
         android:layout_toLeftOf="@+id/message_photo_box"
         android:background="?attr/message_bubble_sent"
         android:longClickable="true"
@@ -48,11 +49,14 @@
             android:layout_height="fill_parent"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:padding="2dp">
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp">
 
             <include
                 android:id="@+id/message_content"
-                layout="@layout/message_content" />
+                layout="@layout/message_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
