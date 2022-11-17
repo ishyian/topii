@@ -17,14 +17,20 @@ import com.topiichat.app.features.chats.base.BaseChatFragment
 import com.topiichat.app.features.chats.root.presentation.adapter.ChatsAdapter
 import com.topiichat.app.features.chats.root.presentation.adapter.ChatsListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import eu.siacs.conversations.entities.Account
+import eu.siacs.conversations.entities.Contact
 import eu.siacs.conversations.entities.Conversation
+import eu.siacs.conversations.ui.ConversationsActivity
 import eu.siacs.conversations.ui.ConversationsOverviewFragment
-import eu.siacs.conversations.ui.StartConversationActivity
+import eu.siacs.conversations.ui.EnterJidDialog
+import eu.siacs.conversations.ui.XmppActivity
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected
 import eu.siacs.conversations.ui.interfaces.OnConversationSelected
 import eu.siacs.conversations.ui.util.PendingActionHelper
 import eu.siacs.conversations.ui.util.PendingItem
 import eu.siacs.conversations.ui.util.ScrollState
+import eu.siacs.conversations.utils.AccountUtils
+import eu.siacs.conversations.xmpp.Jid
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -35,7 +41,9 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
     lateinit var factory: ChatsViewModel.AssistedFactory
     private val viewModel by viewModelCreator { factory.create() }
 
-    private val conversations: ArrayList<Conversation> = ArrayList()
+    private val conversations = arrayListOf<Conversation>()
+    private val activatedAccounts = arrayListOf<String>()
+
     private val swipedConversation = PendingItem<Conversation>()
     private val pendingScrollState = PendingItem<ScrollState>()
 
@@ -45,6 +53,11 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
     private val chatsActionsAdapter by lazy {
         ChatsListAdapter(viewModel::onChatActionClick)
     }
+
+    private val chatsActivity by lazy {
+        requireActivity() as ChatsActivity
+    }
+
     private lateinit var chatsListAdapter: ChatsAdapter
 
     override fun initBinding(inflater: LayoutInflater, container: ViewGroup?) =
@@ -98,7 +111,52 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
     }
 
     override fun onStartChat(ignore: Boolean) {
-        startActivity(Intent(requireContext(), StartConversationActivity::class.java))
+        val fragmentManager = chatsActivity.supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        val previousFragment = fragmentManager.findFragmentByTag(XmppActivity.FRAGMENT_TAG_DIALOG)
+        if (previousFragment != null) {
+            fragmentTransaction.remove(previousFragment)
+        }
+        fragmentTransaction.addToBackStack(null)
+        val dialog = EnterJidDialog.newInstance(
+            activatedAccounts,
+            getString(com.yourbestigor.chat.R.string.add_contact),
+            getString(com.yourbestigor.chat.R.string.add),
+            null,
+            null,
+            true,
+            true
+        )
+
+        dialog.setOnEnterJidDialogPositiveListener { accountJid: Jid?, contactJid: Jid? ->
+            if (!chatsActivity.xmppConnectionServiceBound) {
+                return@setOnEnterJidDialogPositiveListener false
+            }
+            val account: Account = chatsActivity.xmppConnectionService.findAccountByJid(accountJid)
+                ?: return@setOnEnterJidDialogPositiveListener true
+            val contact = account.roster.getContact(contactJid)
+            if (contact.isSelf) {
+                //switchToConversation(contact)
+                return@setOnEnterJidDialogPositiveListener true
+            } else if (contact.showInRoster()) {
+                throw EnterJidDialog.JidError(getString(com.yourbestigor.chat.R.string.contact_already_exists))
+            } else {
+                chatsActivity.xmppConnectionService.createContact(contact, true, null)
+                switchToConversationDoNotAppend(contact)
+                return@setOnEnterJidDialogPositiveListener true
+            }
+        }
+        dialog.show(fragmentTransaction, XmppActivity.FRAGMENT_TAG_DIALOG)
+    }
+
+    private fun switchToConversationDoNotAppend(contact: Contact?) {
+        val conversation: Conversation =
+            chatsActivity.xmppConnectionService.findOrCreateConversation(contact!!.account, contact.jid, false, true)
+        val intent = Intent(requireContext(), ChatsActivity::class.java)
+        intent.action = ConversationsActivity.ACTION_VIEW_CONVERSATION
+        intent.putExtra(ConversationsActivity.EXTRA_CONVERSATION, conversation.getUuid())
+        intent.flags = intent.flags or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
     }
 
     override fun onContentLoaded(content: List<Any>) {
@@ -106,6 +164,15 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
     }
 
     override fun onBackendConnected() {
+        if (activity != null) {
+            activatedAccounts.clear()
+            activatedAccounts.addAll(
+                AccountUtils.getEnabledAccounts(
+                    (requireActivity() as ChatsActivity).xmppConnectionService
+                )
+            )
+        }
+
         refresh()
     }
 

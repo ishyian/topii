@@ -1,31 +1,3 @@
-/*
- * Copyright (c) 2018, Daniel Gultsch All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * 3. Neither the name of the copyright holder nor the names of its contributors
- * may be used to endorse or promote products derived from this software without
- * specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 package com.topiichat.app.features.chats.activity
 
 import android.annotation.SuppressLint
@@ -38,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.widget.Toast
@@ -52,9 +23,7 @@ import com.topiichat.app.features.chats.base.BaseChatFragment
 import com.topiichat.app.features.chats.new_chat.NewChatFragment
 import com.topiichat.app.features.chats.root.presentation.ChatsFragment
 import dagger.hilt.android.AndroidEntryPoint
-import eu.siacs.conversations.Config
 import eu.siacs.conversations.crypto.OmemoSetting
-import eu.siacs.conversations.entities.Account
 import eu.siacs.conversations.entities.Conversation
 import eu.siacs.conversations.services.XmppConnectionService.OnAccountUpdate
 import eu.siacs.conversations.services.XmppConnectionService.OnAffiliationChanged
@@ -62,7 +31,6 @@ import eu.siacs.conversations.services.XmppConnectionService.OnConversationUpdat
 import eu.siacs.conversations.services.XmppConnectionService.OnRosterUpdate
 import eu.siacs.conversations.services.XmppConnectionService.OnShowErrorToast
 import eu.siacs.conversations.ui.EditAccountActivity
-import eu.siacs.conversations.ui.StartConversationActivity
 import eu.siacs.conversations.ui.UriHandlerActivity
 import eu.siacs.conversations.ui.XmppActivity
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected
@@ -74,13 +42,11 @@ import eu.siacs.conversations.ui.util.ActivityResult
 import eu.siacs.conversations.ui.util.ConversationMenuConfigurator
 import eu.siacs.conversations.ui.util.MenuDoubleTabUtil
 import eu.siacs.conversations.ui.util.PendingItem
-import eu.siacs.conversations.utils.AccountUtils
 import eu.siacs.conversations.utils.ExceptionHelper
-import eu.siacs.conversations.utils.SignupUtils
 import eu.siacs.conversations.xmpp.Jid
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist
 import org.openintents.openpgp.util.OpenPgpApi
-import java.util.Arrays
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
 @AndroidEntryPoint
@@ -149,7 +115,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     private val batteryOptimizationPreferenceKey: String
-        private get() {
+        get() {
             @SuppressLint("HardwareIds") val device =
                 Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
             return "show_battery_optimization" + (device ?: "")
@@ -159,6 +125,8 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         preferences.edit().putBoolean(batteryOptimizationPreferenceKey, false).apply()
     }
 
+    @SuppressLint("BatteryLife")
+    @Suppress("DEPRECATION")
     private fun openBatteryOptimizationDialogIfNeeded() {
         if (isOptimizingBattery
             && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && preferences.getBoolean(
@@ -174,7 +142,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
                     getString(R.string.app_name)
                 )
             )
-            builder.setPositiveButton(com.yourbestigor.chat.R.string.next) { dialog: DialogInterface?, which: Int ->
+            builder.setPositiveButton(com.yourbestigor.chat.R.string.next) { _: DialogInterface?, _: Int ->
                 val intent = Intent(
                     Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
                 )
@@ -190,7 +158,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
                     ).show()
                 }
             }
-            builder.setOnDismissListener { dialog: DialogInterface? -> setNeverAskForBatteryOptimizationsAgain() }
+            builder.setOnDismissListener { setNeverAskForBatteryOptimizationsAgain() }
             val dialog = builder.create()
             dialog.setCanceledOnTouchOutside(false)
             dialog.show()
@@ -206,7 +174,6 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
 
     private fun refreshFragment(@IdRes id: Int) {
         val fragment = supportFragmentManager.findFragmentById(id)
-        //TODO
         if (fragment is BaseChatFragment<*>) {
             fragment.refresh()
         }
@@ -216,7 +183,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         val uuid = intent.getStringExtra(EXTRA_CONVERSATION)
         val conversation = if (uuid != null) xmppConnectionService.findConversationByUuid(uuid) else null
         if (conversation == null) {
-            Log.d(Config.LOGTAG, "unable to view conversation with uuid:$uuid")
+            Timber.d("Unable to view conversation with uuid:$uuid")
             return false
         }
         openConversation(conversation, intent.extras)
@@ -226,7 +193,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         UriHandlerActivity.onRequestPermissionResult(this, requestCode, grantResults)
-        if (grantResults.size > 0) {
+        if (grantResults.isNotEmpty()) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 when (requestCode) {
                     REQUEST_OPEN_MESSAGE -> {
@@ -241,6 +208,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         }
     }
 
+    @Suppress("DEPRECATION")
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val activityResult = ActivityResult.of(requestCode, resultCode, data)
@@ -275,7 +243,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     private fun handlePositiveActivityResult(requestCode: Int, data: Intent) {
         val conversation = NewChatFragment.getConversationReliable(this)
         if (conversation == null) {
-            Log.d(Config.LOGTAG, "conversation not found")
+            Timber.d("conversation not found")
             return
         }
         when (requestCode) {
@@ -297,6 +265,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.AppTheme)
         ConversationMenuConfigurator.reloadFeatures(this)
         OmemoSetting.load(this)
         binding = ActivityChatsBinding.inflate(layoutInflater)
@@ -309,6 +278,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
             savedInstanceState.getParcelable("intent")
         }
         if (isViewOrShareIntent(intent)) {
+            Timber.d("View or Share intent")
             pendingViewIntent.push(intent)
             setIntent(createLauncherIntent(this))
         }
@@ -317,7 +287,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     override fun onConversationSelected(conversation: Conversation) {
         clearPendingViewIntent()
         if (NewChatFragment.getConversation(this) === conversation) {
-            Log.d(Config.LOGTAG, "ignore onConversationSelected() because conversation is already open")
+            Timber.d("ignore onConversationSelected() because conversation is already open")
             return
         }
         openConversation(conversation, null)
@@ -325,7 +295,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
 
     fun clearPendingViewIntent() {
         if (pendingViewIntent.clear()) {
-            Log.e(Config.LOGTAG, "cleared pending view intent")
+            Timber.e("cleared pending view intent")
         }
     }
 
@@ -341,27 +311,27 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     private fun openConversation(conversation: Conversation, extras: Bundle?) {
         val fragmentManager = supportFragmentManager
         executePendingTransactions(fragmentManager)
-        val mainNeedsRefresh = false;
+        val mainNeedsRefresh = false
         val mainFragment = fragmentManager.findFragmentById(R.id.chats_container)
         val conversationFragment: NewChatFragment
         if (mainFragment is NewChatFragment) {
             conversationFragment = mainFragment
         } else {
-            conversationFragment = NewChatFragment();
-            val fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.chats_container, conversationFragment);
-            fragmentTransaction.addToBackStack(null);
+            conversationFragment = NewChatFragment()
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.chats_container, conversationFragment)
+            fragmentTransaction.addToBackStack(null)
             try {
-                fragmentTransaction.commit();
+                fragmentTransaction.commit()
             } catch (e: IllegalStateException) {
-                Log.w(Config.LOGTAG, "sate loss while opening conversation", e);
+                Timber.w(e, "sate loss while opening conversation")
                 //allowing state loss is probably fine since view intents et all are already stored and a click can probably be 'ignored'
-                return;
+                return
             }
         }
-        conversationFragment.reInit(conversation, extras ?: Bundle());
+        conversationFragment.reInit(conversation, extras ?: Bundle())
         if (mainNeedsRefresh) {
-            refreshFragment(R.id.chats_container);
+            refreshFragment(R.id.chats_container)
         }
     }
 
@@ -376,7 +346,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
                 try {
                     fm.popBackStack()
                 } catch (e: IllegalStateException) {
-                    Log.w(Config.LOGTAG, "Unable to pop back stack after pressing home button")
+                    Timber.w("Unable to pop back stack after pressing home button")
                 }
                 return true
             }
@@ -386,7 +356,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
 
     override fun onKeyDown(keyCode: Int, keyEvent: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_DPAD_UP && keyEvent.isCtrlPressed) {
-            val conversationFragment = com.topiichat.app.features.chats.new_chat.NewChatFragment.get(this)
+            val conversationFragment = NewChatFragment[this]
             if (conversationFragment != null && conversationFragment.onArrowUpCtrlPressed()) {
                 return true
             }
@@ -408,6 +378,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (isViewOrShareIntent(intent)) {
+            Timber.d("View or Share intent")
             if (xmppConnectionService != null) {
                 clearPendingViewIntent()
                 processViewIntent(intent)
@@ -437,19 +408,6 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         transaction.commit()
     }
 
-    private fun openConversationDetails(conversation: Conversation) {
-        /*if (conversation.getMode() == Conversaftional.MODE_MULTI) {
-            ConferenceDetailsActivity.open(this, conversation);
-        } else {
-            final Contact contact = conversation.getContact();
-            if (contact.isSelf()) {
-                switchToAccount(conversation.getAccount());
-            } else {
-                switchToContactDetails(contact);
-            }
-        }*/
-    }
-
     override fun onConversationArchived(conversation: Conversation?) {
         if (performRedirectIfNecessary(conversation, false)) {
             return
@@ -458,12 +416,12 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         val mainFragment = fragmentManager.findFragmentById(R.id.container)
         if (mainFragment is NewChatFragment) {
             try {
-                fragmentManager.popBackStack();
+                fragmentManager.popBackStack()
             } catch (e: IllegalStateException) {
-                Log.w(Config.LOGTAG, "state loss while popping back state after archiving conversation", e);
+                Timber.w(e, "state loss while popping back state after archiving conversation")
                 //this usually means activity is no longer active; meaning on the next open we will run through this again
             }
-            return;
+            return
         }
     }
 
@@ -476,7 +434,6 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     override fun switchToConversation(conversation: Conversation) {
-        Log.d(Config.LOGTAG, "override")
         openConversation(conversation, null)
     }
 
@@ -484,7 +441,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         if (!activityPaused && pendingViewIntent.peek() == null) {
             xmppConnectionService.sendReadMarker(conversation, upToUuid)
         } else {
-            Log.d(Config.LOGTAG, "ignoring read callback. mActivityPaused=$activityPaused")
+            Timber.d("ignoring read callback. mActivityPaused=$activityPaused")
         }
     }
 
@@ -512,7 +469,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     companion object {
-        const val ACTION_VIEW_CONVERSATION = "eu.siacs.conversations.action.VIEW"
+        private const val ACTION_VIEW_CONVERSATION = "eu.siacs.conversations.action.VIEW"
         const val EXTRA_CONVERSATION = "conversationUuid"
         const val EXTRA_DOWNLOAD_UUID = "eu.siacs.conversations.download_uuid"
         const val EXTRA_AS_QUOTE = "eu.siacs.conversations.as_quote"
@@ -522,7 +479,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         const val EXTRA_POST_INIT_ACTION = "post_init_action"
         const val POST_ACTION_RECORD_VOICE = "record_voice"
         const val EXTRA_TYPE = "type"
-        private val VIEW_AND_SHARE_ACTIONS = Arrays.asList(
+        private val VIEW_AND_SHARE_ACTIONS = listOf(
             ACTION_VIEW_CONVERSATION,
             Intent.ACTION_SEND,
             Intent.ACTION_SEND_MULTIPLE
@@ -531,7 +488,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         const val REQUEST_PLAY_PAUSE = 0x5432
 
         private fun isViewOrShareIntent(i: Intent?): Boolean {
-            Log.d(Config.LOGTAG, "action: " + i?.action)
+            Timber.d("action: " + i?.action)
             return i != null && VIEW_AND_SHARE_ACTIONS.contains(i.action) && i.hasExtra(EXTRA_CONVERSATION)
         }
 
@@ -542,43 +499,11 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
             return intent
         }
 
-        fun getRedirectionIntent(activity: ChatsActivity): Intent {
-            val service = activity.xmppConnectionService
-            val pendingAccount = AccountUtils.getPendingAccount(service)
-            val intent: Intent
-            if (pendingAccount != null) {
-                intent = Intent(activity, EditAccountActivity::class.java)
-                intent.putExtra("jid", pendingAccount.jid.asBareJid().toString())
-                if (!pendingAccount.isOptionSet(Account.OPTION_MAGIC_CREATE)) {
-                    intent.putExtra(
-                        EditAccountActivity.EXTRA_FORCE_REGISTER,
-                        pendingAccount.isOptionSet(Account.OPTION_REGISTER)
-                    )
-                }
-            } else {
-                if (service.accounts.size == 0) {
-                    if (Config.X509_VERIFICATION) {
-                        intent = Intent(activity, EditAccountActivity::class.java)
-                        //intent = new Intent(activity, ManageAccountActivity.class);
-                    } else if (Config.MAGIC_CREATE_DOMAIN != null) {
-                        intent = SignupUtils.getSignUpIntent(activity)
-                    } else {
-                        intent = Intent(activity, EditAccountActivity::class.java)
-                    }
-                } else {
-                    intent = Intent(activity, StartConversationActivity::class.java)
-                }
-            }
-            intent.putExtra("init", true)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            return intent
-        }
-
         private fun executePendingTransactions(fragmentManager: FragmentManager) {
             try {
                 fragmentManager.executePendingTransactions()
             } catch (e: Exception) {
-                Log.e(Config.LOGTAG, "unable to execute pending fragment transactions")
+                Timber.e("unable to execute pending fragment transactions")
             }
         }
     }

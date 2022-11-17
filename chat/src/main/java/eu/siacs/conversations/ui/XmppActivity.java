@@ -90,7 +90,7 @@ public abstract class XmppActivity extends ActionBarActivity {
     public XmppConnectionService xmppConnectionService;
     public boolean xmppConnectionServiceBound = false;
 
-    protected static final String FRAGMENT_TAG_DIALOG = "dialog";
+    public static final String FRAGMENT_TAG_DIALOG = "dialog";
 
     private boolean isCameraFeatureAvailable = false;
 
