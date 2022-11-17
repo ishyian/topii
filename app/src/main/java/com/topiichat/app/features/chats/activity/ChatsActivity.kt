@@ -17,7 +17,6 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentManager
 import com.topiichat.app.R
-import com.topiichat.app.core.util.AccountUtil.createMockAccount
 import com.topiichat.app.databinding.ActivityChatsBinding
 import com.topiichat.app.features.chats.base.BaseChatFragment
 import com.topiichat.app.features.chats.new_chat.NewChatFragment
@@ -30,7 +29,6 @@ import eu.siacs.conversations.services.XmppConnectionService.OnAffiliationChange
 import eu.siacs.conversations.services.XmppConnectionService.OnConversationUpdate
 import eu.siacs.conversations.services.XmppConnectionService.OnRosterUpdate
 import eu.siacs.conversations.services.XmppConnectionService.OnShowErrorToast
-import eu.siacs.conversations.ui.EditAccountActivity
 import eu.siacs.conversations.ui.UriHandlerActivity
 import eu.siacs.conversations.ui.XmppActivity
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected
@@ -85,7 +83,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         }
         val isConversationsListEmpty = xmppConnectionService.isConversationsListEmpty(ignore)
         if (isConversationsListEmpty && redirectInProcess.compareAndSet(false, true)) {
-            val account = createMockAccount(xmppConnectionService)
+            /*val account = createMockAccount(xmppConnectionService)
             val intent = Intent(this, EditAccountActivity::class.java)
             intent.putExtra("jid", account!!.jid.asBareJid().toString())
             intent.putExtra("init", true)
@@ -96,6 +94,12 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
                 if (noAnimation) {
                     overridePendingTransition(0, 0)
                 }
+            }*.
+
+             */
+
+            runOnUiThread {
+                WelcomeActivity.launch(this)
             }
         }
         return redirectInProcess.get()

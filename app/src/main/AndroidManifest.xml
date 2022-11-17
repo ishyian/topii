@@ -27,6 +27,11 @@
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:scheme="mailto" />
+        </intent>
     </queries>
 
     <application
@@ -67,13 +72,9 @@
         </receiver>
 
         <activity android:name="eu.siacs.conversations.ui.ConversationsActivity" />
-        <activity android:name="eu.siacs.conversations.ui.WelcomeActivity" />
         <activity android:name="eu.siacs.conversations.ui.SettingsActivity" />
         <activity android:name="eu.siacs.conversations.ui.UriHandlerActivity" />
         <activity android:name="eu.siacs.conversations.ui.ChooseAccountForProfilePictureActivity" />
-        <activity android:name="eu.siacs.conversations.ui.PickServerActivity" />
-        <activity android:name="eu.siacs.conversations.ui.MagicCreateActivity" />
-        <activity android:name="eu.siacs.conversations.ui.EditAccountActivity" />
         <activity android:name="eu.siacs.conversations.ui.ShareLocationActivity" />
         <activity android:name="eu.siacs.conversations.ui.ShowLocationActivity" />
         <activity android:name="eu.siacs.conversations.ui.TrustKeysActivity" />
@@ -81,10 +82,15 @@
         <activity android:name="eu.siacs.conversations.ui.SearchActivity" />
         <activity android:name="eu.siacs.conversations.ui.StartConversationActivity" />
         <activity android:name="eu.siacs.conversations.ui.ChannelDiscoveryActivity" />
+        <activity android:name=".features.chats.activity.EditAccountActivity" />
+        <activity android:name=".features.chats.activity.WelcomeActivity" />
+        <activity android:name=".features.chats.activity.PickServerActivity" />
+        <activity android:name=".features.chats.activity.MagicCreateActivity" />
+
         <activity
             android:name=".features.chats.activity.ChatsActivity"
             android:exported="true"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

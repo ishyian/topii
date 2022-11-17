@@ -1,10 +1,13 @@
 package eu.siacs.conversations.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -22,8 +25,6 @@ import java.util.Locale;
 import androidx.appcompat.app.AlertDialog;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Account;
-import eu.siacs.conversations.entities.Conversation;
-import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.ui.XmppActivity;
 
@@ -39,6 +40,7 @@ public class ExceptionHelper {
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(context));
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     public static boolean checkForCrash(XmppActivity activity) {
         try {
             final XmppConnectionService service = activity == null ? null : activity.xmppConnectionService;
@@ -87,11 +89,15 @@ public class ExceptionHelper {
             builder.setTitle(activity.getString(R.string.crash_report_title, activity.getString(R.string.app_name)));
             builder.setMessage(activity.getString(R.string.crash_report_message, activity.getString(R.string.app_name)));
             builder.setPositiveButton(activity.getText(R.string.send_now), (dialog, which) -> {
-
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:"));
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"yourbestigor@gmail.com"});
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Crash");
+                intent.putExtra(Intent.EXTRA_TEXT, report.toString());
+                if (intent.resolveActivity(activity.getPackageManager()) != null) {
+                    activity.startActivity(intent);
+                }
                 Log.d(Config.LOGTAG, "using account=" + account.getJid().asBareJid() + " to send in stack trace");
-                Conversation conversation = service.findOrCreateConversation(account, Config.BUG_REPORTS, false, true);
-                Message message = new Message(conversation, report.toString(), Message.ENCRYPTION_NONE);
-                service.sendMessage(message);
             });
             builder.setNegativeButton(activity.getText(R.string.send_never), (dialog, which) -> preferences.edit().putBoolean("never_send", true).apply());
             builder.create().show();
@@ -100,6 +106,7 @@ public class ExceptionHelper {
             return false;
         }
     }
+
 
     static void writeToStacktraceFile(Context context, String msg) {
         try {
