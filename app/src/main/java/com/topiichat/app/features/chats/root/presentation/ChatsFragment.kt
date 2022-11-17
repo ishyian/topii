@@ -18,8 +18,8 @@ import com.topiichat.app.core.extension.viewModelCreator
 import com.topiichat.app.databinding.FragmentChatsBinding
 import com.topiichat.app.features.chats.activity.ChatsActivity
 import com.topiichat.app.features.chats.base.BaseChatFragment
-import com.topiichat.app.features.chats.new_chat.NewChatFragment
-import com.topiichat.app.features.chats.new_chat.NewChatFragment.Companion.STATE_SCROLL_POSITION
+import com.topiichat.app.features.chats.new_chat.ChatFragment
+import com.topiichat.app.features.chats.new_chat.ChatFragment.Companion.STATE_SCROLL_POSITION
 import com.topiichat.app.features.chats.root.presentation.adapter.ChatsAdapter
 import com.topiichat.app.features.chats.root.presentation.adapter.ChatsListAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -104,7 +104,7 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
                     chatsActivity.xmppConnectionService.archiveConversation(c)
                     return
                 }
-                val formerlySelected = NewChatFragment.getConversation(chatsActivity) === swipedConversation.peek()
+                val formerlySelected = ChatFragment.getConversation(chatsActivity) === swipedConversation.peek()
                 if (activity is OnConversationArchived) {
                     (activity as OnConversationArchived).onConversationArchived(swipedConversation.peek())
                 }
@@ -203,6 +203,9 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
 
     override fun onClick(v: View?) {
+        if (v?.id == R.id.image_back) {
+            requireActivity().onBackPressed()
+        }
         viewModel.onClick(v)
     }
 

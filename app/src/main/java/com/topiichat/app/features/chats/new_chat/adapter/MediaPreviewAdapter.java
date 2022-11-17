@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.topiichat.app.features.chats.new_chat.NewChatFragment;
+import com.topiichat.app.features.chats.new_chat.ChatFragment;
 import com.yourbestigor.chat.R;
 import com.yourbestigor.chat.databinding.MediaPreviewBinding;
 
@@ -35,9 +35,9 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
 
     private final ArrayList<Attachment> mediaPreviews = new ArrayList<>();
 
-    private final NewChatFragment conversationFragment;
+    private final ChatFragment conversationFragment;
 
-    public MediaPreviewAdapter(NewChatFragment fragment) {
+    public MediaPreviewAdapter(ChatFragment fragment) {
         this.conversationFragment = fragment;
     }
 

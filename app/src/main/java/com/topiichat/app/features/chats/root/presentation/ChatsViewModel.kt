@@ -6,11 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
 import com.topiichat.app.core.presentation.platform.BaseViewModel
-import com.topiichat.app.features.chats.ChatsScreens
-import com.topiichat.app.features.chats.chat.presentation.ChatParameters
 import com.topiichat.app.features.chats.root.presentation.model.ChatAction
 import com.topiichat.app.features.chats.root.presentation.model.ChatActionUiModel
-import com.topiichat.app.features.chats.root.presentation.model.ChatItemUiModel
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataParameters
 import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCase
@@ -48,14 +45,7 @@ class ChatsViewModel @AssistedInject constructor(
             R.id.image_remittance -> {
                 onKYCClick()
             }
-            R.id.image_back -> {
-                onClickBack()
-            }
         }
-    }
-
-    override fun onChatItemClick(chatItem: ChatItemUiModel) {
-        navigate(ChatsScreens.Chat(ChatParameters(from = chatItem.from)))
     }
 
     override fun onChatActionClick(action: ChatAction) {

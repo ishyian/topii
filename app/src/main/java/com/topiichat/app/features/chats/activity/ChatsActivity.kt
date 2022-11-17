@@ -19,7 +19,7 @@ import androidx.fragment.app.FragmentManager
 import com.topiichat.app.R
 import com.topiichat.app.databinding.ActivityChatsBinding
 import com.topiichat.app.features.chats.base.BaseChatFragment
-import com.topiichat.app.features.chats.new_chat.NewChatFragment
+import com.topiichat.app.features.chats.new_chat.ChatFragment
 import com.topiichat.app.features.chats.root.presentation.ChatsFragment
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.crypto.OmemoSetting
@@ -203,9 +203,9 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
                 when (requestCode) {
                     REQUEST_OPEN_MESSAGE -> {
                         refreshUiReal()
-                        NewChatFragment.openPendingMessage(this)
+                        ChatFragment.openPendingMessage(this)
                     }
-                    REQUEST_PLAY_PAUSE -> NewChatFragment.startStopPending(
+                    REQUEST_PLAY_PAUSE -> ChatFragment.startStopPending(
                         this
                     )
                 }
@@ -233,9 +233,9 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     private fun handleNegativeActivityResult(requestCode: Int) {
-        val conversation = NewChatFragment.getConversationReliable(this)
+        val conversation = ChatFragment.getConversationReliable(this)
         when (requestCode) {
-            NewChatFragment.REQUEST_DECRYPT_PGP -> {
+            ChatFragment.REQUEST_DECRYPT_PGP -> {
                 if (conversation == null) {
                     return
                 }
@@ -246,13 +246,13 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     private fun handlePositiveActivityResult(requestCode: Int, data: Intent) {
-        val conversation = NewChatFragment.getConversationReliable(this)
+        val conversation = ChatFragment.getConversationReliable(this)
         if (conversation == null) {
             Timber.d("conversation not found")
             return
         }
         when (requestCode) {
-            NewChatFragment.REQUEST_DECRYPT_PGP -> conversation.account.pgpDecryptionService.continueDecryption(
+            ChatFragment.REQUEST_DECRYPT_PGP -> conversation.account.pgpDecryptionService.continueDecryption(
                 data
             )
             REQUEST_CHOOSE_PGP_ID -> {
@@ -291,7 +291,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
 
     override fun onConversationSelected(conversation: Conversation) {
         clearPendingViewIntent()
-        if (NewChatFragment.getConversation(this) === conversation) {
+        if (ChatFragment.getConversation(this) === conversation) {
             Timber.d("ignore onConversationSelected() because conversation is already open")
             return
         }
@@ -319,11 +319,11 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         executePendingTransactions(fragmentManager)
         val mainNeedsRefresh = false
         val mainFragment = fragmentManager.findFragmentById(R.id.chats_container)
-        val conversationFragment: NewChatFragment
-        if (mainFragment is NewChatFragment) {
+        val conversationFragment: ChatFragment
+        if (mainFragment is ChatFragment) {
             conversationFragment = mainFragment
         } else {
-            conversationFragment = NewChatFragment()
+            conversationFragment = ChatFragment()
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.chats_container, conversationFragment)
             fragmentTransaction.addToBackStack(null)
@@ -362,7 +362,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
 
     override fun onKeyDown(keyCode: Int, keyEvent: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_DPAD_UP && keyEvent.isCtrlPressed) {
-            val conversationFragment = NewChatFragment[this]
+            val conversationFragment = ChatFragment[this]
             if (conversationFragment != null && conversationFragment.onArrowUpCtrlPressed()) {
                 return true
             }
@@ -421,7 +421,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         }
         val fragmentManager = supportFragmentManager
         val mainFragment = fragmentManager.findFragmentById(R.id.container)
-        if (mainFragment is NewChatFragment) {
+        if (mainFragment is ChatFragment) {
             try {
                 fragmentManager.popBackStack()
             } catch (e: IllegalStateException) {

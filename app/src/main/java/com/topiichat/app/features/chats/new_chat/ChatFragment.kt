@@ -127,7 +127,7 @@ import java.util.Collections
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 
-class NewChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.KeyboardListener,
+class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.KeyboardListener,
     MessageAdapter.OnContactPictureLongClicked,
     MessageAdapter.OnContactPictureClicked {
     private val messageList: MutableList<Message> = ArrayList()
@@ -215,7 +215,7 @@ class NewChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Key
                             override fun onMoreMessagesLoaded(
                                 c: Int, conversation: Conversation
                             ) {
-                                if (this@NewChatFragment.conversation
+                                if (this@ChatFragment.conversation
                                     !== conversation
                                 ) {
                                     conversation.messagesLoaded.set(true)
@@ -245,7 +245,7 @@ class NewChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Key
                                             childPos
                                         )
                                         val pxOffset = v?.top ?: 0
-                                        this@NewChatFragment.conversation!!
+                                        this@ChatFragment.conversation!!
                                             .populateWithMessages(
                                                 messageList
                                             )
@@ -961,8 +961,8 @@ class NewChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Key
         imageAttach.setOnClickListener { showAttachmentsDialog() }
 
         messageListAdapter = MessageAdapter(requireActivity() as XmppActivity, messageList)
-        messageListAdapter?.setOnContactPictureClicked(this@NewChatFragment)
-        messageListAdapter?.setOnContactPictureLongClicked(this@NewChatFragment)
+        messageListAdapter?.setOnContactPictureClicked(this@ChatFragment)
+        messageListAdapter?.setOnContactPictureLongClicked(this@ChatFragment)
 
         rvMessagesList.apply {
             setOnScrollListener(mOnScrollListener)
@@ -971,7 +971,7 @@ class NewChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Key
         }
         registerForContextMenu(rvMessagesList)
 
-        mediaPreviewAdapter = MediaPreviewAdapter(this@NewChatFragment)
+        mediaPreviewAdapter = MediaPreviewAdapter(this@ChatFragment)
         mediaPreview.adapter = mediaPreviewAdapter
 
         //binding.scrollToBottomButton.setOnClickListener(this.mScrollButtonListener);
@@ -3199,14 +3199,14 @@ class NewChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Key
         const val ATTACHMENT_CHOICE_INVALID = 0x0306
         const val ATTACHMENT_CHOICE_RECORD_VIDEO = 0x0307
         const val RECENTLY_USED_QUICK_ACTION = "recently_used_quick_action"
-        val STATE_CONVERSATION_UUID = NewChatFragment::class.java.name + ".uuid"
-        val STATE_SCROLL_POSITION = NewChatFragment::class.java.name + ".scroll_position"
-        val STATE_PHOTO_URI = NewChatFragment::class.java.name + ".media_previews"
-        val STATE_MEDIA_PREVIEWS = NewChatFragment::class.java.name + ".take_photo_uri"
+        val STATE_CONVERSATION_UUID = ChatFragment::class.java.name + ".uuid"
+        val STATE_SCROLL_POSITION = ChatFragment::class.java.name + ".scroll_position"
+        val STATE_PHOTO_URI = ChatFragment::class.java.name + ".media_previews"
+        val STATE_MEDIA_PREVIEWS = ChatFragment::class.java.name + ".take_photo_uri"
         private const val STATE_LAST_MESSAGE_UUID = "state_last_message_uuid"
-        private fun findConversationFragment(activity: AppCompatActivity): NewChatFragment? {
+        private fun findConversationFragment(activity: AppCompatActivity): ChatFragment? {
             val fragment = activity.supportFragmentManager.findFragmentById(R.id.main_fragment)
-            return if (fragment is NewChatFragment) {
+            return if (fragment is ChatFragment) {
                 fragment
             } else null
         }
@@ -3244,21 +3244,21 @@ class NewChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Key
 
         private fun getConversation(activity: AppCompatActivity, @IdRes res: Int): Conversation? {
             val fragment = activity.supportFragmentManager.findFragmentById(res)
-            return if (fragment is NewChatFragment) {
+            return if (fragment is ChatFragment) {
                 fragment.conversation
             } else {
                 null
             }
         }
 
-        operator fun get(activity: AppCompatActivity): NewChatFragment? {
+        operator fun get(activity: AppCompatActivity): ChatFragment? {
             val fragmentManager = activity.supportFragmentManager
             var fragment = fragmentManager.findFragmentById(R.id.main_fragment)
-            return if (fragment is NewChatFragment) {
+            return if (fragment is ChatFragment) {
                 fragment
             } else {
                 fragment = fragmentManager.findFragmentById(R.id.secondary_fragment)
-                if (fragment is NewChatFragment) fragment else null
+                if (fragment is ChatFragment) fragment else null
             }
         }
 
