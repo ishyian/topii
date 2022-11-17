@@ -121,6 +121,7 @@ import eu.siacs.conversations.xmpp.jingle.JingleConnectionManager.RtpSessionProp
 import eu.siacs.conversations.xmpp.jingle.JingleFileTransferConnection
 import eu.siacs.conversations.xmpp.jingle.Media
 import eu.siacs.conversations.xmpp.jingle.RtpCapability
+import timber.log.Timber
 import java.util.Arrays
 import java.util.Collections
 import java.util.UUID
@@ -2073,6 +2074,7 @@ class NewChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Key
     }
 
     fun reInit(conversation: Conversation, extras: Bundle?) {
+        Timber.d("reInit + ${extras.toString()}")
         QuickLoader.set(conversation.uuid)
         val changedConversation = this.conversation !== conversation
         if (changedConversation) {

@@ -180,6 +180,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     private fun processViewIntent(intent: Intent): Boolean {
+        Timber.d("Process view intent")
         val uuid = intent.getStringExtra(EXTRA_CONVERSATION)
         val conversation = if (uuid != null) xmppConnectionService.findConversationByUuid(uuid) else null
         if (conversation == null) {
@@ -309,6 +310,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     private fun openConversation(conversation: Conversation, extras: Bundle?) {
+        Timber.d("Open conversations")
         val fragmentManager = supportFragmentManager
         executePendingTransactions(fragmentManager)
         val mainNeedsRefresh = false
@@ -383,6 +385,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
                 clearPendingViewIntent()
                 processViewIntent(intent)
             } else {
+                Timber.d("connection service null")
                 pendingViewIntent.push(intent)
             }
         }
@@ -469,7 +472,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     companion object {
-        private const val ACTION_VIEW_CONVERSATION = "eu.siacs.conversations.action.VIEW"
+        const val ACTION_VIEW_CONVERSATION = "eu.siacs.conversations.action.VIEW"
         const val EXTRA_CONVERSATION = "conversationUuid"
         const val EXTRA_DOWNLOAD_UUID = "eu.siacs.conversations.download_uuid"
         const val EXTRA_AS_QUOTE = "eu.siacs.conversations.as_quote"
