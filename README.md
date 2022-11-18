@@ -15,29 +15,12 @@
 
 ## How to test chat
 
-* Change account name to your random account name by changing property 'username' in '
-  AccountUtil.kt'. Also you can change domain of XMPP server by changing property 'domain'(for test
-  use - you can leave 'conversations.im')
-
-```
-object AccountUtil {
-
-    fun createMockAccount(xmppConnectionService: XmppConnectionService): Account? {
-        try {
-            val username = "sampleaccount" //Account username
-            val domain = "conversations.im" 
-            ...
-}
-```
-
 * Build application and log-in into Topii account
-* Open Chats button and create chat account. You need to click 'Next', fill Captcha and if you do
-  everything correctly - app will close.
-* After restart of application you can navigate to chats and invite another XMPP account to start
-  conversation.
+* Open Chats button and create or log into successful account. For test purpose you can use '
+  conversations.im' as test server or use own(feature not tested yet).
+* Start conversation by enter another person jid.
 * All prepare flow to test you can see in
-  this https://drive.google.com/file/d/1fCQPxitHFo4GJr-hjLU-0o-qV8shbaRM/view?usp=share_link
-  .
+  this https://drive.google.com/file/d/1OdsaIL3JTPEe_9Nh-LanYFpp-rb4sR_h/view?usp=share_link.
 
 ## Technology stack
 
