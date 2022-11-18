@@ -84,13 +84,12 @@
         android:layout_height="0px"
         android:layout_marginTop="@dimen/offset12"
         android:layout_marginBottom="@dimen/offset16"
+        android:background="@color/chats_search_background"
         android:divider="@null"
         android:dividerHeight="0dp"
-        android:background="@color/chats_search_background"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/barrier_chat_bottom"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/chat_list_item_incoming_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image_avatar" />
 
@@ -139,20 +138,63 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:requiresFadingEdge="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/image_send"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/edit_message_input"
-        tools:listitem="@layout/media_preview" />
+        app:layout_constraintEnd_toStartOf="@id/image_send"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/media_preview"
+        tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier_chat_bottom"
-        android:elevation="0dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:elevation="0dp"
         app:barrierDirection="top"
         app:constraint_referenced_ids="image_attach,edit_message_input,image_send" />
+
+    <RelativeLayout
+        android:id="@+id/snackbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/snackbar"
+        android:minHeight="48dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/media_preview">
+
+        <TextView
+            android:id="@+id/snackbar_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/snackbar_action"
+            android:layout_toLeftOf="@+id/snackbar_action"
+            android:paddingStart="24dp"
+            android:paddingLeft="24dp"
+            android:textAppearance="@style/TextAppearance.Conversations.Body1.OnDark"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/snackbar_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="24dp"
+            android:paddingTop="16dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="16dp"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.Conversations.Body1.OnDark"
+            android:textStyle="bold"
+            tools:ignore="RtlHardcoded" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

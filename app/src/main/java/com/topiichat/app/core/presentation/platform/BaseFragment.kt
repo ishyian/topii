@@ -26,6 +26,7 @@ abstract class BaseFragment<B : ViewBinding> : Fragment(), View.OnClickListener 
 
     private var _binding: B? = null
     val binding: B get() = _binding ?: error("binding exception")
+    val isBindingNotNull: Boolean get() = _binding != null
 
     protected val currentActivity get() = requireActivity() as AppActivity
 

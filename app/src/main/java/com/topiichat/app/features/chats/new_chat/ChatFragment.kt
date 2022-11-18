@@ -16,11 +16,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.preference.PreferenceManager
 import android.provider.MediaStore
 import android.text.TextUtils
-import android.util.Log
 import android.view.ContextMenu
 import android.view.ContextMenu.ContextMenuInfo
 import android.view.Gravity
@@ -122,10 +122,9 @@ import eu.siacs.conversations.xmpp.jingle.JingleFileTransferConnection
 import eu.siacs.conversations.xmpp.jingle.Media
 import eu.siacs.conversations.xmpp.jingle.RtpCapability
 import timber.log.Timber
-import java.util.Arrays
-import java.util.Collections
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.math.max
 
 class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.KeyboardListener,
     MessageAdapter.OnContactPictureLongClicked,
@@ -149,6 +148,13 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     private var chatsActivity: ChatsActivity? = null
     private var reInitRequiredOnStart = true
 
+    private var completionIndex = 0
+    private var lastCompletionLength = 0
+    private var incomplete: String? = null
+    private var lastCompletionCursor = 0
+    private var firstWord = false
+    private var pendingDownloadableMessage: Message? = null
+
     override fun initBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentChatBinding {
         return FragmentChatBinding.inflate(inflater, container, false)
     }
@@ -158,28 +164,29 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     }
     private val leaveMuc =
         View.OnClickListener { chatsActivity!!.xmppConnectionService.archiveConversation(conversation) }
+
     private val joinMuc = View.OnClickListener { chatsActivity!!.xmppConnectionService.joinMuc(conversation) }
     private val acceptJoin = View.OnClickListener {
         conversation!!.setAttribute("accept_non_anonymous", true)
         chatsActivity!!.xmppConnectionService.updateConversation(conversation)
         chatsActivity!!.xmppConnectionService.joinMuc(conversation)
     }
+
     private val enterPassword = View.OnClickListener {
-        val muc = conversation!!.mucOptions
-        var password = muc.password
+        val muc = conversation?.mucOptions
+        var password = muc?.password
         if (password == null) {
             password = ""
         }
-        chatsActivity!!.quickPasswordEdit(
-            password
-        ) { value: String? ->
+        chatsActivity?.quickPasswordEdit(password) { value: String? ->
             chatsActivity!!.xmppConnectionService.providePasswordForMuc(
                 conversation, value
             )
             null
         }
     }
-    private val mOnScrollListener: AbsListView.OnScrollListener = object : AbsListView.OnScrollListener {
+
+    private val onScrollListener: AbsListView.OnScrollListener = object : AbsListView.OnScrollListener {
         override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
             if (AbsListView.OnScrollListener.SCROLL_STATE_IDLE == scrollState) {
                 fireReadEvent()
@@ -194,125 +201,93 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         ) {
             toggleScrollDownButton(view)
             synchronized(messageList) {
-                if (firstVisibleItem < 5 && conversation != null && conversation!!.messagesLoaded.compareAndSet(
-                        true,
-                        false
-                    )
+                if (firstVisibleItem < 5
+                    && conversation != null
+                    && conversation!!.messagesLoaded.compareAndSet(true, false)
                     && messageList.size > 0
                 ) {
-                    val timestamp: Long
-                    timestamp = if (messageList[0].type == Message.TYPE_STATUS
+                    val timestamp: Long = if (messageList[0].type == Message.TYPE_STATUS
                         && messageList.size >= 2
                     ) {
                         messageList[1].timeSent
                     } else {
                         messageList[0].timeSent
                     }
-                    chatsActivity!!.xmppConnectionService.loadMoreMessages(
+                    chatsActivity?.xmppConnectionService?.loadMoreMessages(
                         conversation,
                         timestamp,
-                        object : OnMoreMessagesLoaded {
-                            override fun onMoreMessagesLoaded(
-                                c: Int, conversation: Conversation
-                            ) {
-                                if (this@ChatFragment.conversation
-                                    !== conversation
-                                ) {
-                                    conversation.messagesLoaded.set(true)
-                                    return
-                                }
-                                runOnUiThread {
-                                    synchronized(messageList) {
-                                        val oldPosition = binding!!.rvMessagesList
-                                            .firstVisiblePosition
-                                        var message: Message? = null
-                                        var childPos: Int
-                                        childPos = 0
-                                        while (childPos + oldPosition
-                                            < messageList.size
-                                        ) {
-                                            message = messageList[oldPosition
-                                                + childPos]
-                                            if (message.type
-                                                != Message.TYPE_STATUS
-                                            ) {
-                                                break
-                                            }
-                                            ++childPos
-                                        }
-                                        val uuid = message?.uuid
-                                        val v = binding!!.rvMessagesList.getChildAt(
-                                            childPos
-                                        )
-                                        val pxOffset = v?.top ?: 0
-                                        this@ChatFragment.conversation!!
-                                            .populateWithMessages(
-                                                messageList
-                                            )
-                                        try {
-                                            updateStatusMessages()
-                                        } catch (e: IllegalStateException) {
-                                            Log.d(
-                                                Config.LOGTAG,
-                                                "caught illegal state exception while updating status messages"
-                                            )
-                                        }
-                                        messageListAdapter?.notifyDataSetChanged()
-                                        val pos = Math.max(
-                                            getIndexOf(
-                                                uuid,
-                                                messageList
-                                            ),
-                                            0
-                                        )
-                                        binding!!.rvMessagesList
-                                            .setSelectionFromTop(
-                                                pos, pxOffset
-                                            )
-                                        if (messageLoaderToast != null) {
-                                            messageLoaderToast!!.cancel()
-                                        }
-                                        conversation.messagesLoaded.set(true)
-                                    }
-                                }
-                            }
-
-                            override fun informUser(resId: Int) {
-                                runOnUiThread {
-                                    if (messageLoaderToast != null) {
-                                        messageLoaderToast!!.cancel()
-                                    }
-                                    if (conversation
-                                        !== conversation
-                                    ) {
-                                        return@runOnUiThread
-                                    }
-                                    messageLoaderToast = Toast.makeText(
-                                        view.context,
-                                        resId,
-                                        Toast.LENGTH_LONG
-                                    )
-                                    messageLoaderToast?.show()
-                                }
-                            }
-                        })
+                        onMoreMessagesLoaded
+                    )
                 }
             }
         }
     }
-    private val mEditorContentListener =
-        EditMessage.OnCommitContentListener { inputContentInfo, flags, opts, contentMimeTypes -> // try to get permission to read the image, if applicable
+
+    private val onMoreMessagesLoaded = object : OnMoreMessagesLoaded {
+        override fun onMoreMessagesLoaded(c: Int, conversation: Conversation) {
+            if (this@ChatFragment.conversation !== conversation) {
+                conversation.messagesLoaded.set(true)
+                return
+            }
+            runOnUiThread {
+                synchronized(messageList) {
+                    val oldPosition =
+                        binding.rvMessagesList
+                            .firstVisiblePosition
+                    var message: Message? = null
+                    var childPos = 0
+                    while (childPos + oldPosition < messageList.size) {
+                        message = messageList[oldPosition + childPos]
+                        if (message.type != Message.TYPE_STATUS) {
+                            break
+                        }
+                        ++childPos
+                    }
+                    val uuid = message?.uuid
+                    val v = binding.rvMessagesList.getChildAt(childPos)
+                    val pxOffset = v?.top ?: 0
+                    this@ChatFragment.conversation!!.populateWithMessages(messageList)
+                    try {
+                        updateStatusMessages()
+                    } catch (e: IllegalStateException) {
+                        Timber.d("caught illegal state exception while updating status messages")
+                    }
+                    messageListAdapter?.notifyDataSetChanged()
+                    val pos = max(getIndexOf(uuid, messageList), 0)
+                    binding.rvMessagesList.setSelectionFromTop(pos, pxOffset)
+                    if (messageLoaderToast != null) {
+                        messageLoaderToast!!.cancel()
+                    }
+                    conversation.messagesLoaded.set(
+                        true
+                    )
+                }
+            }
+        }
+
+        override fun informUser(resId: Int) {
+            runOnUiThread {
+                if (messageLoaderToast != null) {
+                    messageLoaderToast!!.cancel()
+                }
+                if (conversation !== conversation) {
+                    return@runOnUiThread
+                }
+                messageLoaderToast = Toast.makeText(requireContext(), resId, Toast.LENGTH_LONG)
+                messageLoaderToast?.show()
+            }
+        }
+    }
+
+    private val editorContentListener =
+        EditMessage.OnCommitContentListener { inputContentInfo, flags, _, _ -> // try to get permission to read the image, if applicable
             if (flags and InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION
                 != 0
             ) {
                 try {
                     inputContentInfo.requestPermission()
                 } catch (e: Exception) {
-                    Log.e(
-                        Config.LOGTAG,
-                        "InputContentInfoCompat#requestPermission() failed.",
-                        e
-                    )
+                    Timber.e(e, "InputContentInfoCompat#requestPermission() failed.")
                     Toast.makeText(
                         activity,
                         chatsActivity!!.getString(
@@ -393,17 +368,19 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                 )
                     .show()
                 conversation
-                    ?.getAccount()
+                    ?.account
                     ?.pgpDecryptionService
                     ?.continueDecryption(true)
             }
         }
         updateSnackBar(conversation)
     }
-    private val mSendingPgpMessage = AtomicBoolean(false)
-    private val mEditorActionListener = OnEditorActionListener { v: TextView, actionId: Int, event: KeyEvent? ->
+
+    private val sendingPgpMessage = AtomicBoolean(false)
+
+    private val editorActionListener = OnEditorActionListener { v: TextView, actionId: Int, _: KeyEvent? ->
         if (actionId == EditorInfo.IME_ACTION_SEND) {
-            val imm = chatsActivity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = chatsActivity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
             if (imm != null && imm.isFullscreenMode) {
                 imm.hideSoftInputFromWindow(v.windowToken, 0)
             }
@@ -413,30 +390,30 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             false
         }
     }
-    private val mScrollButtonListener = View.OnClickListener {
+
+    private val scrollButtonListener = View.OnClickListener {
         stopScrolling()
-        setSelection(binding!!.rvMessagesList.count - 1, true)
+        setSelection(binding.rvMessagesList.count - 1, true)
     }
-    private val mSendButtonListener = View.OnClickListener { v ->
+
+    private val sendButtonListener = View.OnClickListener { v ->
         val tag = v.tag
         if (tag is SendButtonAction) {
-            val action = tag
-            when (action) {
+            when (tag) {
                 SendButtonAction.TAKE_PHOTO, SendButtonAction.RECORD_VIDEO, SendButtonAction.SEND_LOCATION, SendButtonAction.RECORD_VOICE, SendButtonAction.CHOOSE_PICTURE -> attachFile(
-                    action.toChoice()
+                    tag.toChoice()
                 )
                 SendButtonAction.CANCEL -> if (conversation != null) {
                     if (conversation!!.setCorrectingMessage(null)) {
-                        binding!!.editMessageInput.setText("")
-                        binding!!.editMessageInput.append(conversation!!.draftMessage)
-                        conversation!!.draftMessage = null
+                        binding.editMessageInput.setText("")
+                        binding.editMessageInput.append(conversation!!.draftMessage)
+                        conversation?.draftMessage = null
                     } else if (conversation!!.mode == Conversation.MODE_MULTI) {
-                        conversation!!.nextCounterpart = null
-                        binding!!.editMessageInput.setText("")
+                        conversation?.nextCounterpart = null
+                        binding.editMessageInput.setText("")
                     } else {
-                        binding!!.editMessageInput.setText("")
+                        binding.editMessageInput.setText("")
                     }
-                    updateChatMsgHint()
                     updateSendButton()
                     updateEditablity()
                 }
@@ -446,13 +423,8 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             sendMessage()
         }
     }
-    private var completionIndex = 0
-    private var lastCompletionLength = 0
-    private var incomplete: String? = null
-    private var lastCompletionCursor = 0
-    private var firstWord = false
-    private var mPendingDownloadableMessage: Message? = null
-    private fun toggleScrollDownButton(listView: AbsListView = binding!!.rvMessagesList) {
+
+    private fun toggleScrollDownButton(listView: AbsListView = binding.rvMessagesList) {
         if (conversation == null) {
             return
         }
@@ -492,8 +464,8 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     }
 
     private val scrollPosition: ScrollState?
-        private get() {
-            val listView = if (binding == null) null else binding!!.rvMessagesList
+        get() {
+            val listView = if (!isBindingNotNull) null else binding.rvMessagesList
             return if (listView == null || listView.count == 0 || listView.lastVisiblePosition == listView.count - 1) {
                 null
             } else {
@@ -515,9 +487,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                         conversation.getReceivedMessagesCountSinceUuid(lastMessageUuid));*/
             }
             // TODO maybe this needs a 'post'
-            binding!!.rvMessagesList.setSelectionFromTop(
-                scrollPosition.position, scrollPosition.offset
-            )
+            binding.rvMessagesList.setSelectionFromTop(scrollPosition.position, scrollPosition.offset)
             toggleScrollDownButton()
         }
     }
@@ -526,7 +496,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         if (conversation == null) {
             return
         }
-        chatsActivity!!.xmppConnectionService.attachLocationToConversation(
+        chatsActivity?.xmppConnectionService?.attachLocationToConversation(
             conversation,
             uri,
             object : UiCallback<Message?> {
@@ -616,7 +586,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             commitAttachments()
             return
         }
-        val text = binding!!.editMessageInput.text
+        val text = binding.editMessageInput.text
         val body = text?.toString() ?: ""
         val conversation = conversation
         if (body.isEmpty() || conversation == null) {
@@ -651,13 +621,11 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         val axolotlService = conversation!!.account.axolotlService
         val targets = axolotlService.getCryptoTargets(conversation)
         val hasUnaccepted = !conversation!!.acceptedCryptoTargets.containsAll(targets)
-        val hasUndecidedOwn = !axolotlService
-            .getKeysWithTrust(FingerprintStatus.createActiveUndecided())
-            .isEmpty()
-        val hasUndecidedContacts = !axolotlService
-            .getKeysWithTrust(FingerprintStatus.createActiveUndecided(), targets)
-            .isEmpty()
-        val hasPendingKeys = !axolotlService.findDevicesWithoutSession(conversation).isEmpty()
+        val hasUndecidedOwn = axolotlService
+            .getKeysWithTrust(FingerprintStatus.createActiveUndecided()).isNotEmpty()
+        val hasUndecidedContacts = axolotlService
+            .getKeysWithTrust(FingerprintStatus.createActiveUndecided(), targets).isNotEmpty()
+        val hasPendingKeys = axolotlService.findDevicesWithoutSession(conversation).isNotEmpty()
         val hasNoTrustedKeys = axolotlService.anyTargetHasNoTrustedKeys(targets)
         val downloadInProgress = axolotlService.hasPendingKeyFetches(targets)
         return if (hasUndecidedOwn
@@ -686,30 +654,8 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         }
     }
 
-    fun updateChatMsgHint() {
-        /*final boolean multi = conversation.getMode() == Conversation.MODE_MULTI;
-        if (conversation.getCorrectingMessage() != null) {
-            this.binding.editMessageInputHint.setVisibility(View.GONE);
-            this.binding.editMessageInput.setHint(R.string.send_corrected_message);
-        } else if (multi && conversation.getNextCounterpart() != null) {
-            this.binding.editMessageInput.setHint(R.string.send_unencrypted_message);
-            this.binding.editMessageInputHint.setVisibility(View.VISIBLE);
-            this.binding.editMessageInputHint.setText(
-                    getString(
-                            R.string.send_private_message_to,
-                            conversation.getNextCounterpart().getResource()));
-        } else if (multi && !conversation.getMucOptions().participating()) {
-            this.binding.editMessageInputHint.setVisibility(View.GONE);
-            this.binding.editMessageInput.setHint(R.string.you_are_not_participating);
-        } else {
-            this.binding.editMessageInputHint.setVisibility(View.GONE);
-            this.binding.editMessageInput.setHint(UIHelper.getMessageHint(getActivity(), conversation));
-            getActivity().invalidateOptionsMenu();
-        }*/
-    }
-
-    fun setupIme() {
-        binding!!.editMessageInput.refreshIme();
+    private fun setupIme() {
+        binding.editMessageInput.refreshIme()
     }
 
     private fun handleActivityResult(activityResult: ActivityResult) {
@@ -739,7 +685,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                     )
                     toggleInputMethod()
                 } else {
-                    Log.d(Config.LOGTAG, "lost take photo uri. unable to to attach")
+                    Timber.d("lost take photo uri. unable to to attach")
                 }
             }
             ATTACHMENT_CHOICE_CHOOSE_FILE, ATTACHMENT_CHOICE_RECORD_VIDEO, ATTACHMENT_CHOICE_RECORD_VOICE -> {
@@ -753,8 +699,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                 val latitude = data.getDoubleExtra("latitude", 0.0)
                 val longitude = data.getDoubleExtra("longitude", 0.0)
                 val accuracy = data.getIntExtra("accuracy", 0)
-                val geo: Uri
-                geo = if (accuracy > 0) {
+                val geo: Uri = if (accuracy > 0) {
                     Uri.parse(String.format("geo:%s,%s;u=%s", latitude, longitude, accuracy))
                 } else {
                     Uri.parse(String.format("geo:%s,%s", latitude, longitude))
@@ -778,6 +723,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun commitAttachments() {
         val attachments: MutableList<Attachment> = mediaPreviewAdapter!!.attachments
         if (anyNeedsExternalStoragePermission(attachments)
@@ -794,24 +740,22 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             val i = attachments.iterator()
             while (i.hasNext()) {
                 val attachment = i.next()
-                if (attachment.type == Attachment.Type.LOCATION) {
-                    attachLocationToConversation(conversation, attachment.uri)
-                } else if (attachment.type == Attachment.Type.IMAGE) {
-                    Log.d(
-                        Config.LOGTAG,
-                        "ConversationsActivity.commitAttachments() - attaching image to conversations. CHOOSE_IMAGE"
-                    )
-                    attachImageToConversation(
-                        conversation, attachment.uri, attachment.mime
-                    )
-                } else {
-                    Log.d(
-                        Config.LOGTAG,
-                        "ConversationsActivity.commitAttachments() - attaching file to conversations. CHOOSE_FILE/RECORD_VOICE/RECORD_VIDEO"
-                    )
-                    attachFileToConversation(
-                        conversation, attachment.uri, attachment.mime
-                    )
+                when (attachment.type) {
+                    Attachment.Type.LOCATION -> {
+                        attachLocationToConversation(conversation, attachment.uri)
+                    }
+                    Attachment.Type.IMAGE -> {
+                        Timber.d("ConversationsActivity.commitAttachments() - attaching image to conversations. CHOOSE_IMAGE")
+                        attachImageToConversation(
+                            conversation, attachment.uri, attachment.mime
+                        )
+                    }
+                    else -> {
+                        Timber.d("ConversationsActivity.commitAttachments() - attaching file to conversations. CHOOSE_FILE/RECORD_VOICE/RECORD_VIDEO")
+                        attachFileToConversation(
+                            conversation, attachment.uri, attachment.mime
+                        )
+                    }
                 }
                 i.remove()
             }
@@ -843,14 +787,12 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     private fun handleNegativeActivityResult(requestCode: Int) {
         when (requestCode) {
             ATTACHMENT_CHOICE_TAKE_PHOTO -> if (pendingTakePhotoUri.clear()) {
-                Log.d(
-                    Config.LOGTAG,
-                    "cleared pending photo uri after negative activity result"
-                )
+                Timber.d("cleared pending photo uri after negative activity result")
             }
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val activityResult = ActivityResult.of(requestCode, resultCode, data)
@@ -861,13 +803,14 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         }
     }
 
-    fun unblockConversation(conversation: Blockable?) {
+    private fun unblockConversation(conversation: Blockable?) {
         chatsActivity!!.xmppConnectionService.sendUnblockRequest(conversation)
     }
 
+    @Suppress("DEPRECATION")
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
-        Log.d(Config.LOGTAG, "ConversationFragment.onAttach()")
+        Timber.d("ConversationFragment.onAttach()")
         if (activity is ChatsActivity) {
             chatsActivity = activity
         } else {
@@ -950,14 +893,14 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
 
         editMessageInput.apply {
             addTextChangedListener(MessageEditorStyler(this))
-            setOnEditorActionListener(mEditorActionListener)
-            setRichContentListener(arrayOf("image/*"), mEditorContentListener)
+            setOnEditorActionListener(editorActionListener)
+            setRichContentListener(arrayOf("image/*"), editorContentListener)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 customInsertionActionModeCallback = EditMessageActionModeCallback(this)
             }
         }
 
-        imageSend.setOnClickListener(mSendButtonListener)
+        imageSend.setOnClickListener(sendButtonListener)
         imageAttach.setOnClickListener { showAttachmentsDialog() }
 
         messageListAdapter = MessageAdapter(requireActivity() as XmppActivity, messageList)
@@ -965,7 +908,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         messageListAdapter?.setOnContactPictureLongClicked(this@ChatFragment)
 
         rvMessagesList.apply {
-            setOnScrollListener(mOnScrollListener)
+            setOnScrollListener(onScrollListener)
             transcriptMode = ListView.TRANSCRIPT_MODE_NORMAL
             adapter = messageListAdapter
         }
@@ -974,7 +917,17 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         mediaPreviewAdapter = MediaPreviewAdapter(this@ChatFragment)
         mediaPreview.adapter = mediaPreviewAdapter
 
+        checkForCallsAvailability()
+        imageVideoCall.setOnClickListener { checkPermissionAndTriggerVideoCall() }
+        imageCall.setOnClickListener { checkPermissionAndTriggerAudioCall() }
         //binding.scrollToBottomButton.setOnClickListener(this.mScrollButtonListener);
+    }
+
+    private fun checkForCallsAvailability() = with(binding) {
+        val rtpCapability = RtpCapability.check(conversation!!.contact)
+        val cameraAvailable = chatsActivity != null && chatsActivity?.isCameraFeatureAvailable == true
+        imageCall.isVisible = (rtpCapability != RtpCapability.Capability.NONE)
+        imageVideoCall.isVisible = (rtpCapability == RtpCapability.Capability.VIDEO && cameraAvailable)
     }
 
     private fun showAttachmentsDialog() {
@@ -983,11 +936,24 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         with(dialogBinding) {
             layoutCamera.setOnClickListener {
                 attachFile(ATTACHMENT_CHOICE_TAKE_PHOTO)
+                bottomSheetDialog.dismiss()
             }
-            textClose.setOnClickListener { bottomSheetDialog.dismiss() }
+            layoutGallery.setOnClickListener {
+                attachFile(ATTACHMENT_CHOICE_CHOOSE_IMAGE)
+                bottomSheetDialog.dismiss()
+            }
+            layoutLocation.setOnClickListener {
+                attachFile(ATTACHMENT_CHOICE_LOCATION)
+                bottomSheetDialog.dismiss()
+            }
+            layoutDocument.setOnClickListener {
+                attachFile(ATTACHMENT_CHOICE_CHOOSE_FILE)
+                bottomSheetDialog.dismiss()
+            }
             layoutContact.setOnClickListener {
                 bottomSheetDialog.dismiss()
             }
+            textClose.setOnClickListener { bottomSheetDialog.dismiss() }
         }
         bottomSheetDialog.setContentView(dialogBinding.root)
         bottomSheetDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -996,19 +962,19 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d(Config.LOGTAG, "ConversationFragment.onDestroyView()")
+        Timber.d("ConversationFragment.onDestroyView()")
         messageListAdapter!!.setOnContactPictureClicked(null)
         messageListAdapter!!.setOnContactPictureLongClicked(null)
     }
 
     private fun quoteText(text: String) {
-        if (binding!!.editMessageInput.isEnabled) {
-            binding!!.editMessageInput.insertAsQuote(text);
-            binding!!.editMessageInput.requestFocus()
+        if (binding.editMessageInput.isEnabled) {
+            binding.editMessageInput.insertAsQuote(text);
+            binding.editMessageInput.requestFocus()
             val inputMethodManager =
-                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
             inputMethodManager?.showSoftInput(
-                binding!!.editMessageInput, InputMethodManager.SHOW_IMPLICIT
+                binding.editMessageInput, InputMethodManager.SHOW_IMPLICIT
             )
         }
     }
@@ -1287,9 +1253,8 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             Toast.makeText(chatsActivity, R.string.disable_tor_to_make_call, Toast.LENGTH_SHORT).show()
             return
         }
-        val permissions: List<String>
-        permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Arrays.asList(
+        val permissions: List<String> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            listOf(
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.BLUETOOTH_CONNECT
             )
@@ -1306,15 +1271,14 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             Toast.makeText(chatsActivity, R.string.disable_tor_to_make_call, Toast.LENGTH_SHORT).show()
             return
         }
-        val permissions: List<String>
-        permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Arrays.asList(
+        val permissions: List<String> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            listOf(
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.CAMERA,
                 Manifest.permission.BLUETOOTH_CONNECT
             )
         } else {
-            Arrays.asList(
+            listOf(
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.CAMERA
             )
@@ -1330,22 +1294,23 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                 .show()
             return
         }
-        val contact = conversation!!.contact
-        if (contact.presences.anySupport(Namespace.JINGLE_MESSAGE)) {
-            triggerRtpSession(contact.account, contact.jid.asBareJid(), action)
-        } else {
-            val capability: RtpCapability.Capability
-            capability = if (action == RtpSessionActivity.ACTION_MAKE_VIDEO_CALL) {
-                RtpCapability.Capability.VIDEO
+        conversation?.contact?.let { contact ->
+            if (contact.presences.anySupport(Namespace.JINGLE_MESSAGE)) {
+                triggerRtpSession(contact.account, contact.jid.asBareJid(), action)
             } else {
-                RtpCapability.Capability.AUDIO
+                val capability: RtpCapability.Capability = if (action == RtpSessionActivity.ACTION_MAKE_VIDEO_CALL) {
+                    RtpCapability.Capability.VIDEO
+                } else {
+                    RtpCapability.Capability.AUDIO
+                }
+                PresenceSelector.selectFullJidForDirectRtpConnection(
+                    chatsActivity,
+                    contact,
+                    capability
+                ) { fullJid: Jid -> triggerRtpSession(contact.account, fullJid, action) }
             }
-            PresenceSelector.selectFullJidForDirectRtpConnection(
-                chatsActivity,
-                contact,
-                capability
-            ) { fullJid: Jid -> triggerRtpSession(contact.account, fullJid, action) }
         }
+
     }
 
     private fun triggerRtpSession(account: Account, with: Jid, action: String) {
@@ -1403,12 +1368,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                 updated = false
             }
         } else if (itemId == R.id.encryption_choice_axolotl) {
-            Log.d(
-                Config.LOGTAG,
-                AxolotlService.getLogprefix(conversation!!.account)
-                    + "Enabled axolotl for Contact "
-                    + conversation!!.contact.jid
-            )
+            Timber.d(AxolotlService.getLogprefix(conversation!!.account) + "Enabled axolotl for Contact " + conversation!!.contact.jid)
             updated = conversation!!.setNextEncryption(Message.ENCRYPTION_AXOLOTL)
             item.isChecked = true
         } else {
@@ -1417,7 +1377,6 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         if (updated) {
             chatsActivity!!.xmppConnectionService.updateConversation(conversation)
         }
-        updateChatMsgHint()
         requireActivity().invalidateOptionsMenu()
         chatsActivity!!.refreshUi()
     }
@@ -1528,8 +1487,8 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         if (grantResults.size > 0) {
             if (PermissionUtils.allGranted(permissionResult.grantResults)) {
                 when (requestCode) {
-                    REQUEST_START_DOWNLOAD -> if (mPendingDownloadableMessage != null) {
-                        startDownloadable(mPendingDownloadableMessage)
+                    REQUEST_START_DOWNLOAD -> if (pendingDownloadableMessage != null) {
+                        startDownloadable(pendingDownloadableMessage)
                     }
                     REQUEST_ADD_EDITOR_CONTENT -> if (mPendingEditorContent != null) {
                         attachEditorContentToConversation(mPendingEditorContent)
@@ -1563,7 +1522,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
 
     fun startDownloadable(message: Message?) {
         if (!hasPermissions(REQUEST_START_DOWNLOAD, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            mPendingDownloadableMessage = message
+            pendingDownloadableMessage = message
             return
         }
         val transferable = message!!.transferable
@@ -1573,7 +1532,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                 return
             }
             if (!transferable.start()) {
-                Log.d(Config.LOGTAG, "type: " + transferable.javaClass.name)
+                Timber.d("type: " + transferable.javaClass.name)
                 Toast.makeText(activity, R.string.not_connected_try_again, Toast.LENGTH_SHORT)
                     .show()
             }
@@ -1583,9 +1542,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         ) {
             createNewConnection(message)
         } else {
-            Log.d(
-                Config.LOGTAG, message.conversation.account.toString() + ": unable to start downloadable"
-            )
+            Timber.d(message.conversation.account.toString() + ": unable to start downloadable")
         }
     }
 
@@ -1691,7 +1648,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         requireActivity().invalidateOptionsMenu()
     }
 
-    protected fun invokeAttachFileIntent(attachmentChoice: Int) {
+    private fun invokeAttachFileIntent(attachmentChoice: Int) {
         var intent = Intent()
         var chooser = false
         when (attachmentChoice) {
@@ -1737,7 +1694,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
 
     override fun onResume() {
         super.onResume()
-        binding!!.rvMessagesList.post { fireReadEvent() }
+        binding.rvMessagesList.post { fireReadEvent() }
     }
 
     private fun fireReadEvent() {
@@ -1752,17 +1709,17 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     // should not happen if we synchronize properly. however if that fails we
     // just gonna try item -1
     private val lastVisibleMessageUuid: String?
-        private get() {
-            if (binding == null) {
+        get() {
+            if (!isBindingNotNull) {
                 return null
             }
             synchronized(messageList) {
-                val pos = binding!!.rvMessagesList.lastVisiblePosition
+                val pos = binding.rvMessagesList.lastVisiblePosition
                 if (pos >= 0) {
                     var message: Message? = null
                     for (i in pos downTo 0) {
                         message = try {
-                            binding!!.rvMessagesList.getItemAtPosition(i) as Message
+                            binding.rvMessagesList.getItemAtPosition(i) as Message
                         } catch (e: IndexOutOfBoundsException) {
                             // should not happen if we synchronize properly. however if that fails we
                             // just gonna try item -1
@@ -1784,10 +1741,10 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         }
 
     private fun openWith(message: Message?) {
-        if (message!!.isGeoUri) {
+        if (message?.isGeoUri == true) {
             GeoHelper.view(activity, message)
         } else {
-            val file = chatsActivity!!.xmppConnectionService.fileBackend.getFile(message)
+            val file = chatsActivity?.xmppConnectionService?.fileBackend?.getFile(message)
             ViewUtil.view(chatsActivity, file)
         }
     }
@@ -1798,17 +1755,14 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         val errorMessage = message!!.errorMessage
         val errorMessageParts: Array<String?> = errorMessage?.split("\\u001f")
             ?.toTypedArray() ?: arrayOfNulls(0)
-        val displayError: String?
-        displayError = if (errorMessageParts.size == 2) {
+        val displayError: String? = if (errorMessageParts.size == 2) {
             errorMessageParts[1]
         } else {
             errorMessage
         }
         builder.setMessage(displayError)
-        builder.setNegativeButton(
-            R.string.copy_to_clipboard
-        ) { dialog: DialogInterface?, which: Int ->
-            chatsActivity!!.copyTextToClipboard(displayError, R.string.error_message)
+        builder.setNegativeButton(R.string.copy_to_clipboard) { _: DialogInterface?, _: Int ->
+            chatsActivity?.copyTextToClipboard(displayError, R.string.error_message)
             Toast.makeText(
                 chatsActivity,
                 R.string.error_message_copied_to_clipboard,
@@ -1827,12 +1781,12 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         builder.setMessage(R.string.delete_file_dialog_msg)
         builder.setPositiveButton(
             R.string.confirm
-        ) { dialog: DialogInterface?, which: Int ->
-            if (chatsActivity!!.xmppConnectionService.fileBackend.deleteFile(message)) {
-                message!!.isDeleted = true
-                chatsActivity!!.xmppConnectionService.evictPreview(message.uuid)
-                chatsActivity!!.xmppConnectionService.updateMessage(message, false)
-                chatsActivity!!.onConversationsListItemUpdated()
+        ) { _: DialogInterface?, _: Int ->
+            if (chatsActivity?.xmppConnectionService?.fileBackend?.deleteFile(message) == true) {
+                message?.isDeleted = true
+                chatsActivity?.xmppConnectionService?.evictPreview(message?.uuid)
+                chatsActivity?.xmppConnectionService?.updateMessage(message, false)
+                chatsActivity?.onConversationsListItemUpdated()
                 refresh()
             }
         }
@@ -1840,7 +1794,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     }
 
     private fun resendMessage(message: Message?) {
-        if (message!!.isFileOrImage) {
+        if (message?.isFileOrImage == true) {
             if (message.conversation !is Conversation) {
                 return
             }
@@ -1858,10 +1812,10 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                     ) {
                         message.counterpart = conversation.nextCounterpart
                         chatsActivity!!.xmppConnectionService.resendFailedMessages(message)
-                        Handler()
+                        Handler(Looper.getMainLooper())
                             .post {
                                 val size = messageList.size
-                                binding!!.rvMessagesList.setSelection(
+                                binding.rvMessagesList.setSelection(
                                     size - 1
                                 )
                             }
@@ -1880,59 +1834,57 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                 return
             }
         }
-        chatsActivity!!.xmppConnectionService.resendFailedMessages(message)
-        Handler()
-            .post {
-                val size = messageList.size
-                binding!!.rvMessagesList.setSelection(size - 1)
-            }
+        chatsActivity?.xmppConnectionService?.resendFailedMessages(message)
+        Handler(Looper.getMainLooper()).post {
+            val size = messageList.size
+            binding.rvMessagesList.setSelection(size - 1)
+        }
     }
 
     private fun cancelTransmission(message: Message?) {
-        val transferable = message!!.transferable
+        val transferable = message?.transferable
         if (transferable != null) {
             transferable.cancel()
-        } else if (message.status != Message.STATUS_RECEIVED) {
-            chatsActivity!!.xmppConnectionService.markMessage(
+        } else if (message?.status != Message.STATUS_RECEIVED) {
+            chatsActivity?.xmppConnectionService?.markMessage(
                 message, Message.STATUS_SEND_FAILED, Message.ERROR_MESSAGE_CANCELLED
             )
         }
     }
 
     private fun retryDecryption(message: Message?) {
-        message!!.encryption = Message.ENCRYPTION_PGP
-        chatsActivity!!.onConversationsListItemUpdated()
+        message?.encryption = Message.ENCRYPTION_PGP
+        chatsActivity?.onConversationsListItemUpdated()
         refresh()
-        conversation!!.account.pgpDecryptionService.decrypt(message, false)
+        conversation?.account?.pgpDecryptionService?.decrypt(message, false)
     }
 
-    fun privateMessageWith(counterpart: Jid?) {
-        if (conversation!!.setOutgoingChatState(Config.DEFAULT_CHAT_STATE)) {
-            chatsActivity!!.xmppConnectionService.sendChatState(conversation)
+    private fun privateMessageWith(counterpart: Jid?) {
+        if (conversation?.setOutgoingChatState(Config.DEFAULT_CHAT_STATE) == true) {
+            chatsActivity?.xmppConnectionService?.sendChatState(conversation)
         }
-        binding!!.editMessageInput.setText("")
-        conversation!!.nextCounterpart = counterpart
-        updateChatMsgHint()
+        binding.editMessageInput.setText("")
+        conversation?.nextCounterpart = counterpart
         updateSendButton()
         updateEditablity()
     }
 
     private fun correctMessage(message: Message?) {
-        var message = message
-        while (message!!.mergeable(message.next())) {
-            message = message.next()
+        var messageModel = message
+        while (messageModel!!.mergeable(messageModel.next())) {
+            messageModel = messageModel.next()
         }
-        conversation!!.correctingMessage = message
-        val editable = binding!!.editMessageInput.text
-        conversation!!.draftMessage = editable.toString()
-        binding!!.editMessageInput.setText("")
-        binding!!.editMessageInput.append(message.body)
+        conversation?.correctingMessage = messageModel
+        val editable = binding.editMessageInput.text
+        conversation?.draftMessage = editable.toString()
+        binding.editMessageInput.setText("")
+        binding.editMessageInput.append(messageModel.body)
     }
 
-    private fun highlightInConference(nick: String) {
-        val editable = binding!!.editMessageInput.text
+    private fun highlightInConference(nick: String) = with(binding) {
+        val editable = editMessageInput.text
         val oldString = editable.toString().trim { it <= ' ' }
-        val pos = binding!!.editMessageInput.selectionStart
+        val pos = editMessageInput.selectionStart
         if (oldString.isEmpty() || pos == 0) {
             editable!!.insert(0, "$nick: ")
         } else {
@@ -1943,14 +1895,13 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             } else {
                 if (pos > 2 && editable.subSequence(pos - 2, pos).toString() == ": ") {
                     if (NickValidityChecker.check(
-                            conversation,
-                            Arrays.asList(
+                            conversation, listOf(
                                 *editable.subSequence(0, pos - 2).toString().split(", ").toTypedArray()
                             )
                         )
                     ) {
                         editable.insert(pos - 2, ", $nick")
-                        return
+                        return@with
                     }
                 }
                 editable.insert(
@@ -1960,14 +1911,13 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                         + if (Character.isWhitespace(after)) "" else " "
                 )
                 if (Character.isWhitespace(after)) {
-                    binding!!.editMessageInput.setSelection(
-                        binding!!.editMessageInput.selectionStart + 1
-                    )
+                    editMessageInput.setSelection(editMessageInput.selectionStart + 1)
                 }
             }
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun startActivityForResult(intent: Intent, requestCode: Int) {
         val activity: Activity? = activity
         if (activity is ChatsActivity) {
@@ -2026,10 +1976,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             extras?.let { processExtras(it) }
         } else if (conversation == null && chatsActivity != null && chatsActivity!!.xmppConnectionService != null) {
             val uuid = pendingConversationsUuid.pop()
-            Log.d(
-                Config.LOGTAG, "ConversationFragment.onStart() - activity was bound but no conversation loaded. uuid="
-                    + uuid
-            )
+            Timber.d("ConversationFragment.onStart() - activity was bound but no conversation loaded. uuid=" + uuid)
             uuid?.let { findAndReInitByUuidOrArchive(it) }
         }
     }
@@ -2043,7 +1990,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             messageListAdapter!!.stopAudioPlayer()
         }
         if (conversation != null) {
-            val msg = binding!!.editMessageInput.text.toString()
+            val msg = binding.editMessageInput.text.toString()
             storeNextMessage(msg)
             updateChatState(conversation, msg)
             chatsActivity!!.xmppConnectionService.notificationService.setOpenConversation(null)
@@ -2061,11 +2008,11 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
 
     private fun saveMessageDraftStopAudioPlayer() {
         val previousConversation = conversation
-        if (chatsActivity == null || binding == null || previousConversation == null) {
+        if (chatsActivity == null || !isBindingNotNull || previousConversation == null) {
             return
         }
-        Log.d(Config.LOGTAG, "ConversationFragment.saveMessageDraftStopAudioPlayer()")
-        val msg = binding!!.editMessageInput.text.toString()
+        Timber.d("ConversationFragment.saveMessageDraftStopAudioPlayer()")
+        val msg = binding.editMessageInput.text.toString()
         storeNextMessage(msg)
         updateChatState(conversation, msg)
         messageListAdapter!!.stopAudioPlayer()
@@ -2102,7 +2049,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         this.conversation = conversation
         // once we set the conversation all is good and it will automatically do the right thing in
         // onStart()
-        if (chatsActivity == null || binding == null) {
+        if (chatsActivity == null || !isBindingNotNull) {
             return false
         }
         if (!chatsActivity!!.xmppConnectionService.isConversationStillOpen(this.conversation)) {
@@ -2110,32 +2057,32 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             return false
         }
         stopScrolling()
-        Log.d(Config.LOGTAG, "reInit(hasExtras=$hasExtras)")
+        Timber.d("reInit(hasExtras=" + hasExtras + ")")
         if (this.conversation!!.isRead && hasExtras) {
-            Log.d(Config.LOGTAG, "trimming conversation")
+            Timber.d("trimming conversation")
             this.conversation!!.trim()
         }
         setupIme()
         val scrolledToBottomAndNoPending = this.scrolledToBottom() && pendingScrollState.peek() == null
-        binding!!.imageSend.contentDescription =
+        binding.imageSend.contentDescription =
             chatsActivity!!.getString(R.string.send_message_to_x, conversation.name)
-        binding!!.editMessageInput.setKeyboardListener(null);
-        binding!!.editMessageInput.setText("")
+        binding.editMessageInput.setKeyboardListener(null)
+        binding.editMessageInput.setText("")
         val participating = (conversation.mode == Conversational.MODE_SINGLE
             || conversation.mucOptions.participating())
         if (participating) {
-            binding!!.editMessageInput.append(this.conversation!!.nextMessage)
+            binding.editMessageInput.append(this.conversation!!.nextMessage)
         }
-        binding!!.editMessageInput.setKeyboardListener(this);
+        binding.editMessageInput.setKeyboardListener(this)
         messageListAdapter!!.updatePreferences()
         refresh(false)
         chatsActivity!!.invalidateOptionsMenu()
         this.conversation!!.messagesLoaded.set(true)
-        Log.d(Config.LOGTAG, "scrolledToBottomAndNoPending=$scrolledToBottomAndNoPending")
+        Timber.d("scrolledToBottomAndNoPending=$scrolledToBottomAndNoPending")
         if (hasExtras || scrolledToBottomAndNoPending) {
             //resetUnreadMessagesCount()
             synchronized(messageList) {
-                Log.d(Config.LOGTAG, "jump to first unread message")
+                Timber.d("jump to first unread message")
                 val first = conversation.firstUnreadMessage
                 val bottom = Math.max(0, messageList.size - 1)
                 val pos: Int
@@ -2151,7 +2098,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                 setSelection(pos, jumpToBottom)
             }
         }
-        binding!!.rvMessagesList.post { fireReadEvent() }
+        binding.rvMessagesList.post { fireReadEvent() }
         // TODO if we only do this when this fragment is running on main it won't *bing* in tablet
         // layout which might be unnecessary since we can *see* it
         chatsActivity!!.xmppConnectionService
@@ -2172,14 +2119,14 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     }
 
     private fun setSelection(pos: Int, jumpToBottom: Boolean) {
-        ListViewUtils.setSelection(binding!!.rvMessagesList, pos, jumpToBottom)
-        binding!!.rvMessagesList.post { ListViewUtils.setSelection(binding!!.rvMessagesList, pos, jumpToBottom) }
-        binding!!.rvMessagesList.post { fireReadEvent() }
+        ListViewUtils.setSelection(binding.rvMessagesList, pos, jumpToBottom)
+        binding.rvMessagesList.post { ListViewUtils.setSelection(binding.rvMessagesList, pos, jumpToBottom) }
+        binding.rvMessagesList.post { fireReadEvent() }
     }
 
     private fun scrolledToBottom(): Boolean {
-        return binding != null && scrolledToBottom(
-            binding!!.rvMessagesList
+        return isBindingNotNull && scrolledToBottom(
+            binding.rvMessagesList
         )
     }
 
@@ -2402,13 +2349,6 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     }
 
     override fun refresh() {
-        if (binding == null) {
-            Log.d(
-                Config.LOGTAG,
-                "ConversationFragment.refresh() skipped updated because view binding was null"
-            )
-            return
-        }
         if (conversation != null && chatsActivity != null && chatsActivity!!.xmppConnectionService != null) {
             if (!chatsActivity!!.xmppConnectionService.isConversationStillOpen(conversation)) {
                 chatsActivity!!.onConversationArchived(conversation!!)
@@ -2429,9 +2369,8 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                     //binding.unreadCountCustomView.setUnreadCount(conversation.getReceivedMessagesCountSinceUuid(lastMessageUuid));
                 }
                 messageListAdapter!!.notifyDataSetChanged()
-                updateChatMsgHint()
                 if (notifyConversationRead && chatsActivity != null) {
-                    binding!!.rvMessagesList.post { fireReadEvent() }
+                    binding.rvMessagesList.post { fireReadEvent() }
                 }
                 updateSendButton()
                 updateEditablity()
@@ -2439,15 +2378,14 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         }
     }
 
-    protected fun messageSent() {
-        mSendingPgpMessage.set(false)
-        binding!!.editMessageInput.setText("")
+    private fun messageSent() {
+        sendingPgpMessage.set(false)
+        binding.editMessageInput.setText("")
         if (conversation!!.setCorrectingMessage(null)) {
-            binding!!.editMessageInput.append(conversation!!.draftMessage)
+            binding.editMessageInput.append(conversation!!.draftMessage)
             conversation!!.draftMessage = null
         }
         storeNextMessage()
-        updateChatMsgHint()
         val p = PreferenceManager.getDefaultSharedPreferences(chatsActivity)
         val prefScrollToBottom = p.getBoolean(
             "scroll_to_bottom",
@@ -2457,12 +2395,12 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             Handler()
                 .post {
                     val size = messageList.size
-                    binding!!.rvMessagesList.setSelection(size - 1)
+                    binding.rvMessagesList.setSelection(size - 1)
                 }
         }
     }
 
-    private fun storeNextMessage(msg: String = binding!!.editMessageInput.text.toString()): Boolean {
+    private fun storeNextMessage(msg: String = binding.editMessageInput.text.toString()): Boolean {
         val participating = (conversation!!.mode == Conversational.MODE_SINGLE
             || conversation!!.mucOptions.participating())
         if (conversation!!.status != Conversation.STATUS_ARCHIVED && participating
@@ -2475,7 +2413,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     }
 
     fun doneSendingPgpMessage() {
-        mSendingPgpMessage.set(false)
+        sendingPgpMessage.set(false)
     }
 
     private fun getMaxHttpUploadSize(conversation: Conversation): Long {
@@ -2486,25 +2424,23 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     private fun updateEditablity() = with(binding) {
         val canWrite = (conversation!!.mode == Conversation.MODE_SINGLE || conversation!!.mucOptions.participating()
             || conversation!!.nextCounterpart != null)
-        binding!!.editMessageInput.isFocusable = canWrite
-        binding!!.editMessageInput.isFocusableInTouchMode = canWrite
-        binding!!.imageSend.isEnabled = canWrite
-        binding!!.editMessageInput.isCursorVisible = canWrite
-        binding!!.editMessageInput.isEnabled = canWrite
+        binding.editMessageInput.isFocusable = canWrite
+        binding.editMessageInput.isFocusableInTouchMode = canWrite
+        binding.imageSend.isEnabled = canWrite
+        binding.editMessageInput.isCursorVisible = canWrite
+        binding.editMessageInput.isEnabled = canWrite
     }
 
-    fun updateSendButton() {
+    private fun updateSendButton() {
         val hasAttachments = mediaPreviewAdapter != null && mediaPreviewAdapter?.hasAttachments() == true
         val c = conversation
-        val status: Presence.Status
-        val text = if (binding!!.editMessageInput == null) "" else binding!!.editMessageInput.text.toString()
-        val action: SendButtonAction
-        action = if (hasAttachments) {
+        val text = if (!isBindingNotNull) "" else binding.editMessageInput.text.toString()
+        val action: SendButtonAction = if (hasAttachments) {
             SendButtonAction.TEXT
         } else {
             SendButtonTool.getAction(activity, c, text)
         }
-        status = if (c!!.account.status == Account.State.ONLINE) {
+        val status: Presence.Status = if (c!!.account.status == Account.State.ONLINE) {
             if (chatsActivity != null && chatsActivity!!.xmppConnectionService != null && chatsActivity!!.xmppConnectionService.messageArchiveService.isCatchingUp(
                     c
                 )
@@ -2518,11 +2454,11 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         } else {
             Presence.Status.OFFLINE
         }
-        binding!!.imageSend.tag = action
+        binding.imageSend.tag = action
         val activity: Activity? = activity
     }
 
-    protected fun updateStatusMessages() {
+    private fun updateStatusMessages() {
         DateSeparator.addAll(messageList)
         if (showLoadMoreMessages(conversation)) {
             messageList.add(0, Message.createLoadMoreMessage(conversation))
@@ -2669,7 +2605,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     private fun stopScrolling() {
         val now = SystemClock.uptimeMillis()
         val cancel = MotionEvent.obtain(now, now, MotionEvent.ACTION_CANCEL, 0f, 0f, 0)
-        binding!!.rvMessagesList.dispatchTouchEvent(cancel)
+        binding.rvMessagesList.dispatchTouchEvent(cancel)
     }
 
     private fun showLoadMoreMessages(c: Conversation?): Boolean {
@@ -2693,34 +2629,34 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         }
     }
 
-    protected fun showSnackbar(
+    private fun showSnackbar(
         message: Int,
         action: Int,
         clickListener: View.OnClickListener?,
         longClickListener: OnLongClickListener? = null
-    ) {
-        /*this.binding.snackbar.setVisibility(View.VISIBLE);
-        this.binding.snackbar.setOnClickListener(null);
-        this.binding.snackbarMessage.setText(message);
-        this.binding.snackbarMessage.setOnClickListener(null);
-        this.binding.snackbarAction.setVisibility(clickListener == null ? View.GONE : View.VISIBLE);
+    ) = with(binding) {
+        snackbar.visibility = View.VISIBLE
+        snackbar.setOnClickListener(null)
+        snackbarMessage.setText(message)
+        snackbarMessage.setOnClickListener(null)
+        snackbarAction.isVisible = clickListener != null
         if (action != 0) {
-            this.binding.snackbarAction.setText(action);
+            snackbarAction.setText(action)
         }
-        this.binding.snackbarAction.setOnClickListener(clickListener);
-        this.binding.snackbarAction.setOnLongClickListener(longClickListener);*/
+        snackbarAction.setOnClickListener(clickListener)
+        snackbarAction.setOnLongClickListener(longClickListener)
     }
 
-    protected fun hideSnackbar() {
-        //this.binding.snackbar.setVisibility(View.GONE);
+    private fun hideSnackbar() {
+        binding.snackbar.visibility = View.GONE
     }
 
-    protected fun sendMessage(message: Message?) {
+    private fun sendMessage(message: Message?) {
         chatsActivity!!.xmppConnectionService.sendMessage(message)
         messageSent()
     }
 
-    protected fun sendPgpMessage(message: Message) {
+    private fun sendPgpMessage(message: Message) {
         val xmppService = chatsActivity!!.xmppConnectionService
         val contact = message.conversation.contact
         if (!chatsActivity!!.hasPgp()) {
@@ -2733,8 +2669,8 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             )
             return
         }
-        if (!mSendingPgpMessage.compareAndSet(false, true)) {
-            Log.d(Config.LOGTAG, "sending pgp message already in progress")
+        if (!sendingPgpMessage.compareAndSet(false, true)) {
+            Timber.d("sending pgp message already in progress")
         }
         if (conversation!!.mode == Conversation.MODE_SINGLE) {
             if (contact.pgpKeyId != 0L) {
@@ -2762,7 +2698,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                                     )
                                         .show()
                                 }
-                                mSendingPgpMessage.set(false)
+                                sendingPgpMessage.set(false)
                             }
                         })
             } else {
@@ -2812,25 +2748,23 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
 
                     override fun success(message: Message?) {
                         // TODO the following two call can be made before the callback
-                        activity!!.runOnUiThread { messageSent() }
+                        requireActivity().runOnUiThread { messageSent() }
                     }
 
                     override fun error(error: Int, message: Message?) {
-                        requireActivity().runOnUiThread(
-                            Runnable {
-                                doneSendingPgpMessage()
-                                Toast.makeText(
-                                    activity,
-                                    if (error == 0) R.string.unable_to_connect_to_keychain else error,
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                            })
+                        requireActivity().runOnUiThread {
+                            doneSendingPgpMessage()
+                            Toast.makeText(
+                                requireActivity(),
+                                if (error == 0) R.string.unable_to_connect_to_keychain
+                                else error, Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 })
     }
 
-    fun showNoPGPKeyDialog(plural: Boolean, listener: DialogInterface.OnClickListener?) {
+    private fun showNoPGPKeyDialog(plural: Boolean, listener: DialogInterface.OnClickListener?) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setIconAttribute(android.R.attr.alertDialogIcon)
         if (plural) {
@@ -2845,9 +2779,9 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         builder.create().show()
     }
 
-    fun appendText(text: String?, doNotAppend: Boolean) {
-        var text = text ?: return
-        val editable = binding!!.editMessageInput.text
+    private fun appendText(text: String?, doNotAppend: Boolean) {
+        var chatText = text ?: return
+        val editable = binding.editMessageInput.text
         val previous = editable?.toString() ?: ""
         if (doNotAppend && !TextUtils.isEmpty(previous)) {
             Toast.makeText(activity, R.string.already_drafting_message, Toast.LENGTH_LONG)
@@ -2855,16 +2789,16 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             return
         }
         if (UIHelper.isLastLineQuote(previous)) {
-            text = """
+            chatText = """
                 
-                $text
+                $chatText
                 """.trimIndent()
         } else if (previous.length != 0
             && !Character.isWhitespace(previous[previous.length - 1])
         ) {
-            text = " $text"
+            chatText = " $chatText"
         }
-        binding!!.editMessageInput.append(text)
+        binding.editMessageInput.append(chatText)
     }
 
     override fun onEnterPressed(isCtrlPressed: Boolean): Boolean {
@@ -2945,8 +2879,8 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         } else {
             lastCompletionLength = 0
             completionIndex = 0
-            val content = binding!!.editMessageInput.text.toString()
-            lastCompletionCursor = binding!!.editMessageInput.selectionEnd
+            val content = binding.editMessageInput.text.toString()
+            lastCompletionCursor = binding.editMessageInput.selectionEnd
             val start = if (lastCompletionCursor > 0) content.lastIndexOf(" ", lastCompletionCursor - 1) + 1 else 0
             firstWord = start == 0
             incomplete = content.substring(start, lastCompletionCursor)
@@ -2958,17 +2892,17 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                 completions.add(name + if (firstWord) ": " else " ")
             }
         }
-        Collections.sort(completions)
+        completions.sort()
         if (completions.size > completionIndex) {
             val completion = completions[completionIndex].substring(incomplete!!.length)
-            binding!!.editMessageInput
+            binding.editMessageInput
                 .editableText
                 .delete(lastCompletionCursor, lastCompletionCursor + lastCompletionLength)
-            binding!!.editMessageInput.editableText.insert(lastCompletionCursor, completion)
+            binding.editMessageInput.editableText.insert(lastCompletionCursor, completion)
             lastCompletionLength = completion.length
         } else {
             completionIndex = -1
-            binding!!.editMessageInput
+            binding.editMessageInput
                 .editableText
                 .delete(lastCompletionCursor, lastCompletionCursor + lastCompletionLength)
             lastCompletionLength = 0
@@ -2986,7 +2920,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     }
 
     override fun onBackendConnected() {
-        Log.d(Config.LOGTAG, "ConversationFragment.onBackendConnected()")
+        Timber.d("ConversationFragment.onBackendConnected()")
         val uuid = pendingConversationsUuid.pop()
         if (uuid != null) {
             if (!findAndReInitByUuidOrArchive(uuid)) {
@@ -3017,7 +2951,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         val attachments: List<Attachment>? = pendingMediaPreviews.pop()
         scrollState?.let { setScrollPosition(it, lastMessageUuid) }
         if (attachments != null && attachments.size > 0) {
-            Log.d(Config.LOGTAG, "had attachments on restore")
+            Timber.d("had attachments on restore")
             mediaPreviewAdapter!!.addMediaPreviews(attachments)
             toggleInputMethod()
         }
@@ -3026,25 +2960,24 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
 
     private fun clearPending() {
         if (postponedActivityResult.clear()) {
-            Log.e(Config.LOGTAG, "cleared pending intent with unhandled result left")
+            Timber.e("cleared pending intent with unhandled result left")
             if (pendingTakePhotoUri.clear()) {
-                Log.e(Config.LOGTAG, "cleared pending photo uri")
+                Timber.e("cleared pending photo uri")
             }
         }
         if (pendingScrollState.clear()) {
-            Log.e(Config.LOGTAG, "cleared scroll state")
+            Timber.e("cleared scroll state")
         }
         if (pendingConversationsUuid.clear()) {
-            Log.e(Config.LOGTAG, "cleared pending conversations uuid")
+            Timber.e("cleared pending conversations uuid")
         }
         if (pendingMediaPreviews.clear()) {
-            Log.e(Config.LOGTAG, "cleared pending media previews")
+            Timber.e("cleared pending media previews")
         }
     }
 
     override fun onContactPictureLongClicked(v: View, message: Message) {
-        val fingerprint: String
-        fingerprint = if (message.encryption == Message.ENCRYPTION_PGP
+        val fingerprint: String = if (message.encryption == Message.ENCRYPTION_PGP
             || message.encryption == Message.ENCRYPTION_DECRYPTED
         ) {
             "pgp"
@@ -3102,18 +3035,21 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             popupMenu.setOnMenuItemClickListener { item: MenuItem ->
                 val activity: XmppActivity? = chatsActivity
                 if (activity == null) {
-                    Log.e(Config.LOGTAG, "Unable to perform action. no context provided")
+                    Timber.e("Unable to perform action. no context provided")
                     return@setOnMenuItemClickListener true
                 }
-                val itemId = item.itemId
-                if (itemId == R.id.action_show_qr_code) {
-                    activity.showQrCode(conversation!!.account.shareableUri)
-                } else if (itemId == R.id.action_account_details) {
-                    activity.switchToAccount(
-                        message.conversation.account, fingerprint
-                    )
-                } else if (itemId == R.id.action_manage_accounts) {
-                    AccountUtils.launchManageAccounts(activity)
+                when (item.itemId) {
+                    R.id.action_show_qr_code -> {
+                        activity.showQrCode(conversation!!.account.shareableUri)
+                    }
+                    R.id.action_account_details -> {
+                        activity.switchToAccount(
+                            message.conversation.account, fingerprint
+                        )
+                    }
+                    R.id.action_manage_accounts -> {
+                        AccountUtils.launchManageAccounts(activity)
+                    }
                 }
                 true
             }

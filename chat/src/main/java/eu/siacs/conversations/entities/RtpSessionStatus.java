@@ -1,6 +1,9 @@
 package eu.siacs.conversations.entities;
 
 import com.google.common.base.Strings;
+import com.yourbestigor.chat.R;
+
+import androidx.annotation.DrawableRes;
 
 public class RtpSessionStatus {
 
@@ -37,7 +40,8 @@ public class RtpSessionStatus {
         return new RtpSessionStatus(made, duration);
     }
 
-    /*public static @DrawableRes int getDrawable(final boolean received, final boolean successful, final boolean darkTheme) {
+    public static @DrawableRes
+    int getDrawable(final boolean received, final boolean successful, final boolean darkTheme) {
         if (received) {
             if (successful) {
                 return darkTheme ? R.drawable.ic_call_received_white_18dp : R.drawable.ic_call_received_black_18dp;
@@ -51,5 +55,5 @@ public class RtpSessionStatus {
                 return darkTheme ? R.drawable.ic_call_missed_outgoing_white_18dp : R.drawable.ic_call_missed_outgoing_black_18dp;
             }
         }
-    }*/
+    }
 }

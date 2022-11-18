@@ -648,7 +648,7 @@ class MessageAdapter @JvmOverloads constructor(
                     viewHolder.image = view.findViewById(R.id.message_image)
                     viewHolder.messageBody = view.findViewById(R.id.message_body)
                     viewHolder.time = view.findViewById(R.id.message_time)
-                    //viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
+                    viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
                     viewHolder.encryption = view.findViewById(R.id.message_encryption)
                     viewHolder.audioPlayer = view.findViewById(R.id.audio_player)
                 }
@@ -707,9 +707,15 @@ class MessageAdapter @JvmOverloads constructor(
                     viewHolder.status_message?.setText(R.string.outgoing_call)
                 }
             }
-            //viewHolder.indicatorReceived.setImageResource(RtpSessionStatus.getDrawable(received, rtpSessionStatus.successful, isDarkTheme));
-            viewHolder.indicatorReceived!!.alpha = if (isDarkTheme) 0.7f else 0.57f
-            viewHolder.message_box!!.setBackgroundResource(if (isDarkTheme) R.drawable.date_bubble_grey else R.drawable.date_bubble_white)
+            viewHolder.indicatorReceived?.setImageResource(
+                RtpSessionStatus.getDrawable(
+                    received,
+                    rtpSessionStatus.successful,
+                    isDarkTheme
+                )
+            );
+            viewHolder.indicatorReceived?.alpha = if (isDarkTheme) 0.7f else 0.57f
+            viewHolder.message_box?.setBackgroundResource(if (isDarkTheme) R.drawable.date_bubble_grey else R.drawable.date_bubble_white)
             return view!!
         } else if (type == STATUS) {
             if ("LOAD_MORE" == message.body) {
