@@ -1,13 +1,12 @@
 package com.topiichat.app.features.chats.root.presentation.adapter;
 
-import android.graphics.Bitmap;
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.topiichat.app.databinding.ChatListItemBinding;
@@ -21,6 +20,7 @@ import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.ui.XmppActivity;
+import eu.siacs.conversations.ui.util.AvatarWorkerTask;
 import eu.siacs.conversations.utils.IrregularUnicodeDetector;
 import eu.siacs.conversations.utils.MimeUtils;
 import eu.siacs.conversations.utils.UIHelper;
@@ -45,6 +45,7 @@ public class ChatsAdapter
         return new ConversationViewHolder(ChatListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ConversationViewHolder viewHolder, int position) {
         Conversation conversation = conversations.get(position);
@@ -59,14 +60,6 @@ public class ChatsAdapter
             viewHolder.binding.textMessageRecipient.setText(name);
         }
 
-        /*if (conversation == ConversationFragment.getConversation(activity)) {
-            viewHolder.binding.frame.setBackgroundColor(
-                    StyledAttributes.getColor(activity, R.attr.color_background_tertiary));
-        } else {
-            viewHolder.binding.frame.setBackgroundColor(
-                    StyledAttributes.getColor(activity, R.attr.color_background_primary));
-        }*/
-
         Message message = conversation.getLatestMessage();
         final int unreadCount = conversation.unreadCount();
         final boolean isRead = conversation.isRead();
@@ -78,16 +71,15 @@ public class ChatsAdapter
             viewHolder.binding.textUnreadMessagesCount.setVisibility(View.GONE);
         }
 
-        /*if (isRead) {
-            viewHolder.binding.conversationName.setTypeface(null, Typeface.NORMAL);
+        if (isRead) {
+            viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.NORMAL);
         } else {
-            viewHolder.binding.conversationName.setTypeface(null, Typeface.BOLD);
-        }*/
+            viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.BOLD);
+        }
 
         if (draft != null) {
-            //viewHolder.binding.conversationLastmsgImg.setVisibility(View.GONE);
-            //viewHolder.binding.conversationLastmsg.setText(draft.getMessage());
-            viewHolder.binding.textMessageRecipient.setText(R.string.draft);
+            viewHolder.binding.imageAvatar.setVisibility(View.GONE);
+            viewHolder.binding.textMessageRecipient.setText(activity.getString(R.string.draft) + " " + draft.getMessage());
             viewHolder.binding.textMessageRecipient.setVisibility(View.VISIBLE);
             viewHolder.binding.textMessagePreview.setTypeface(null, Typeface.NORMAL);
             viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.ITALIC);
@@ -105,8 +97,6 @@ public class ChatsAdapter
                                     R.attr.ic_attach_location, R.drawable.ic_attach_location);
                     showPreviewText = false;
                 } else {
-                    // TODO move this into static MediaPreview method and use same icons as in
-                    // MediaAdapter
                     final String mime = message.getMimeType();
                     if (MimeUtils.AMBIGUOUS_CONTAINER_FORMATS.contains(mime)) {
                         final Message.FileParams fileParams = message.getFileParams();
@@ -160,10 +150,10 @@ public class ChatsAdapter
                         }
                     }
                 }
-                //  viewHolder.binding.conversationLastmsgImg.setImageResource(imageResource);
-                // viewHolder.binding.conversationLastmsgImg.setVisibility(View.VISIBLE);
+                viewHolder.binding.imageLastImage.setImageResource(imageResource);
+                viewHolder.binding.imageLastImage.setVisibility(View.VISIBLE);
             } else {
-                //viewHolder.binding.conversationLastmsgImg.setVisibility(View.GONE);
+                viewHolder.binding.imageLastImage.setVisibility(View.GONE);
                 showPreviewText = true;
             }
             final Pair<CharSequence, Boolean> preview =
@@ -174,42 +164,28 @@ public class ChatsAdapter
             if (showPreviewText) {
                 viewHolder.binding.textMessagePreview.setText(UIHelper.shorten(preview.first));
             } else {
-                //viewHolder.binding.conversationLastmsgImg.setContentDescription(preview.first);
+                viewHolder.binding.imageLastImage.setContentDescription(preview.first);
             }
             viewHolder.binding.textMessagePreview.setVisibility(
                     showPreviewText ? View.VISIBLE : View.GONE);
             if (preview.second) {
                 if (isRead) {
                     viewHolder.binding.textMessagePreview.setTypeface(null, Typeface.ITALIC);
-                    //viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.NORMAL);
+                    viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.NORMAL);
                 } else {
                     viewHolder.binding.textMessagePreview.setTypeface(null, Typeface.BOLD_ITALIC);
-                    //viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.BOLD);
+                    viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.BOLD);
                 }
             } else {
                 if (isRead) {
                     viewHolder.binding.textMessagePreview.setTypeface(null, Typeface.NORMAL);
-                    //viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.NORMAL);
+                    viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.NORMAL);
                 } else {
                     viewHolder.binding.textMessagePreview.setTypeface(null, Typeface.BOLD);
-                    //viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.BOLD);
+                    viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.BOLD);
                 }
             }
 
-            /*if (message.getStatus() == Message.STATUS_RECEIVED) {
-                if (conversation.getMode() == Conversation.MODE_MULTI) {
-                    viewHolder.binding.textMessageRecipient.setVisibility(View.VISIBLE);
-                    viewHolder.binding.textMessageRecipient.setText(
-                            UIHelper.getMessageDisplayName(message).split("\\s+")[0] + ':');
-                } else {
-                    viewHolder.binding.textMessageRecipient.setVisibility(View.GONE);
-                }
-            } else if (message.getType() != Message.TYPE_STATUS) {
-                viewHolder.binding.textMessageRecipient.setVisibility(View.VISIBLE);
-                viewHolder.binding.textMessageRecipient.setText(activity.getString(R.string.me) + ':');
-            } else {
-                viewHolder.binding.textMessageRecipient.setVisibility(View.GONE);
-            }*/
         }
 
         final Optional<OngoingRtpSession> ongoingCall;
@@ -222,40 +198,33 @@ public class ChatsAdapter
                             .getOngoingRtpConnection(conversation.getContact());
         }
 
-       /* if (ongoingCall.isPresent()) {
-            viewHolder.binding.notificationStatus.setVisibility(View.VISIBLE);
+        if (ongoingCall.isPresent()) {
+            viewHolder.binding.imageNotificationStatus.setVisibility(View.VISIBLE);
             final int ic_ongoing_call =
                     activity.getThemeResource(
                             R.attr.ic_ongoing_call_hint, R.drawable.ic_phone_in_talk_black_18dp);
-            viewHolder.binding.notificationStatus.setImageResource(ic_ongoing_call);
+            viewHolder.binding.imageNotificationStatus.setImageResource(ic_ongoing_call);
         } else {
             final long muted_till =
                     conversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0);
-            if (muted_till == Long.MAX_VALUE) {
-                viewHolder.binding.notificationStatus.setVisibility(View.VISIBLE);
+            if (muted_till == Long.MAX_VALUE || muted_till >= System.currentTimeMillis()) {
+                viewHolder.binding.imageNotificationStatus.setVisibility(View.VISIBLE);
                 int ic_notifications_off =
                         activity.getThemeResource(
                                 R.attr.icon_notifications_off,
                                 R.drawable.ic_notifications_off_black_24dp);
-                viewHolder.binding.notificationStatus.setImageResource(ic_notifications_off);
-            } else if (muted_till >= System.currentTimeMillis()) {
-                viewHolder.binding.notificationStatus.setVisibility(View.VISIBLE);
-                int ic_notifications_paused =
-                        activity.getThemeResource(
-                                R.attr.icon_notifications_paused,
-                                R.drawable.ic_notifications_paused_black_24dp);
-                viewHolder.binding.notificationStatus.setImageResource(ic_notifications_paused);
+                viewHolder.binding.imageNotificationStatus.setImageResource(ic_notifications_off);
             } else if (conversation.alwaysNotify()) {
-                viewHolder.binding.notificationStatus.setVisibility(View.GONE);
+                viewHolder.binding.imageNotificationStatus.setVisibility(View.GONE);
             } else {
-                viewHolder.binding.notificationStatus.setVisibility(View.VISIBLE);
+                viewHolder.binding.imageNotificationStatus.setVisibility(View.VISIBLE);
                 int ic_notifications_none =
                         activity.getThemeResource(
                                 R.attr.icon_notifications_none,
                                 R.drawable.ic_notifications_none_black_24dp);
-                viewHolder.binding.notificationStatus.setImageResource(ic_notifications_none);
+                viewHolder.binding.imageNotificationStatus.setImageResource(ic_notifications_none);
             }
-        }*/
+        }
 
         long timestamp;
         if (draft != null) {
@@ -263,14 +232,13 @@ public class ChatsAdapter
         } else {
             timestamp = conversation.getLatestMessage().getTimeSent();
         }
-        /*viewHolder.binding.pinnedOnTop.setVisibility(
-                conversation.getBooleanAttribute(Conversation.ATTRIBUTE_PINNED_ON_TOP, false)
-                        ? View.VISIBLE
-                        : View.GONE);*/
+
         viewHolder.binding.textMessageTime.setText(
                 UIHelper.readableTimeDifference(activity, timestamp));
-        final Bitmap bm = activity.avatarService().get(conversation, (int) activity.getResources().getDimension(R.dimen.avatar_on_conversation_overview), true);
-        Glide.with(viewHolder.itemView).load(bm).into(viewHolder.binding.imageAvatar);
+        AvatarWorkerTask.loadAvatar(
+                conversation,
+                viewHolder.binding.imageAvatar,
+                R.dimen.avatar_on_conversation_overview);
         viewHolder.itemView.setOnClickListener(v -> listener.onConversationClick(v, conversation));
     }
 
