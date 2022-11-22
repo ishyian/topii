@@ -1,207 +1,188 @@
-package com.topiichat.app.features.chats.chat.adapter;
+package com.topiichat.app.features.chats.chat.adapter
 
-import android.content.ActivityNotFoundException;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.os.AsyncTask
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
+import com.topiichat.app.features.chats.chat.ChatFragment
+import com.yourbestigor.chat.R
+import com.yourbestigor.chat.databinding.MediaPreviewBinding
+import eu.siacs.conversations.persistance.FileBackend
+import eu.siacs.conversations.ui.XmppActivity
+import eu.siacs.conversations.ui.adapter.MediaAdapter
+import eu.siacs.conversations.ui.util.Attachment
+import java.lang.ref.WeakReference
+import java.util.concurrent.RejectedExecutionException
+import kotlin.math.roundToInt
 
-import com.topiichat.app.features.chats.chat.ChatFragment;
-import com.yourbestigor.chat.R;
-import com.yourbestigor.chat.databinding.MediaPreviewBinding;
+class MediaPreviewAdapter(private val conversationFragment: ChatFragment) :
+    RecyclerView.Adapter<MediaPreviewAdapter.MediaPreviewViewHolder>() {
+    val attachments = ArrayList<Attachment>()
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.RejectedExecutionException;
-
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.RecyclerView;
-import eu.siacs.conversations.persistance.FileBackend;
-import eu.siacs.conversations.ui.XmppActivity;
-import eu.siacs.conversations.ui.adapter.MediaAdapter;
-import eu.siacs.conversations.ui.util.Attachment;
-
-public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapter.MediaPreviewViewHolder> {
-
-    private final ArrayList<Attachment> mediaPreviews = new ArrayList<>();
-
-    private final ChatFragment conversationFragment;
-
-    public MediaPreviewAdapter(ChatFragment fragment) {
-        this.conversationFragment = fragment;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaPreviewViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding =
+            DataBindingUtil.inflate<MediaPreviewBinding>(layoutInflater, R.layout.media_preview, parent, false)
+        return MediaPreviewViewHolder(binding)
     }
 
-    @NonNull
-    @Override
-    public MediaPreviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        MediaPreviewBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.media_preview, parent, false);
-        return new MediaPreviewViewHolder(binding);
+    override fun onBindViewHolder(holder: MediaPreviewViewHolder, position: Int) {
+        val attachment = attachments[position]
+        holder.bind(attachment, conversationFragment.requireContext())
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull MediaPreviewViewHolder holder, int position) {
-        final Context context = conversationFragment.getActivity();
-        final Attachment attachment = mediaPreviews.get(position);
-        if (attachment.renderThumbnail()) {
-            holder.binding.mediaPreview.setImageAlpha(255);
-            loadPreview(attachment, holder.binding.mediaPreview);
-        } else {
-            cancelPotentialWork(attachment, holder.binding.mediaPreview);
-            MediaAdapter.renderPreview(context, attachment, holder.binding.mediaPreview);
-        }
-        holder.binding.deleteButton.setOnClickListener(v -> {
-            final int pos = mediaPreviews.indexOf(attachment);
-            mediaPreviews.remove(pos);
-            notifyItemRemoved(pos);
-            conversationFragment.toggleInputMethod();
-        });
-        holder.binding.mediaPreview.setOnClickListener(v -> view(context, attachment));
+    @SuppressLint("NotifyDataSetChanged")
+    fun addMediaPreviews(attachments: List<Attachment>?) {
+        this.attachments.addAll(attachments!!)
+        notifyDataSetChanged()
     }
 
-    private static void view(final Context context, Attachment attachment) {
-        final Intent view = new Intent(Intent.ACTION_VIEW);
-        final Uri uri = FileBackend.getUriForUri(context, attachment.getUri());
-        view.setDataAndType(uri, attachment.getMime());
-        view.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        try {
-            context.startActivity(view);
-        } catch (final ActivityNotFoundException e) {
-            Toast.makeText(context, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
-        } catch (final SecurityException e) {
-            Toast.makeText(context, R.string.sharing_application_not_grant_permission, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void addMediaPreviews(List<Attachment> attachments) {
-        this.mediaPreviews.addAll(attachments);
-        notifyDataSetChanged();
-    }
-
-    private void loadPreview(Attachment attachment, ImageView imageView) {
+    private fun loadPreview(attachment: Attachment, imageView: ImageView) {
         if (cancelPotentialWork(attachment, imageView)) {
-            XmppActivity activity = (XmppActivity) conversationFragment.getActivity();
-            final Bitmap bm = activity.xmppConnectionService.getFileBackend().getPreviewForUri(attachment, Math.round(activity.getResources().getDimension(R.dimen.media_preview_size)), true);
+            val activity = conversationFragment.activity as XmppActivity?
+            val bm = activity!!.xmppConnectionService.fileBackend.getPreviewForUri(
+                attachment, activity.resources.getDimension(R.dimen.media_preview_size).roundToInt(), true
+            )
             if (bm != null) {
-                cancelPotentialWork(attachment, imageView);
-                imageView.setImageBitmap(bm);
-                imageView.setBackgroundColor(0x00000000);
+                cancelPotentialWork(attachment, imageView)
+                imageView.setImageBitmap(bm)
+                imageView.setBackgroundColor(0x00000000)
             } else {
-                imageView.setBackgroundColor(0xff333333);
-                imageView.setImageDrawable(null);
-                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-                final AsyncDrawable asyncDrawable = new AsyncDrawable(conversationFragment.getActivity().getResources(), null, task);
-                imageView.setImageDrawable(asyncDrawable);
+                imageView.setBackgroundColor(-0xcccccd)
+                imageView.setImageDrawable(null)
+                val task = BitmapWorkerTask(imageView)
+                val asyncDrawable = AsyncDrawable(
+                    conversationFragment.requireActivity().resources, null, task
+                )
+                imageView.setImageDrawable(asyncDrawable)
                 try {
-                    task.execute(attachment);
-                } catch (final RejectedExecutionException ignored) {
+                    task.execute(attachment)
+                } catch (ignored: RejectedExecutionException) {
                 }
             }
         }
     }
 
-    private static boolean cancelPotentialWork(Attachment attachment, ImageView imageView) {
-        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+    override fun getItemCount(): Int {
+        return attachments.size
+    }
 
-        if (bitmapWorkerTask != null) {
-            final Attachment oldAttachment = bitmapWorkerTask.attachment;
-            if (oldAttachment == null || !oldAttachment.equals(attachment)) {
-                bitmapWorkerTask.cancel(true);
+    fun hasAttachments(): Boolean {
+        return attachments.size > 0
+    }
+
+    fun clearPreviews() {
+        attachments.clear()
+    }
+
+    inner class MediaPreviewViewHolder(val binding: MediaPreviewBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(attachment: Attachment, context: Context) = with(binding) {
+            if (attachment.renderThumbnail()) {
+                mediaPreview.imageAlpha = 255
+                loadPreview(attachment, mediaPreview)
             } else {
-                return false;
+                cancelPotentialWork(attachment, binding.mediaPreview)
+                MediaAdapter.renderPreview(itemView.context, attachment, mediaPreview)
+            }
+            deleteButton.setOnClickListener {
+                val pos = attachments.indexOf(attachment)
+                attachments.removeAt(pos)
+                notifyItemRemoved(pos)
+                conversationFragment.toggleInputMethod()
+            }
+            mediaPreview.setOnClickListener {
+                view(context, attachment)
             }
         }
-        return true;
     }
 
-    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
-        if (imageView != null) {
-            final Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-                return asyncDrawable.getBitmapWorkerTask();
-            }
-        }
-        return null;
-    }
+    internal class AsyncDrawable(res: Resources?, bitmap: Bitmap?, bitmapWorkerTask: BitmapWorkerTask) :
+        BitmapDrawable(res, bitmap) {
+        private val bitmapWorkerTaskReference: WeakReference<BitmapWorkerTask>
+        val bitmapWorkerTask: BitmapWorkerTask?
+            get() = bitmapWorkerTaskReference.get()
 
-    @Override
-    public int getItemCount() {
-        return mediaPreviews.size();
-    }
-
-    public boolean hasAttachments() {
-        return mediaPreviews.size() > 0;
-    }
-
-    public ArrayList<Attachment> getAttachments() {
-        return mediaPreviews;
-    }
-
-    public void clearPreviews() {
-        this.mediaPreviews.clear();
-    }
-
-    class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
-
-        private final MediaPreviewBinding binding;
-
-        MediaPreviewViewHolder(MediaPreviewBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
+        init {
+            bitmapWorkerTaskReference = WeakReference(bitmapWorkerTask)
         }
     }
 
-    static class AsyncDrawable extends BitmapDrawable {
-        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+    @Suppress("DEPRECATION")
+    class BitmapWorkerTask constructor(imageView: ImageView) : AsyncTask<Attachment?, Void?, Bitmap?>() {
+        private val imageViewReference: WeakReference<ImageView>
+        var attachment: Attachment? = null
 
-        AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
-            super(res, bitmap);
-            bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
+        override fun doInBackground(vararg params: Attachment?): Bitmap? {
+            attachment = params[0]
+            val activity = XmppActivity.find(imageViewReference) ?: return null
+            return activity.xmppConnectionService.fileBackend.getPreviewForUri(
+                attachment,
+                activity.resources.getDimension(R.dimen.media_preview_size).roundToInt(),
+                false
+            )
         }
 
-        BitmapWorkerTask getBitmapWorkerTask() {
-            return bitmapWorkerTaskReference.get();
-        }
-    }
-
-    public static class BitmapWorkerTask extends AsyncTask<Attachment, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-        public Attachment attachment = null;
-
-        BitmapWorkerTask(ImageView imageView) {
-            imageViewReference = new WeakReference<>(imageView);
-        }
-
-        @Override
-        protected Bitmap doInBackground(Attachment... params) {
-            this.attachment = params[0];
-            final XmppActivity activity = XmppActivity.find(imageViewReference);
-            if (activity == null) {
-                return null;
-            }
-            return activity.xmppConnectionService.getFileBackend().getPreviewForUri(this.attachment, Math.round(activity.getResources().getDimension(R.dimen.media_preview_size)), false);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null && !isCancelled()) {
-                final ImageView imageView = imageViewReference.get();
+        override fun onPostExecute(bitmap: Bitmap?) {
+            if (bitmap != null && !isCancelled) {
+                val imageView = imageViewReference.get()
                 if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                    imageView.setBackgroundColor(0x00000000);
+                    imageView.setImageBitmap(bitmap)
+                    imageView.setBackgroundColor(0x00000000)
                 }
             }
+        }
+
+        init {
+            imageViewReference = WeakReference(imageView)
+        }
+    }
+
+    companion object {
+        private fun view(context: Context?, attachment: Attachment) {
+            val view = Intent(Intent.ACTION_VIEW)
+            val uri = FileBackend.getUriForUri(context, attachment.uri)
+            view.setDataAndType(uri, attachment.mime)
+            view.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            try {
+                context!!.startActivity(view)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(context, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show()
+            } catch (e: SecurityException) {
+                Toast.makeText(context, R.string.sharing_application_not_grant_permission, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        private fun cancelPotentialWork(attachment: Attachment, imageView: ImageView): Boolean {
+            val bitmapWorkerTask = getBitmapWorkerTask(imageView)
+            if (bitmapWorkerTask != null) {
+                val oldAttachment = bitmapWorkerTask.attachment
+                if (oldAttachment == null || oldAttachment != attachment) {
+                    bitmapWorkerTask.cancel(true)
+                } else {
+                    return false
+                }
+            }
+            return true
+        }
+
+        private fun getBitmapWorkerTask(imageView: ImageView?): BitmapWorkerTask? {
+            if (imageView != null) {
+                val drawable = imageView.drawable
+                if (drawable is AsyncDrawable) {
+                    return drawable.bitmapWorkerTask
+                }
+            }
+            return null
         }
     }
 }
