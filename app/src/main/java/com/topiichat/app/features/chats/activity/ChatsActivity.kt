@@ -19,7 +19,7 @@ import androidx.fragment.app.FragmentManager
 import com.topiichat.app.R
 import com.topiichat.app.databinding.ActivityChatsBinding
 import com.topiichat.app.features.chats.base.BaseChatFragment
-import com.topiichat.app.features.chats.new_chat.ChatFragment
+import com.topiichat.app.features.chats.chat.ChatFragment
 import com.topiichat.app.features.chats.root.presentation.ChatsFragment
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.crypto.OmemoSetting

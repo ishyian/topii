@@ -1,4 +1,4 @@
-package com.topiichat.app.features.chats.new_chat
+package com.topiichat.app.features.chats.chat
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -56,8 +56,8 @@ import com.topiichat.app.databinding.DialogAddAttachmentBinding
 import com.topiichat.app.databinding.FragmentChatBinding
 import com.topiichat.app.features.chats.activity.ChatsActivity
 import com.topiichat.app.features.chats.base.BaseChatFragment
-import com.topiichat.app.features.chats.new_chat.adapter.MediaPreviewAdapter
-import com.topiichat.app.features.chats.new_chat.adapter.MessageAdapter
+import com.topiichat.app.features.chats.chat.adapter.MediaPreviewAdapter
+import com.topiichat.app.features.chats.chat.adapter.MessageAdapter
 import com.yourbestigor.chat.R
 import eu.siacs.conversations.Config
 import eu.siacs.conversations.crypto.axolotl.AxolotlService
@@ -157,33 +157,6 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
 
     override fun initBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentChatBinding {
         return FragmentChatBinding.inflate(inflater, container, false)
-    }
-
-    private val clickToMuc = View.OnClickListener {
-        //ConferenceDetailsActivity.open(getActivity(), conversation);
-    }
-    private val leaveMuc =
-        View.OnClickListener { chatsActivity!!.xmppConnectionService.archiveConversation(conversation) }
-
-    private val joinMuc = View.OnClickListener { chatsActivity!!.xmppConnectionService.joinMuc(conversation) }
-    private val acceptJoin = View.OnClickListener {
-        conversation!!.setAttribute("accept_non_anonymous", true)
-        chatsActivity!!.xmppConnectionService.updateConversation(conversation)
-        chatsActivity!!.xmppConnectionService.joinMuc(conversation)
-    }
-
-    private val enterPassword = View.OnClickListener {
-        val muc = conversation?.mucOptions
-        var password = muc?.password
-        if (password == null) {
-            password = ""
-        }
-        chatsActivity?.quickPasswordEdit(password) { value: String? ->
-            chatsActivity!!.xmppConnectionService.providePasswordForMuc(
-                conversation, value
-            )
-            null
-        }
     }
 
     private val onScrollListener: AbsListView.OnScrollListener = object : AbsListView.OnScrollListener {
@@ -482,11 +455,6 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
     private fun setScrollPosition(scrollPosition: ScrollState?, lastMessageUuid: String?) {
         if (scrollPosition != null) {
             this.lastMessageUuid = lastMessageUuid
-            if (lastMessageUuid != null) {
-                /*binding.unreadCountCustomView.setUnreadCount(
-                        conversation.getReceivedMessagesCountSinceUuid(lastMessageUuid));*/
-            }
-            // TODO maybe this needs a 'post'
             binding.rvMessagesList.setSelectionFromTop(scrollPosition.position, scrollPosition.offset)
             toggleScrollDownButton()
         }
@@ -2284,56 +2252,6 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                 mAllowPresenceSubscription,
                 mLongPressBlockListener
             )
-        } else if (mode == Conversation.MODE_MULTI && !conversation.mucOptions.online()
-            && account.status == Account.State.ONLINE
-        ) {
-            when (conversation.mucOptions.error) {
-                MucOptions.Error.NICK_IN_USE -> showSnackbar(R.string.nick_in_use, R.string.edit, clickToMuc)
-                MucOptions.Error.NO_RESPONSE -> showSnackbar(R.string.joining_conference, 0, null)
-                MucOptions.Error.SERVER_NOT_FOUND -> if (conversation.receivedMessagesCount() > 0) {
-                    showSnackbar(R.string.remote_server_not_found, R.string.try_again, joinMuc)
-                } else {
-                    showSnackbar(R.string.remote_server_not_found, R.string.leave, leaveMuc)
-                }
-                MucOptions.Error.REMOTE_SERVER_TIMEOUT -> if (conversation.receivedMessagesCount() > 0) {
-                    showSnackbar(R.string.remote_server_timeout, R.string.try_again, joinMuc)
-                } else {
-                    showSnackbar(R.string.remote_server_timeout, R.string.leave, leaveMuc)
-                }
-                MucOptions.Error.PASSWORD_REQUIRED -> showSnackbar(
-                    R.string.conference_requires_password,
-                    R.string.enter_password,
-                    enterPassword
-                )
-                MucOptions.Error.BANNED -> showSnackbar(R.string.conference_banned, R.string.leave, leaveMuc)
-                MucOptions.Error.MEMBERS_ONLY -> showSnackbar(
-                    R.string.conference_members_only,
-                    R.string.leave,
-                    leaveMuc
-                )
-                MucOptions.Error.RESOURCE_CONSTRAINT -> showSnackbar(
-                    R.string.conference_resource_constraint, R.string.try_again, joinMuc
-                )
-                MucOptions.Error.KICKED -> showSnackbar(R.string.conference_kicked, R.string.join, joinMuc)
-                MucOptions.Error.TECHNICAL_PROBLEMS -> showSnackbar(
-                    R.string.conference_technical_problems,
-                    R.string.try_again,
-                    joinMuc
-                )
-                MucOptions.Error.UNKNOWN -> showSnackbar(R.string.conference_unknown_error, R.string.try_again, joinMuc)
-                MucOptions.Error.INVALID_NICK -> {
-                    showSnackbar(R.string.invalid_muc_nick, R.string.edit, clickToMuc)
-                    showSnackbar(R.string.conference_shutdown, R.string.try_again, joinMuc)
-                }
-                MucOptions.Error.SHUTDOWN -> showSnackbar(R.string.conference_shutdown, R.string.try_again, joinMuc)
-                MucOptions.Error.DESTROYED -> showSnackbar(R.string.conference_destroyed, R.string.leave, leaveMuc)
-                MucOptions.Error.NON_ANONYMOUS -> showSnackbar(
-                    R.string.group_chat_will_make_your_jabber_id_public,
-                    R.string.join,
-                    acceptJoin
-                )
-                else -> hideSnackbar()
-            }
         } else if (account.hasPendingPgpIntent(conversation)) {
             showSnackbar(R.string.openpgp_messages_found, R.string.decrypt, clickToDecryptListener)
         } else if (connection != null && connection.features.blocking()
@@ -2392,7 +2310,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
             chatsActivity!!.resources.getBoolean(R.bool.scroll_to_bottom)
         )
         if (prefScrollToBottom || scrolledToBottom()) {
-            Handler()
+            Handler(Looper.getMainLooper())
                 .post {
                     val size = messageList.size
                     binding.rvMessagesList.setSelection(size - 1)

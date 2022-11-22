@@ -1,4 +1,4 @@
-package com.topiichat.app.features.chats.new_chat.adapter
+package com.topiichat.app.features.chats.chat.adapter
 
 import android.Manifest
 import android.app.Activity

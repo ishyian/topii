@@ -1,4 +1,4 @@
-package com.topiichat.app.features.chats.new_chat.adapter;
+package com.topiichat.app.features.chats.chat.adapter;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.topiichat.app.features.chats.new_chat.ChatFragment;
+import com.topiichat.app.features.chats.chat.ChatFragment;
 import com.yourbestigor.chat.R;
 import com.yourbestigor.chat.databinding.MediaPreviewBinding;
 
