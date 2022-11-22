@@ -1,276 +1,199 @@
-package com.topiichat.app.features.chats.root.presentation.adapter;
+package com.topiichat.app.features.chats.root.presentation.adapter
 
-import android.annotation.SuppressLint;
-import android.graphics.Typeface;
-import android.util.Pair;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.annotation.SuppressLint
+import android.graphics.Typeface
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.google.common.base.Optional
+import com.google.common.base.Strings
+import com.topiichat.app.databinding.ChatListItemBinding
+import com.yourbestigor.chat.R
+import eu.siacs.conversations.entities.Conversation
+import eu.siacs.conversations.entities.Conversational
+import eu.siacs.conversations.ui.XmppActivity
+import eu.siacs.conversations.ui.util.AvatarWorkerTask
+import eu.siacs.conversations.utils.IrregularUnicodeDetector
+import eu.siacs.conversations.utils.MimeUtils
+import eu.siacs.conversations.utils.UIHelper
+import eu.siacs.conversations.xmpp.Jid
+import eu.siacs.conversations.xmpp.jingle.OngoingRtpSession
 
-import com.google.common.base.Optional;
-import com.google.common.base.Strings;
-import com.topiichat.app.databinding.ChatListItemBinding;
-import com.yourbestigor.chat.R;
+class ChatsAdapter(
+    val activity: XmppActivity,
+    private val conversations: MutableList<Conversation>
+) : RecyclerView.Adapter<ChatsAdapter.ConversationViewHolder>() {
 
-import java.util.List;
+    private var listener: OnConversationClickListener? = null
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import eu.siacs.conversations.entities.Conversation;
-import eu.siacs.conversations.entities.Conversational;
-import eu.siacs.conversations.entities.Message;
-import eu.siacs.conversations.ui.XmppActivity;
-import eu.siacs.conversations.ui.util.AvatarWorkerTask;
-import eu.siacs.conversations.utils.IrregularUnicodeDetector;
-import eu.siacs.conversations.utils.MimeUtils;
-import eu.siacs.conversations.utils.UIHelper;
-import eu.siacs.conversations.xmpp.Jid;
-import eu.siacs.conversations.xmpp.jingle.OngoingRtpSession;
-
-public class ChatsAdapter
-        extends RecyclerView.Adapter<ChatsAdapter.ConversationViewHolder> {
-
-    private final XmppActivity activity;
-    private final List<Conversation> conversations;
-    private OnConversationClickListener listener;
-
-    public ChatsAdapter(XmppActivity activity, List<Conversation> conversations) {
-        this.activity = activity;
-        this.conversations = conversations;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConversationViewHolder {
+        return ConversationViewHolder(ChatListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
-    @NonNull
-    @Override
-    public ConversationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ConversationViewHolder(ChatListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+    override fun onBindViewHolder(viewHolder: ConversationViewHolder, position: Int) {
+        val conversation = conversations[position]
+        viewHolder.bind(conversation, activity)
+        viewHolder.itemView.setOnClickListener { v: View? -> listener?.onConversationClick(v, conversation) }
     }
 
-    @SuppressLint("SetTextI18n")
-    @Override
-    public void onBindViewHolder(@NonNull ConversationViewHolder viewHolder, int position) {
-        Conversation conversation = conversations.get(position);
-        if (conversation == null) {
-            return;
-        }
-        CharSequence name = conversation.getName();
-        if (name instanceof Jid) {
-            viewHolder.binding.textMessageRecipient.setText(
-                    IrregularUnicodeDetector.style(activity, (Jid) name));
-        } else {
-            viewHolder.binding.textMessageRecipient.setText(name);
-        }
+    override fun getItemCount(): Int {
+        return conversations.size
+    }
 
-        Message message = conversation.getLatestMessage();
-        final int unreadCount = conversation.unreadCount();
-        final boolean isRead = conversation.isRead();
-        final Conversation.Draft draft = isRead ? conversation.getDraft() : null;
-        if (unreadCount > 0) {
-            viewHolder.binding.textUnreadMessagesCount.setVisibility(View.VISIBLE);
-            viewHolder.binding.textUnreadMessagesCount.setText(String.valueOf(unreadCount));
-        } else {
-            viewHolder.binding.textUnreadMessagesCount.setVisibility(View.GONE);
-        }
+    fun setConversationClickListener(listener: OnConversationClickListener) {
+        this.listener = listener
+    }
 
-        if (isRead) {
-            viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.NORMAL);
-        } else {
-            viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.BOLD);
-        }
+    @SuppressLint("NotifyDataSetChanged")
+    fun insert(c: Conversation, position: Int) {
+        conversations.add(position, c)
+        notifyDataSetChanged()
+    }
 
-        if (draft != null) {
-            viewHolder.binding.imageAvatar.setVisibility(View.GONE);
-            viewHolder.binding.textMessageRecipient.setText(activity.getString(R.string.draft) + " " + draft.getMessage());
-            viewHolder.binding.textMessageRecipient.setVisibility(View.VISIBLE);
-            viewHolder.binding.textMessagePreview.setTypeface(null, Typeface.NORMAL);
-            viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.ITALIC);
-        } else {
-            final boolean fileAvailable = !message.isDeleted();
-            final boolean showPreviewText;
-            if (fileAvailable
-                    && (message.isFileOrImage()
-                    || message.treatAsDownloadable()
-                    || message.isGeoUri())) {
-                final int imageResource;
-                if (message.isGeoUri()) {
-                    imageResource =
-                            activity.getThemeResource(
-                                    R.attr.ic_attach_location, R.drawable.ic_attach_location);
-                    showPreviewText = false;
-                } else {
-                    final String mime = message.getMimeType();
-                    if (MimeUtils.AMBIGUOUS_CONTAINER_FORMATS.contains(mime)) {
-                        final Message.FileParams fileParams = message.getFileParams();
-                        if (fileParams.width > 0 && fileParams.height > 0) {
-                            imageResource =
-                                    activity.getThemeResource(
-                                            R.attr.ic_attach_videocam,
-                                            R.drawable.ic_attach_videocam);
-                            showPreviewText = false;
-                        } else if (fileParams.runtime > 0) {
-                            imageResource =
-                                    activity.getThemeResource(
-                                            R.attr.ic_attach_record, R.drawable.ic_attach_record);
-                            showPreviewText = false;
-                        } else {
-                            imageResource =
-                                    activity.getThemeResource(
-                                            R.attr.ic_attach_document,
-                                            R.drawable.ic_attach_document);
-                            showPreviewText = true;
-                        }
+    fun remove(conversation: Conversation, position: Int) {
+        conversations.remove(conversation)
+        notifyItemRemoved(position)
+    }
+
+    interface OnConversationClickListener {
+        fun onConversationClick(view: View?, conversation: Conversation?)
+    }
+
+    class ConversationViewHolder constructor(val binding: ChatListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        @SuppressLint("SetTextI18n")
+        fun bind(conversation: Conversation, activity: XmppActivity) = with(binding) {
+            val name = conversation.name
+            if (name is Jid) {
+                textMessageRecipient.text = IrregularUnicodeDetector.style(itemView.context, name)
+            } else {
+                textMessageRecipient.text = name
+            }
+            val message = conversation.latestMessage
+            val unreadCount = conversation.unreadCount()
+            val isRead = conversation.isRead
+            val draft = if (isRead) conversation.draft else null
+            if (unreadCount > 0) {
+                textUnreadMessagesCount.visibility = View.VISIBLE
+                textUnreadMessagesCount.text = unreadCount.toString()
+            } else {
+                textUnreadMessagesCount.visibility = View.GONE
+            }
+            if (isRead) {
+                textMessageRecipient.setTypeface(null, Typeface.NORMAL)
+            } else {
+                textMessageRecipient.setTypeface(null, Typeface.BOLD)
+            }
+            if (draft != null) {
+                imageAvatar.visibility = View.GONE
+                textMessageRecipient.text = itemView.context.getString(R.string.draft) + " " + draft.message
+                textMessageRecipient.visibility = View.VISIBLE
+                textMessagePreview.setTypeface(null, Typeface.NORMAL)
+                textMessageRecipient.setTypeface(null, Typeface.ITALIC)
+            } else {
+                val fileAvailable = !message.isDeleted
+                val showPreviewText: Boolean
+                if (fileAvailable
+                    && (message.isFileOrImage
+                        || message.treatAsDownloadable()
+                        || message.isGeoUri)
+                ) {
+                    val imageResource: Int
+                    if (message.isGeoUri) {
+                        imageResource = R.drawable.ic_attach_location
+                        showPreviewText = false
                     } else {
-                        switch (Strings.nullToEmpty(mime).split("/")[0]) {
-                            case "image":
-                                imageResource =
-                                        activity.getThemeResource(
-                                                R.attr.ic_attach_photo, R.drawable.ic_attach_photo);
-                                showPreviewText = false;
-                                break;
-                            case "video":
-                                imageResource =
-                                        activity.getThemeResource(
-                                                R.attr.ic_attach_videocam,
-                                                R.drawable.ic_attach_videocam);
-                                showPreviewText = false;
-                                break;
-                            case "audio":
-                                imageResource =
-                                        activity.getThemeResource(
-                                                R.attr.ic_attach_record,
-                                                R.drawable.ic_attach_record);
-                                showPreviewText = false;
-                                break;
-                            default:
-                                imageResource =
-                                        activity.getThemeResource(
-                                                R.attr.ic_attach_document,
-                                                R.drawable.ic_attach_document);
-                                showPreviewText = true;
-                                break;
+                        val mime = message.mimeType
+                        if (MimeUtils.AMBIGUOUS_CONTAINER_FORMATS.contains(mime)) {
+                            val fileParams = message.fileParams
+                            if (fileParams.width > 0 && fileParams.height > 0) {
+                                imageResource = R.drawable.ic_attach_videocam
+                                showPreviewText = false
+                            } else if (fileParams.runtime > 0) {
+                                imageResource = R.drawable.ic_attach_record
+                                showPreviewText = false
+                            } else {
+                                imageResource = R.drawable.ic_attach_document
+                                showPreviewText = true
+                            }
+                        } else {
+                            when (Strings.nullToEmpty(mime).split("/").toTypedArray()[0]) {
+                                "image" -> {
+                                    imageResource = R.drawable.ic_attach_photo
+                                    showPreviewText = false
+                                }
+                                "video" -> {
+                                    imageResource = R.drawable.ic_attach_videocam
+                                    showPreviewText = false
+                                }
+                                "audio" -> {
+                                    imageResource = R.drawable.ic_attach_record
+                                    showPreviewText = false
+                                }
+                                else -> {
+                                    imageResource = R.drawable.ic_attach_document
+                                    showPreviewText = true
+                                }
+                            }
                         }
                     }
-                }
-                viewHolder.binding.imageLastImage.setImageResource(imageResource);
-                viewHolder.binding.imageLastImage.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.binding.imageLastImage.setVisibility(View.GONE);
-                showPreviewText = true;
-            }
-            final Pair<CharSequence, Boolean> preview =
-                    UIHelper.getMessagePreview(
-                            activity,
-                            message,
-                            viewHolder.binding.textMessagePreview.getCurrentTextColor());
-            if (showPreviewText) {
-                viewHolder.binding.textMessagePreview.setText(UIHelper.shorten(preview.first));
-            } else {
-                viewHolder.binding.imageLastImage.setContentDescription(preview.first);
-            }
-            viewHolder.binding.textMessagePreview.setVisibility(
-                    showPreviewText ? View.VISIBLE : View.GONE);
-            if (preview.second) {
-                if (isRead) {
-                    viewHolder.binding.textMessagePreview.setTypeface(null, Typeface.ITALIC);
-                    viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.NORMAL);
+                    imageLastImage.setImageResource(imageResource)
+                    imageLastImage.visibility = View.VISIBLE
                 } else {
-                    viewHolder.binding.textMessagePreview.setTypeface(null, Typeface.BOLD_ITALIC);
-                    viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.BOLD);
+                    binding.imageLastImage.visibility = View.GONE
+                    showPreviewText = true
                 }
-            } else {
-                if (isRead) {
-                    viewHolder.binding.textMessagePreview.setTypeface(null, Typeface.NORMAL);
-                    viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.NORMAL);
+                val preview = UIHelper.getMessagePreview(itemView.context, message, textMessagePreview.currentTextColor)
+                if (showPreviewText) {
+                    textMessagePreview.text = UIHelper.shorten(preview.first)
                 } else {
-                    viewHolder.binding.textMessagePreview.setTypeface(null, Typeface.BOLD);
-                    viewHolder.binding.textMessageRecipient.setTypeface(null, Typeface.BOLD);
+                    imageLastImage.contentDescription = preview.first
+                }
+                textMessagePreview.visibility = if (showPreviewText) View.VISIBLE else View.GONE
+                if (preview.second) {
+                    if (isRead) {
+                        textMessagePreview.setTypeface(null, Typeface.ITALIC)
+                        textMessageRecipient.setTypeface(null, Typeface.NORMAL)
+                    } else {
+                        textMessagePreview.setTypeface(null, Typeface.BOLD_ITALIC)
+                        textMessageRecipient.setTypeface(null, Typeface.BOLD)
+                    }
+                } else {
+                    if (isRead) {
+                        textMessagePreview.setTypeface(null, Typeface.NORMAL)
+                        textMessageRecipient.setTypeface(null, Typeface.NORMAL)
+                    } else {
+                        textMessagePreview.setTypeface(null, Typeface.BOLD)
+                        textMessageRecipient.setTypeface(null, Typeface.BOLD)
+                    }
                 }
             }
-
-        }
-
-        final Optional<OngoingRtpSession> ongoingCall;
-        if (conversation.getMode() == Conversational.MODE_MULTI) {
-            ongoingCall = Optional.absent();
-        } else {
-            ongoingCall =
-                    activity.xmppConnectionService
-                            .getJingleConnectionManager()
-                            .getOngoingRtpConnection(conversation.getContact());
-        }
-
-        if (ongoingCall.isPresent()) {
-            viewHolder.binding.imageNotificationStatus.setVisibility(View.VISIBLE);
-            final int ic_ongoing_call =
-                    activity.getThemeResource(
-                            R.attr.ic_ongoing_call_hint, R.drawable.ic_phone_in_talk_black_18dp);
-            viewHolder.binding.imageNotificationStatus.setImageResource(ic_ongoing_call);
-        } else {
-            final long muted_till =
-                    conversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0);
-            if (muted_till == Long.MAX_VALUE || muted_till >= System.currentTimeMillis()) {
-                viewHolder.binding.imageNotificationStatus.setVisibility(View.VISIBLE);
-                int ic_notifications_off =
-                        activity.getThemeResource(
-                                R.attr.icon_notifications_off,
-                                R.drawable.ic_notifications_off_black_24dp);
-                viewHolder.binding.imageNotificationStatus.setImageResource(ic_notifications_off);
-            } else if (conversation.alwaysNotify()) {
-                viewHolder.binding.imageNotificationStatus.setVisibility(View.GONE);
+            val ongoingCall: Optional<OngoingRtpSession> = if (conversation.mode == Conversational.MODE_MULTI) {
+                Optional.absent()
             } else {
-                viewHolder.binding.imageNotificationStatus.setVisibility(View.VISIBLE);
-                int ic_notifications_none =
-                        activity.getThemeResource(
-                                R.attr.icon_notifications_none,
-                                R.drawable.ic_notifications_none_black_24dp);
-                viewHolder.binding.imageNotificationStatus.setImageResource(ic_notifications_none);
+                activity.xmppConnectionService
+                    .jingleConnectionManager
+                    .getOngoingRtpConnection(conversation.contact)
             }
-        }
-
-        long timestamp;
-        if (draft != null) {
-            timestamp = draft.getTimestamp();
-        } else {
-            timestamp = conversation.getLatestMessage().getTimeSent();
-        }
-
-        viewHolder.binding.textMessageTime.setText(
-                UIHelper.readableTimeDifference(activity, timestamp));
-        AvatarWorkerTask.loadAvatar(
-                conversation,
-                viewHolder.binding.imageAvatar,
-                R.dimen.avatar_on_conversation_overview);
-        viewHolder.itemView.setOnClickListener(v -> listener.onConversationClick(v, conversation));
-    }
-
-    @Override
-    public int getItemCount() {
-        return conversations.size();
-    }
-
-    public void setConversationClickListener(OnConversationClickListener listener) {
-        this.listener = listener;
-    }
-
-    public void insert(Conversation c, int position) {
-        conversations.add(position, c);
-        notifyDataSetChanged();
-    }
-
-    public void remove(Conversation conversation, int position) {
-        conversations.remove(conversation);
-        notifyItemRemoved(position);
-    }
-
-    public interface OnConversationClickListener {
-        void onConversationClick(View view, Conversation conversation);
-    }
-
-    static class ConversationViewHolder extends RecyclerView.ViewHolder {
-        private final ChatListItemBinding binding;
-
-        private ConversationViewHolder(ChatListItemBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
+            if (ongoingCall.isPresent) {
+                imageNotificationStatus.visibility = View.VISIBLE
+                imageNotificationStatus.setImageResource(R.drawable.ic_phone_in_talk_black_18dp)
+            } else {
+                val mutedTill = conversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0)
+                if (mutedTill == Long.MAX_VALUE || mutedTill >= System.currentTimeMillis()) {
+                    imageNotificationStatus.visibility = View.VISIBLE
+                    imageNotificationStatus.setImageResource(R.drawable.ic_notifications_off_black_24dp)
+                } else if (conversation.alwaysNotify()) {
+                    imageNotificationStatus.visibility = View.GONE
+                } else {
+                    imageNotificationStatus.visibility = View.VISIBLE
+                    binding.imageNotificationStatus.setImageResource(R.drawable.ic_notifications_none_black_24dp)
+                }
+            }
+            val timestamp: Long = draft?.timestamp ?: conversation.latestMessage.timeSent
+            textMessageTime.text = UIHelper.readableTimeDifference(activity, timestamp)
+            AvatarWorkerTask.loadAvatar(conversation, binding.imageAvatar, R.dimen.avatar_on_conversation_overview)
         }
     }
 }

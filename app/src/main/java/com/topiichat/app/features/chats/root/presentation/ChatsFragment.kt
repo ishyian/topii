@@ -168,13 +168,15 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
 
         swipeEscapeVelocity = resources.getDimension(com.yourbestigor.chat.R.dimen.swipe_escape_velocity)
 
-        chatsListAdapter.setConversationClickListener { _: View?, conversation: Conversation? ->
-            if (activity is OnConversationSelected) {
-                (activity as OnConversationSelected).onConversationSelected(conversation)
-            } else {
-                Timber.w("Activity does not implement OnConversationSelected")
+        chatsListAdapter.setConversationClickListener(object : ChatsAdapter.OnConversationClickListener {
+            override fun onConversationClick(view: View?, conversation: Conversation?) {
+                if (activity is OnConversationSelected) {
+                    (activity as OnConversationSelected).onConversationSelected(conversation)
+                } else {
+                    Timber.w("Activity does not implement OnConversationSelected")
+                }
             }
-        }
+        })
 
         touchHelper = ItemTouchHelper(callback)
         touchHelper?.attachToRecyclerView(rvChatsList)
