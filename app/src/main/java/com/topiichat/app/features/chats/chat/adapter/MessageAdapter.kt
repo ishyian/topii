@@ -527,8 +527,10 @@ class MessageAdapter @JvmOverloads constructor(
         viewHolder.download_button!!.visibility = View.GONE
         val audioPlayer = viewHolder.audioPlayer
         audioPlayer!!.visibility = View.VISIBLE
-        AudioPlayer.ViewHolder.get(audioPlayer).setDarkBackground(darkBackground)
-        this.audioPlayer.init(audioPlayer, message)
+        AudioPlayer.ViewHolder[audioPlayer].darkBackground = darkBackground
+        message?.let {
+            this.audioPlayer.init(audioPlayer, it)
+        }
     }
 
     private fun displayMediaPreviewMessage(viewHolder: ViewHolder, message: Message?, darkBackground: Boolean) {

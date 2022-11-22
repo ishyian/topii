@@ -1,455 +1,457 @@
-package com.topiichat.app.features.chats.chat.adapter;
+package com.topiichat.app.features.chats.chat.adapter
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.media.AudioManager;
-import android.os.Build;
-import android.os.Handler;
-import android.os.PowerManager;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.media.MediaPlayer.OnCompletionListener
+import android.os.Handler
+import android.os.Looper
+import android.os.PowerManager
+import android.os.PowerManager.WakeLock
+import android.view.View
+import android.widget.ImageButton
+import android.widget.RelativeLayout
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.TextView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.topiichat.app.features.chats.activity.ChatsActivity
+import com.yourbestigor.chat.R
+import eu.siacs.conversations.entities.Message
+import eu.siacs.conversations.ui.util.PendingItem
+import eu.siacs.conversations.utils.WeakReferenceSet
+import timber.log.Timber
+import java.lang.ref.WeakReference
+import java.util.Locale
+import java.util.concurrent.Executors
+import kotlin.math.min
+import kotlin.math.roundToInt
 
-import com.topiichat.app.features.chats.activity.ChatsActivity;
-import com.yourbestigor.chat.R;
-
-import java.lang.ref.WeakReference;
-import java.util.Locale;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import eu.siacs.conversations.Config;
-import eu.siacs.conversations.entities.Message;
-import eu.siacs.conversations.services.MediaPlayer;
-import eu.siacs.conversations.ui.util.PendingItem;
-import eu.siacs.conversations.utils.WeakReferenceSet;
-
-public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener, Runnable, SensorEventListener {
-
-    private static final int REFRESH_INTERVAL = 250;
-    private static final Object LOCK = new Object();
-    private static MediaPlayer player = null;
-    private static Message currentlyPlayingMessage = null;
-    private static PowerManager.WakeLock wakeLock;
-    private final MessageAdapter messageAdapter;
-    private final WeakReferenceSet<RelativeLayout> audioPlayerLayouts = new WeakReferenceSet<>();
-    private final SensorManager sensorManager;
-    private final Sensor proximitySensor;
-    private final PendingItem<WeakReference<ImageButton>> pendingOnClickView = new PendingItem<>();
-
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
-
-    private final Handler handler = new Handler();
-
-    public AudioPlayer(MessageAdapter adapter) {
-        final Context context = adapter.getContext();
-        this.messageAdapter = adapter;
-        this.sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        this.proximitySensor = this.sensorManager == null ? null : this.sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        initializeProximityWakeLock(context);
-        synchronized (AudioPlayer.LOCK) {
-            if (AudioPlayer.player != null) {
-                AudioPlayer.player.setOnCompletionListener(this);
-                if (AudioPlayer.player.isPlaying() && sensorManager != null) {
-                    sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
-                }
+class AudioPlayer(adapter: MessageAdapter) : View.OnClickListener, OnCompletionListener, OnSeekBarChangeListener,
+    Runnable, SensorEventListener {
+    private val messageAdapter: MessageAdapter
+    private val audioPlayerLayouts = WeakReferenceSet<RelativeLayout>()
+    private val sensorManager: SensorManager?
+    private val proximitySensor: Sensor?
+    private val pendingOnClickView = PendingItem<WeakReference<ImageButton>>()
+    private val executor = Executors.newSingleThreadExecutor()
+    private val handler = Handler(Looper.getMainLooper())
+    private fun initializeProximityWakeLock(context: Context) {
+        synchronized(LOCK) {
+            if (wakeLock == null) {
+                val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager?
+                wakeLock = powerManager?.newWakeLock(
+                    PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
+                    AudioPlayer::class.java.simpleName
+                )
+                wakeLock?.setReferenceCounted(false)
             }
         }
     }
 
-    private static String formatTime(int ms) {
-        return String.format(Locale.ENGLISH, "%d:%02d", ms / 60000, Math.min(Math.round((ms % 60000) / 1000f), 59));
-    }
-
-    private void initializeProximityWakeLock(Context context) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            synchronized (AudioPlayer.LOCK) {
-                if (AudioPlayer.wakeLock == null) {
-                    final PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                    AudioPlayer.wakeLock = powerManager == null ? null : powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, AudioPlayer.class.getSimpleName());
-                    AudioPlayer.wakeLock.setReferenceCounted(false);
-                }
-            }
-        } else {
-            AudioPlayer.wakeLock = null;
-        }
-    }
-
-    public void init(RelativeLayout audioPlayer, Message message) {
-        synchronized (AudioPlayer.LOCK) {
-            audioPlayer.setTag(message);
-            if (init(ViewHolder.get(audioPlayer), message)) {
-                this.audioPlayerLayouts.addWeakReferenceTo(audioPlayer);
-                executor.execute(() -> this.stopRefresher(true));
+    fun init(audioPlayer: RelativeLayout, message: Message) {
+        synchronized(LOCK) {
+            audioPlayer.tag = message
+            if (init(ViewHolder[audioPlayer], message)) {
+                audioPlayerLayouts.addWeakReferenceTo(audioPlayer)
+                executor.execute { stopRefresher(true) }
             } else {
-                this.audioPlayerLayouts.removeWeakReferenceTo(audioPlayer);
+                audioPlayerLayouts.removeWeakReferenceTo(audioPlayer)
             }
         }
     }
 
-    private boolean init(ViewHolder viewHolder, Message message) {
+    @Suppress("DEPRECATION")
+    private fun init(viewHolder: ViewHolder, message: Message): Boolean {
         if (viewHolder.darkBackground) {
-            viewHolder.runtime.setTextAppearance(this.messageAdapter.getContext(), R.style.TextAppearance_Conversations_Caption_OnDark);
+            viewHolder.runtime?.setTextAppearance(
+                messageAdapter.context,
+                R.style.TextAppearance_Conversations_Caption_OnDark
+            )
         } else {
-            viewHolder.runtime.setTextAppearance(this.messageAdapter.getContext(), R.style.TextAppearance_Conversations_Caption);
+            viewHolder.runtime?.setTextAppearance(messageAdapter.context, R.style.TextAppearance_Conversations_Caption)
         }
-        viewHolder.progress.setOnSeekBarChangeListener(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ColorStateList color = ContextCompat.getColorStateList(messageAdapter.getContext(), viewHolder.darkBackground ? R.color.white70 : R.color.green700_desaturated);
-            viewHolder.progress.setThumbTintList(color);
-            viewHolder.progress.setProgressTintList(color);
-        }
-        viewHolder.playPause.setAlpha(viewHolder.darkBackground ? 0.7f : 0.57f);
-        viewHolder.playPause.setOnClickListener(this);
-        final Context context = viewHolder.playPause.getContext();
-        if (message == currentlyPlayingMessage) {
-            if (AudioPlayer.player != null && AudioPlayer.player.isPlaying()) {
-                viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_pause_white_36dp : R.drawable.ic_pause_black_36dp);
-                viewHolder.playPause.setContentDescription(context.getString(R.string.pause_audio));
-                viewHolder.progress.setEnabled(true);
+        viewHolder.progress!!.setOnSeekBarChangeListener(this)
+        val color = ContextCompat.getColorStateList(
+            messageAdapter.context,
+            if (viewHolder.darkBackground) R.color.white70 else R.color.green700_desaturated
+        )
+        viewHolder.progress?.thumbTintList = color
+        viewHolder.progress?.progressTintList = color
+        viewHolder.playPause?.alpha = if (viewHolder.darkBackground) 0.7f else 0.57f
+        viewHolder.playPause?.setOnClickListener(this)
+        val context = viewHolder.playPause?.context
+        return if (message === currentlyPlayingMessage) {
+            if (player != null && player?.isPlaying == true) {
+                viewHolder.playPause!!.setImageResource(if (viewHolder.darkBackground) R.drawable.ic_pause_white_36dp else R.drawable.ic_pause_black_36dp)
+                viewHolder.playPause!!.contentDescription = context?.getString(R.string.pause_audio)
+                viewHolder.progress!!.isEnabled = true
             } else {
-                viewHolder.playPause.setContentDescription(context.getString(R.string.play_audio));
-                viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_play_arrow_white_36dp : R.drawable.ic_play_arrow_black_36dp);
-                viewHolder.progress.setEnabled(false);
+                viewHolder.playPause!!.contentDescription = context?.getString(R.string.play_audio)
+                viewHolder.playPause!!.setImageResource(if (viewHolder.darkBackground) R.drawable.ic_play_arrow_white_36dp else R.drawable.ic_play_arrow_black_36dp)
+                viewHolder.progress!!.isEnabled = false
             }
-            return true;
+            true
         } else {
-            viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_play_arrow_white_36dp : R.drawable.ic_play_arrow_black_36dp);
-            viewHolder.playPause.setContentDescription(context.getString(R.string.play_audio));
-            viewHolder.runtime.setText(formatTime(message.getFileParams().runtime));
-            viewHolder.progress.setProgress(0);
-            viewHolder.progress.setEnabled(false);
-            return false;
+            viewHolder.playPause!!.setImageResource(if (viewHolder.darkBackground) R.drawable.ic_play_arrow_white_36dp else R.drawable.ic_play_arrow_black_36dp)
+            viewHolder.playPause!!.contentDescription = context?.getString(R.string.play_audio)
+            viewHolder.runtime!!.text =
+                formatTime(message.fileParams.runtime)
+            viewHolder.progress!!.progress = 0
+            viewHolder.progress!!.isEnabled = false
+            false
         }
     }
 
-    @Override
-    public synchronized void onClick(View v) {
-        if (v.getId() == R.id.play_pause) {
-            synchronized (LOCK) {
-                startStop((ImageButton) v);
-            }
+    @Synchronized override fun onClick(v: View) {
+        if (v.id == R.id.play_pause) {
+            synchronized(LOCK) { startStop(v as ImageButton) }
         }
     }
 
-    private void startStop(ImageButton playPause) {
-        if (ContextCompat.checkSelfPermission(messageAdapter.getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            pendingOnClickView.push(new WeakReference<>(playPause));
-            ActivityCompat.requestPermissions(messageAdapter.getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ChatsActivity.REQUEST_PLAY_PAUSE);
-            return;
+    private fun startStop(playPause: ImageButton) {
+        if (ContextCompat.checkSelfPermission(
+                messageAdapter.getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            pendingOnClickView.push(WeakReference(playPause))
+            ActivityCompat.requestPermissions(
+                messageAdapter.getActivity(),
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                ChatsActivity.REQUEST_PLAY_PAUSE
+            )
+            return
         }
-        initializeProximityWakeLock(playPause.getContext());
-        final RelativeLayout audioPlayer = (RelativeLayout) playPause.getParent();
-        final ViewHolder viewHolder = ViewHolder.get(audioPlayer);
-        final Message message = (Message) audioPlayer.getTag();
+        initializeProximityWakeLock(playPause.context)
+        val audioPlayer = playPause.parent as RelativeLayout
+        val viewHolder = ViewHolder[audioPlayer]
+        val message = audioPlayer.tag as Message
         if (startStop(viewHolder, message)) {
-            this.audioPlayerLayouts.clear();
-            this.audioPlayerLayouts.addWeakReferenceTo(audioPlayer);
-            stopRefresher(true);
+            audioPlayerLayouts.clear()
+            audioPlayerLayouts.addWeakReferenceTo(audioPlayer)
+            stopRefresher(true)
         }
     }
 
-    private boolean playPauseCurrent(final ViewHolder viewHolder) {
-        final Context context = viewHolder.playPause.getContext();
-        viewHolder.playPause.setAlpha(viewHolder.darkBackground ? 0.7f : 0.57f);
-        if (player.isPlaying()) {
-            viewHolder.progress.setEnabled(false);
-            player.pause();
-            messageAdapter.flagScreenOff();
-            releaseProximityWakeLock();
-            viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_play_arrow_white_36dp : R.drawable.ic_play_arrow_black_36dp);
-            viewHolder.playPause.setContentDescription(context.getString(R.string.play_audio));
+    private fun playPauseCurrent(viewHolder: ViewHolder): Boolean {
+        val context = viewHolder.playPause!!.context
+        viewHolder.playPause!!.alpha = if (viewHolder.darkBackground) 0.7f else 0.57f
+        if (player!!.isPlaying) {
+            viewHolder.progress!!.isEnabled = false
+            player!!.pause()
+            messageAdapter.flagScreenOff()
+            releaseProximityWakeLock()
+            viewHolder.playPause!!.setImageResource(if (viewHolder.darkBackground) R.drawable.ic_play_arrow_white_36dp else R.drawable.ic_play_arrow_black_36dp)
+            viewHolder.playPause!!.contentDescription = context.getString(R.string.play_audio)
         } else {
-            viewHolder.progress.setEnabled(true);
-            player.start();
-            messageAdapter.flagScreenOn();
-            acquireProximityWakeLock();
-            this.stopRefresher(true);
-            viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_pause_white_36dp : R.drawable.ic_pause_black_36dp);
-            viewHolder.playPause.setContentDescription(context.getString(R.string.pause_audio));
+            viewHolder.progress!!.isEnabled = true
+            player!!.start()
+            messageAdapter.flagScreenOn()
+            acquireProximityWakeLock()
+            stopRefresher(true)
+            viewHolder.playPause!!.setImageResource(if (viewHolder.darkBackground) R.drawable.ic_pause_white_36dp else R.drawable.ic_pause_black_36dp)
+            viewHolder.playPause!!.contentDescription = context.getString(R.string.pause_audio)
         }
-        return false;
+        return false
     }
 
-    private void play(ViewHolder viewHolder, Message message, boolean earpiece, double progress) {
+    private fun play(viewHolder: ViewHolder, message: Message?, earpiece: Boolean, progress: Double) {
         if (play(viewHolder, message, earpiece)) {
-            AudioPlayer.player.seekTo((int) (AudioPlayer.player.getDuration() * progress));
+            player!!.seekTo((player!!.duration * progress).toInt())
         }
     }
 
-    private boolean play(ViewHolder viewHolder, Message message, boolean earpiece) {
-        AudioPlayer.player = new MediaPlayer();
-        try {
-            AudioPlayer.currentlyPlayingMessage = message;
-            AudioPlayer.player.setAudioStreamType(earpiece ? AudioManager.STREAM_VOICE_CALL : AudioManager.STREAM_MUSIC);
-            AudioPlayer.player.setDataSource(messageAdapter.getFileBackend().getFile(message).getAbsolutePath());
-            AudioPlayer.player.setOnCompletionListener(this);
-            AudioPlayer.player.prepare();
-            AudioPlayer.player.start();
-            messageAdapter.flagScreenOn();
-            acquireProximityWakeLock();
-            viewHolder.progress.setEnabled(true);
-            viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_pause_white_36dp : R.drawable.ic_pause_black_36dp);
-            viewHolder.playPause.setContentDescription(viewHolder.playPause.getContext().getString(R.string.pause_audio));
-            sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
-            return true;
-        } catch (Exception e) {
-            messageAdapter.flagScreenOff();
-            releaseProximityWakeLock();
-            AudioPlayer.currentlyPlayingMessage = null;
-            sensorManager.unregisterListener(this);
-            return false;
+    private fun play(viewHolder: ViewHolder, message: Message?, earpiece: Boolean): Boolean {
+        player = eu.siacs.conversations.services.MediaPlayer()
+        return try {
+            currentlyPlayingMessage = message
+            player?.audioStreamType = if (earpiece) AudioManager.STREAM_VOICE_CALL else AudioManager.STREAM_MUSIC
+            player?.setDataSource(messageAdapter.fileBackend.getFile(message).absolutePath)
+            player!!.setOnCompletionListener(this)
+            player!!.prepare()
+            player!!.start()
+            messageAdapter.flagScreenOn()
+            acquireProximityWakeLock()
+            viewHolder.progress!!.isEnabled = true
+            viewHolder.playPause!!.setImageResource(if (viewHolder.darkBackground) R.drawable.ic_pause_white_36dp else R.drawable.ic_pause_black_36dp)
+            viewHolder.playPause!!.contentDescription = viewHolder.playPause!!.context.getString(R.string.pause_audio)
+            sensorManager!!.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
+            true
+        } catch (e: Exception) {
+            messageAdapter.flagScreenOff()
+            releaseProximityWakeLock()
+            currentlyPlayingMessage = null
+            sensorManager!!.unregisterListener(this)
+            false
         }
     }
 
-    public void startStopPending() {
-        WeakReference<ImageButton> reference = pendingOnClickView.pop();
+    fun startStopPending() {
+        val reference = pendingOnClickView.pop()
         if (reference != null) {
-            ImageButton imageButton = reference.get();
-            if (imageButton != null) {
-                startStop(imageButton);
-            }
+            val imageButton = reference.get()
+            imageButton?.let { startStop(it) }
         }
     }
 
-    private boolean startStop(ViewHolder viewHolder, Message message) {
-        if (message == currentlyPlayingMessage && player != null) {
-            return playPauseCurrent(viewHolder);
+    private fun startStop(viewHolder: ViewHolder, message: Message): Boolean {
+        if (message === currentlyPlayingMessage && player != null) {
+            return playPauseCurrent(viewHolder)
         }
-        if (AudioPlayer.player != null) {
-            stopCurrent();
+        if (player != null) {
+            stopCurrent()
         }
-        return play(viewHolder, message, false);
+        return play(viewHolder, message, false)
     }
 
-    private void stopCurrent() {
-        if (AudioPlayer.player.isPlaying()) {
-            AudioPlayer.player.stop();
+    private fun stopCurrent() {
+        if (player?.isPlaying == true) {
+            player?.stop()
         }
-        AudioPlayer.player.release();
-        messageAdapter.flagScreenOff();
-        releaseProximityWakeLock();
-        AudioPlayer.player = null;
-        resetPlayerUi();
+        player?.release()
+        messageAdapter.flagScreenOff()
+        releaseProximityWakeLock()
+        player = null
+        resetPlayerUi()
     }
 
-    private void resetPlayerUi() {
-        for (WeakReference<RelativeLayout> audioPlayer : audioPlayerLayouts) {
-            resetPlayerUi(audioPlayer.get());
+    private fun resetPlayerUi() {
+        for (audioPlayer in audioPlayerLayouts) {
+            resetPlayerUi(audioPlayer.get())
         }
     }
 
-    private void resetPlayerUi(RelativeLayout audioPlayer) {
+    private fun resetPlayerUi(audioPlayer: RelativeLayout?) {
         if (audioPlayer == null) {
-            return;
+            return
         }
-        final ViewHolder viewHolder = ViewHolder.get(audioPlayer);
-        final Message message = (Message) audioPlayer.getTag();
-        viewHolder.playPause.setContentDescription(viewHolder.playPause.getContext().getString(R.string.play_audio));
-        viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_play_arrow_white_36dp : R.drawable.ic_play_arrow_black_36dp);
+        val viewHolder = ViewHolder[audioPlayer]
+        val message = audioPlayer.tag as Message?
+        viewHolder.playPause!!.contentDescription = viewHolder.playPause!!.context.getString(R.string.play_audio)
+        viewHolder.playPause!!.setImageResource(if (viewHolder.darkBackground) R.drawable.ic_play_arrow_white_36dp else R.drawable.ic_play_arrow_black_36dp)
         if (message != null) {
-            viewHolder.runtime.setText(formatTime(message.getFileParams().runtime));
+            viewHolder.runtime?.text =
+                formatTime(message.fileParams.runtime)
         }
-        viewHolder.progress.setProgress(0);
-        viewHolder.progress.setEnabled(false);
+        viewHolder.progress?.progress = 0
+        viewHolder.progress?.isEnabled = false
     }
 
-    @Override
-    public void onCompletion(android.media.MediaPlayer mediaPlayer) {
-        synchronized (AudioPlayer.LOCK) {
-            this.stopRefresher(false);
-            if (AudioPlayer.player == mediaPlayer) {
-                AudioPlayer.currentlyPlayingMessage = null;
-                AudioPlayer.player = null;
+    override fun onCompletion(mediaPlayer: MediaPlayer) {
+        synchronized(LOCK) {
+            stopRefresher(false)
+            if (player === mediaPlayer) {
+                currentlyPlayingMessage = null
+                player = null
             }
-            mediaPlayer.release();
-            messageAdapter.flagScreenOff();
-            releaseProximityWakeLock();
-            resetPlayerUi();
-            sensorManager.unregisterListener(this);
-        }
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        synchronized (AudioPlayer.LOCK) {
-            final RelativeLayout audioPlayer = (RelativeLayout) seekBar.getParent();
-            final Message message = (Message) audioPlayer.getTag();
-            if (fromUser && message == AudioPlayer.currentlyPlayingMessage) {
-                float percent = progress / 100f;
-                int duration = AudioPlayer.player.getDuration();
-                int seekTo = Math.round(duration * percent);
-                AudioPlayer.player.seekTo(seekTo);
-            }
+            mediaPlayer.release()
+            messageAdapter.flagScreenOff()
+            releaseProximityWakeLock()
+            resetPlayerUi()
+            sensorManager?.unregisterListener(this)
         }
     }
 
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    public void stop() {
-        synchronized (AudioPlayer.LOCK) {
-            stopRefresher(false);
-            if (AudioPlayer.player != null) {
-                stopCurrent();
+    override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+        synchronized(LOCK) {
+            val audioPlayer = seekBar.parent as RelativeLayout
+            val message = audioPlayer.tag as Message
+            if (fromUser && message === currentlyPlayingMessage) {
+                val percent = progress / 100f
+                val duration = player?.duration ?: 0
+                val seekTo = (duration * percent).roundToInt()
+                player?.seekTo(seekTo)
             }
-            AudioPlayer.currentlyPlayingMessage = null;
-            sensorManager.unregisterListener(this);
-            if (wakeLock != null && wakeLock.isHeld()) {
-                wakeLock.release();
-            }
-            wakeLock = null;
         }
     }
 
-    private void stopRefresher(boolean runOnceMore) {
-        this.handler.removeCallbacks(this);
+    override fun onStartTrackingTouch(seekBar: SeekBar) {}
+    override fun onStopTrackingTouch(seekBar: SeekBar) {}
+    fun stop() {
+        synchronized(LOCK) {
+            stopRefresher(false)
+            if (player != null) {
+                stopCurrent()
+            }
+            currentlyPlayingMessage = null
+            sensorManager?.unregisterListener(this)
+            if (wakeLock != null && wakeLock?.isHeld == true) {
+                wakeLock?.release()
+            }
+            wakeLock = null
+        }
+    }
+
+    private fun stopRefresher(runOnceMore: Boolean) {
+        handler.removeCallbacks(this)
         if (runOnceMore) {
-            this.handler.post(this);
+            handler.post(this)
         }
     }
 
-    public void unregisterListener() {
-        if (sensorManager != null) {
-            sensorManager.unregisterListener(this);
-        }
+    fun unregisterListener() {
+        sensorManager?.unregisterListener(this)
     }
 
-    @Override
-    public void run() {
-        synchronized (AudioPlayer.LOCK) {
-            if (AudioPlayer.player != null) {
-                boolean renew = false;
-                final int current = player.getCurrentPosition();
-                final int duration = player.getDuration();
-                for (WeakReference<RelativeLayout> audioPlayer : audioPlayerLayouts) {
-                    renew |= refreshAudioPlayer(audioPlayer.get(), current, duration);
+    override fun run() {
+        synchronized(LOCK) {
+            if (player != null) {
+                var renew = false
+                val current = player?.currentPosition
+                val duration = player?.duration
+                for (audioPlayer in audioPlayerLayouts) {
+                    renew = renew or refreshAudioPlayer(audioPlayer.get(), current ?: 0, duration ?: 0)
                 }
-                if (renew && AudioPlayer.player.isPlaying()) {
-                    handler.postDelayed(this, REFRESH_INTERVAL);
+                if (renew && player?.isPlaying == true) {
+                    handler.postDelayed(this, REFRESH_INTERVAL.toLong())
                 }
             }
         }
     }
 
-    private boolean refreshAudioPlayer(RelativeLayout audioPlayer, int current, int duration) {
-        if (audioPlayer == null || audioPlayer.getVisibility() != View.VISIBLE) {
-            return false;
+    private fun refreshAudioPlayer(audioPlayer: RelativeLayout?, current: Int, duration: Int): Boolean {
+        if (audioPlayer == null || audioPlayer.visibility != View.VISIBLE) {
+            return false
         }
-        final ViewHolder viewHolder = ViewHolder.get(audioPlayer);
+        val viewHolder = ViewHolder[audioPlayer]
         if (duration <= 0) {
-            viewHolder.progress.setProgress(100);
+            viewHolder.progress?.progress = 100
         } else {
-            viewHolder.progress.setProgress(current * 100 / duration);
+            viewHolder.progress?.progress = current * 100 / duration
         }
-        viewHolder.runtime.setText(String.format("%s / %s", formatTime(current), formatTime(duration)));
-        return true;
+        viewHolder.runtime?.text = String.format(
+            "%s / %s",
+            formatTime(current),
+            formatTime(duration)
+        )
+        return true
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() != Sensor.TYPE_PROXIMITY) {
-            return;
+    override fun onSensorChanged(event: SensorEvent) {
+        if (event.sensor.type != Sensor.TYPE_PROXIMITY) {
+            return
         }
-        if (AudioPlayer.player == null || !AudioPlayer.player.isPlaying()) {
-            return;
+        if (player == null || !player!!.isPlaying) {
+            return
         }
-        final int streamType;
-        if (event.values[0] < 5f && event.values[0] != proximitySensor.getMaximumRange()) {
-            streamType = AudioManager.STREAM_VOICE_CALL;
+        val streamType: Int = if (event.values[0] < 5f && event.values[0] != proximitySensor!!.maximumRange) {
+            AudioManager.STREAM_VOICE_CALL
         } else {
-            streamType = AudioManager.STREAM_MUSIC;
+            AudioManager.STREAM_MUSIC
         }
-        messageAdapter.setVolumeControl(streamType);
-        double position = AudioPlayer.player.getCurrentPosition();
-        double duration = AudioPlayer.player.getDuration();
-        double progress = position / duration;
-        if (AudioPlayer.player.getAudioStreamType() != streamType) {
-            synchronized (AudioPlayer.LOCK) {
-                AudioPlayer.player.stop();
-                AudioPlayer.player.release();
-                AudioPlayer.player = null;
+        messageAdapter.setVolumeControl(streamType)
+        val position = player?.currentPosition?.toDouble() ?: 0.0
+        val duration = player?.duration?.toDouble() ?: 0.0
+        val progress = position / duration
+        if (player!!.audioStreamType != streamType) {
+            synchronized(LOCK) {
+                player?.stop()
+                player?.release()
+                player = null
                 try {
-                    ViewHolder currentViewHolder = getCurrentViewHolder();
-                    if (currentViewHolder != null) {
-                        play(currentViewHolder, currentlyPlayingMessage, streamType == AudioManager.STREAM_VOICE_CALL, progress);
+                    val currentViewHolder = currentViewHolder
+                    currentViewHolder?.let { viewHolder ->
+                        play(
+                            viewHolder = viewHolder,
+                            message = currentlyPlayingMessage,
+                            earpiece = streamType == AudioManager.STREAM_VOICE_CALL,
+                            progress = progress
+                        )
                     }
-                } catch (Exception e) {
-                    Log.w(Config.LOGTAG, e);
+                } catch (e: Exception) {
+                    Timber.w(e)
                 }
             }
         }
     }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-    }
+    override fun onAccuracyChanged(sensor: Sensor, i: Int) {}
 
-    private void acquireProximityWakeLock() {
-        synchronized (AudioPlayer.LOCK) {
+    @SuppressLint("WakelockTimeout")
+    private fun acquireProximityWakeLock() {
+        synchronized(LOCK) {
             if (wakeLock != null) {
-                wakeLock.acquire();
+                wakeLock?.acquire()
             }
         }
     }
 
-    private void releaseProximityWakeLock() {
-        synchronized (AudioPlayer.LOCK) {
-            if (wakeLock != null && wakeLock.isHeld()) {
-                wakeLock.release();
+    private fun releaseProximityWakeLock() {
+        synchronized(LOCK) {
+            if (wakeLock != null && wakeLock?.isHeld == true) {
+                wakeLock?.release()
             }
         }
-        messageAdapter.setVolumeControl(AudioManager.STREAM_MUSIC);
+        messageAdapter.setVolumeControl(AudioManager.STREAM_MUSIC)
     }
 
-    private ViewHolder getCurrentViewHolder() {
-        for (WeakReference<RelativeLayout> audioPlayer : audioPlayerLayouts) {
-            final Message message = (Message) audioPlayer.get().getTag();
-            if (message == currentlyPlayingMessage) {
-                return ViewHolder.get(audioPlayer.get());
+    private val currentViewHolder: ViewHolder?
+        get() {
+            for (audioPlayer in audioPlayerLayouts) {
+                val message = audioPlayer.get()?.tag as Message
+                if (message === currentlyPlayingMessage) {
+                    return ViewHolder[audioPlayer.get()]
+                }
+            }
+            return null
+        }
+
+    class ViewHolder {
+        var runtime: TextView? = null
+        var progress: SeekBar? = null
+        var playPause: ImageButton? = null
+        var darkBackground = false
+
+        companion object {
+            operator fun get(audioPlayer: RelativeLayout?): ViewHolder {
+                var viewHolder = audioPlayer?.getTag(R.id.TAG_AUDIO_PLAYER_VIEW_HOLDER) as ViewHolder?
+                if (viewHolder == null) {
+                    viewHolder = ViewHolder()
+                    viewHolder.runtime = audioPlayer?.findViewById(R.id.runtime)
+                    viewHolder.progress = audioPlayer?.findViewById(R.id.progress)
+                    viewHolder.playPause = audioPlayer?.findViewById(R.id.play_pause)
+                    audioPlayer?.setTag(R.id.TAG_AUDIO_PLAYER_VIEW_HOLDER, viewHolder)
+                }
+                return viewHolder
             }
         }
-        return null;
     }
 
-    public static class ViewHolder {
-        private TextView runtime;
-        private SeekBar progress;
-        private ImageButton playPause;
-        private boolean darkBackground = false;
-
-        public static ViewHolder get(RelativeLayout audioPlayer) {
-            ViewHolder viewHolder = (ViewHolder) audioPlayer.getTag(R.id.TAG_AUDIO_PLAYER_VIEW_HOLDER);
-            if (viewHolder == null) {
-                viewHolder = new ViewHolder();
-                viewHolder.runtime = audioPlayer.findViewById(R.id.runtime);
-                viewHolder.progress = audioPlayer.findViewById(R.id.progress);
-                viewHolder.playPause = audioPlayer.findViewById(R.id.play_pause);
-                audioPlayer.setTag(R.id.TAG_AUDIO_PLAYER_VIEW_HOLDER, viewHolder);
-            }
-            return viewHolder;
+    companion object {
+        private const val REFRESH_INTERVAL = 250
+        private val LOCK = Any()
+        private var player: eu.siacs.conversations.services.MediaPlayer? = null
+        private var currentlyPlayingMessage: Message? = null
+        private var wakeLock: WakeLock? = null
+        private fun formatTime(ms: Int): String {
+            return String.format(
+                Locale.ENGLISH, "%d:%02d", ms / 60000, min((ms % 60000 / 1000f).roundToInt(), 59)
+            )
         }
+    }
 
-        public void setDarkBackground(boolean darkBackground) {
-            this.darkBackground = darkBackground;
+    init {
+        val context = adapter.context
+        messageAdapter = adapter
+        sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager?
+        proximitySensor = sensorManager?.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+        initializeProximityWakeLock(context)
+        synchronized(LOCK) {
+            if (player != null) {
+                player!!.setOnCompletionListener(this)
+                if (player!!.isPlaying && sensorManager != null) {
+                    sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
+                }
+            }
         }
     }
 }
