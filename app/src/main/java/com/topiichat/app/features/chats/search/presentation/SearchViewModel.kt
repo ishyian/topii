@@ -8,7 +8,6 @@ import dagger.assisted.AssistedInject
 import eu.siacs.conversations.entities.Message
 import eu.siacs.conversations.services.XmppConnectionService
 import eu.siacs.conversations.ui.interfaces.OnSearchResultsAvailable
-import eu.siacs.conversations.utils.FtsUtils
 import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
@@ -21,8 +20,8 @@ class SearchViewModel @AssistedInject constructor(
     private val _searchResults: MutableLiveData<List<Message>> = MutableLiveData()
     val searchResults: LiveData<List<Message>> = _searchResults
 
-    override fun search(query: String, xmppConnectionService: XmppConnectionService) {
-        xmppConnectionService.search(FtsUtils.parse(query), null, this)
+    override fun search(query: List<String>, xmppConnectionService: XmppConnectionService) {
+        xmppConnectionService.search(query, null, this)
     }
 
     override fun onClick(view: View?) {

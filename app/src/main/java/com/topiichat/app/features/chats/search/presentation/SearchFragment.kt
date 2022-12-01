@@ -2,6 +2,8 @@ package com.topiichat.app.features.chats.search.presentation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +17,17 @@ import com.topiichat.app.features.chats.activity.ChatsActivity
 import com.topiichat.app.features.chats.search.presentation.adapter.SearchMessagesAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.entities.Message
+import eu.siacs.conversations.services.MessageSearchTask
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected
+import eu.siacs.conversations.ui.util.ChangeWatcher
+import eu.siacs.conversations.utils.FtsUtils
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : BaseFragment<FragmentSearchBinding>(),
     ISearchFragment,
     OnBackendConnected,
+    TextWatcher,
     SearchMessagesAdapter.OnMessageClickListener {
 
     @Inject
@@ -33,6 +39,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(),
     }
 
     private val messages = arrayListOf<Message>()
+    private val currentSearch = ChangeWatcher<List<String>>()
 
     private val searchMessagesAdapter: SearchMessagesAdapter by lazy {
         SearchMessagesAdapter(chatsActivity, messages)
@@ -55,8 +62,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(),
             addItemDecoration(itemDecoration)
             adapter = searchMessagesAdapter
         }
+        editTextSearch.addTextChangedListener(this@SearchFragment)
         initObservers()
-        viewModel.search("ih", chatsActivity.xmppConnectionService)
     }
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
@@ -69,6 +76,29 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(),
         val conversation =
             chatsActivity.xmppConnectionService.findConversationByUuid(message?.conversationUuid)
         chatsActivity.openConversation(conversation, null)
+    }
+
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        // Ignore
+    }
+
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        // Ignore
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun afterTextChanged(s: Editable?) {
+        val term = FtsUtils.parse(s.toString().trim())
+        if (!currentSearch.watch(term)) {
+            return
+        }
+        if (term.size > 0) {
+            viewModel.search(term, chatsActivity.xmppConnectionService)
+        } else {
+            MessageSearchTask.cancelRunningTasks()
+            messages.clear()
+            searchMessagesAdapter.notifyDataSetChanged()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
