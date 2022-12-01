@@ -165,7 +165,7 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
         FragmentChatsBinding.inflate(inflater, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
-        setupClickListener(imageBack, imageRemittance)
+        setupClickListener(imageBack, imageRemittance, editTextSearch)
 
         swipeEscapeVelocity = resources.getDimension(com.yourbestigor.chat.R.dimen.swipe_escape_velocity)
 
@@ -214,6 +214,7 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
     }
 
     override fun openSearchScreen() {
+        Timber.d("Open search screen")
         val fragmentManager = chatsActivity.supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.apply {

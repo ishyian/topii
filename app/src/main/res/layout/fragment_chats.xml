@@ -75,10 +75,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.appcompat.widget.AppCompatEditText
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/edit_text_search"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:gravity="center_vertical"
         android:background="@drawable/chats_search_edittext"
         android:drawableStart="@drawable/ic_search"
         android:drawablePadding="8dp"
@@ -87,7 +88,6 @@
         android:lines="1"
         android:maxLines="1"
         android:paddingHorizontal="26dp"
-        android:textAlignment="textStart"
         android:textColor="@color/pin_code_text_color"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -313,8 +313,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         displayToast(getString(resId, jid.asBareJid().toString()))
     }
 
-    private fun openConversation(conversation: Conversation, extras: Bundle?) {
-        Timber.d("Open conversations")
+    fun openConversation(conversation: Conversation, extras: Bundle?) {
         val fragmentManager = supportFragmentManager
         executePendingTransactions(fragmentManager)
         val mainNeedsRefresh = false
