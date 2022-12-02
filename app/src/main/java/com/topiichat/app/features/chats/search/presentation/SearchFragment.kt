@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.topiichat.app.R
 import com.topiichat.app.core.extension.getDrawableKtx
@@ -63,6 +64,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(),
             adapter = searchMessagesAdapter
         }
         editTextSearch.addTextChangedListener(this@SearchFragment)
+        setupClickListener(textCancel)
         initObservers()
     }
 
@@ -86,6 +88,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(),
         // Ignore
     }
 
+    override fun onClick(v: View?) {
+        viewModel.onClick(v)
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     override fun afterTextChanged(s: Editable?) {
         val term = FtsUtils.parse(s.toString().trim())
@@ -93,8 +99,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(),
             return
         }
         if (term.size > 0) {
+            binding.textMessage.isVisible = false
             viewModel.search(term, chatsActivity.xmppConnectionService)
         } else {
+            binding.textMessage.isVisible = true
             MessageSearchTask.cancelRunningTasks()
             messages.clear()
             searchMessagesAdapter.notifyDataSetChanged()
@@ -105,6 +113,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(),
     override fun onSearchResultsLoaded(messages: List<Message>) {
         this.messages.clear()
         this.messages.addAll(messages)
+        binding.textMessage.text = getString(R.string.no_results)
+        binding.textMessage.isVisible = messages.isEmpty()
         searchMessagesAdapter.notifyDataSetChanged()
     }
 

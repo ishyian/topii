@@ -177,4 +177,6 @@
     <string name="error_insufficient_funds_title">Saldo insuﬁciente</string>
     <string name="error_insufficient_funds_description">El saldo de tu cuenta es insuﬁciente</string>
     <string name="error_insufficient_funds_button_text">Regresar</string>
+    <string name="search_results_hints">Here will be the search results</string>
+    <string name="no_results">No results</string>
 </resources>

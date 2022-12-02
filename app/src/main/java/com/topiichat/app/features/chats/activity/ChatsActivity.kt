@@ -13,10 +13,12 @@ import android.provider.Settings
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentManager
 import com.topiichat.app.R
+import com.topiichat.app.core.annotations.ChatNavigatorHolderQualifier
+import com.topiichat.app.core.annotations.ChatRouterQualifier
+import com.topiichat.app.core.extension.currentChatFragment
 import com.topiichat.app.databinding.ActivityChatsBinding
 import com.topiichat.app.features.chats.base.BaseChatFragment
 import com.topiichat.app.features.chats.chat.ChatFragment
@@ -44,22 +46,42 @@ import eu.siacs.conversations.utils.ExceptionHelper
 import eu.siacs.conversations.xmpp.Jid
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist
 import org.openintents.openpgp.util.OpenPgpApi
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated,
     OnConversationRead, OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, OnShowErrorToast,
     OnAffiliationChanged {
+    private var needToBackendConnected = false
     private val pendingViewIntent = PendingItem<Intent?>()
     private val postponedActivityResult = PendingItem<ActivityResult>()
     private lateinit var binding: ActivityChatsBinding
     private var activityPaused = true
     private val redirectInProcess = AtomicBoolean(false)
 
+    private val navigator = SupportAppNavigator(this, supportFragmentManager, R.id.chats_container)
+
+    @Inject
+    @ChatNavigatorHolderQualifier
+    lateinit var navigatorHolder: NavigatorHolder
+
+    @Inject
+    @ChatRouterQualifier
+    lateinit var router: Router
+
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        navigatorHolder.setNavigator(navigator)
+    }
+
     override fun refreshUiReal() {
         invalidateOptionsMenu()
-        refreshFragment(R.id.chats_container)
+        refreshFragment()
     }
 
     override fun onBackendConnected() {
@@ -67,7 +89,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
             return
         }
         xmppConnectionService.notificationService.setIsInForeground(true)
-        notifyFragmentOfBackendConnected(R.id.chats_container)
+        notifyFragmentOfBackendConnected()
         val activityResult = postponedActivityResult.pop()
         activityResult?.let { handleActivityResult(it) }
         showDialogsIfMainIsOverview()
@@ -169,15 +191,15 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         }
     }
 
-    private fun notifyFragmentOfBackendConnected(@IdRes id: Int) {
-        val fragment = supportFragmentManager.findFragmentById(id)
+    private fun notifyFragmentOfBackendConnected() {
+        val fragment = supportFragmentManager.currentChatFragment
         if (fragment is OnBackendConnected) {
             (fragment as OnBackendConnected).onBackendConnected()
         }
     }
 
-    private fun refreshFragment(@IdRes id: Int) {
-        val fragment = supportFragmentManager.findFragmentById(id)
+    private fun refreshFragment() {
+        val fragment = supportFragmentManager.currentChatFragment
         if (fragment is BaseChatFragment<*>) {
             fragment.refresh()
         }
@@ -336,7 +358,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         }
         conversationFragment.reInit(conversation, extras ?: Bundle())
         if (mainNeedsRefresh) {
-            refreshFragment(R.id.chats_container)
+            refreshFragment()
         }
     }
 
@@ -398,6 +420,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     override fun onPause() {
         activityPaused = true
         super.onPause()
+        navigatorHolder.removeNavigator()
     }
 
     public override fun onResume() {
@@ -432,10 +455,9 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     override fun onConversationsListItemUpdated() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.chats_container)
-        //TODO
-        if (fragment is ChatsFragment) {
-            fragment.refresh()
+        val currentFragment = supportFragmentManager.currentChatFragment
+        if (currentFragment is ChatsFragment) {
+            currentFragment.refresh()
         }
     }
 

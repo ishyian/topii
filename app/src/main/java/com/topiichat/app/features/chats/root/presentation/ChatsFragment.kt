@@ -22,7 +22,6 @@ import com.topiichat.app.features.chats.chat.ChatFragment
 import com.topiichat.app.features.chats.chat.ChatFragment.Companion.STATE_SCROLL_POSITION
 import com.topiichat.app.features.chats.root.presentation.adapter.ChatsAdapter
 import com.topiichat.app.features.chats.root.presentation.adapter.ChatsListAdapter
-import com.topiichat.app.features.chats.search.presentation.SearchFragment
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.entities.Account
 import eu.siacs.conversations.entities.Contact
@@ -206,22 +205,7 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
 
     override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.image_back -> requireActivity().onBackPressed()
-            R.id.edit_text_search -> openSearchScreen()
-        }
         viewModel.onClick(v)
-    }
-
-    override fun openSearchScreen() {
-        Timber.d("Open search screen")
-        val fragmentManager = chatsActivity.supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.apply {
-            replace(R.id.chats_container, SearchFragment())
-            addToBackStack(null)
-            commit()
-        }
     }
 
     override fun onStartChat(ignore: Boolean) {
@@ -268,6 +252,7 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
     }
 
     override fun onBackendConnected() {
+        Timber.d("OnBackendConnected")
         if (activity != null) {
             activatedAccounts.clear()
             activatedAccounts.addAll(

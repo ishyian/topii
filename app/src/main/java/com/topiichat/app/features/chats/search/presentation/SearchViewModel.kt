@@ -3,6 +3,8 @@ package com.topiichat.app.features.chats.search.presentation
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.topiichat.app.R
+import com.topiichat.app.core.annotations.ChatRouterQualifier
 import com.topiichat.app.core.presentation.platform.BaseViewModel
 import dagger.assisted.AssistedInject
 import eu.siacs.conversations.entities.Message
@@ -12,7 +14,7 @@ import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 class SearchViewModel @AssistedInject constructor(
-    appRouter: Router
+    @ChatRouterQualifier appRouter: Router
 ) : BaseViewModel(appRouter),
     ISearchViewModel,
     OnSearchResultsAvailable {
@@ -25,7 +27,9 @@ class SearchViewModel @AssistedInject constructor(
     }
 
     override fun onClick(view: View?) {
-
+        when (view?.id) {
+            R.id.text_cancel -> onClickBack()
+        }
     }
 
     override fun onSearchResultsAvailable(

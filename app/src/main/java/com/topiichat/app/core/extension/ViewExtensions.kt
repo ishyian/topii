@@ -137,6 +137,9 @@ fun AutoCompleteTextView.showDropDownWhenClick() {
 inline val FragmentManager.currentFragment: Fragment?
     get() = this.findFragmentById(R.id.container)
 
+inline val FragmentManager.currentChatFragment: Fragment?
+    get() = this.findFragmentById(R.id.chats_container)
+
 fun EditText.setupInputMask(mask: String, includePlaceholder: Boolean = false) {
     val listener = MaskedTextChangedListener(mask, this)
     if (includePlaceholder) hint = listener.placeholder()

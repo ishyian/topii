@@ -6,5 +6,4 @@ interface IChatsFragment : IBaseFragment {
     fun onContentLoaded(content: List<Any>)
     fun refresh()
     fun onStartChat(ignore: Boolean)
-    fun openSearchScreen()
 }

@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
+import com.topiichat.app.core.annotations.ChatRouterQualifier
 import com.topiichat.app.core.presentation.platform.BaseViewModel
+import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.chats.root.presentation.model.ChatAction
 import com.topiichat.app.features.chats.root.presentation.model.ChatActionUiModel
 import com.topiichat.app.features.kyc.KYCScreens
@@ -17,7 +19,7 @@ import ru.terrakok.cicerone.Router
 
 class ChatsViewModel @AssistedInject constructor(
     private val getAuthData: GetAuthDataUseCase,
-    appRouter: Router
+    @ChatRouterQualifier appRouter: Router
 ) : BaseViewModel(appRouter), IChatsViewModel {
 
     private val _content: MutableLiveData<List<Any>> = MutableLiveData()
@@ -45,7 +47,17 @@ class ChatsViewModel @AssistedInject constructor(
             R.id.image_remittance -> {
                 onKYCClick()
             }
+            R.id.image_back -> {
+                onClickBack()
+            }
+            R.id.edit_text_search -> {
+                onSearchClick()
+            }
         }
+    }
+
+    override fun onSearchClick() {
+        navigate(ChatsScreens.Search)
     }
 
     override fun onChatActionClick(action: ChatAction) {
