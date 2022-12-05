@@ -52,6 +52,7 @@ import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.common.base.Optional
 import com.google.common.collect.ImmutableList
+import com.topiichat.app.core.extension.viewModelCreator
 import com.topiichat.app.databinding.DialogAddAttachmentBinding
 import com.topiichat.app.databinding.FragmentChatBinding
 import com.topiichat.app.features.chats.activity.ChatsActivity
@@ -59,6 +60,7 @@ import com.topiichat.app.features.chats.base.BaseChatFragment
 import com.topiichat.app.features.chats.chat.adapter.MediaPreviewAdapter
 import com.topiichat.app.features.chats.chat.adapter.MessageAdapter
 import com.yourbestigor.chat.R
+import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.Config
 import eu.siacs.conversations.crypto.axolotl.AxolotlService
 import eu.siacs.conversations.crypto.axolotl.FingerprintStatus
@@ -124,11 +126,22 @@ import eu.siacs.conversations.xmpp.jingle.RtpCapability
 import timber.log.Timber
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 import kotlin.math.max
 
-class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.KeyboardListener,
+@AndroidEntryPoint
+class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
+    IChatFragment,
+    EditMessage.KeyboardListener,
     MessageAdapter.OnContactPictureLongClicked,
     MessageAdapter.OnContactPictureClicked {
+
+    @Inject
+    lateinit var factory: ChatViewModel.AssistedFactory
+    private val viewModel by viewModelCreator {
+        factory.create()
+    }
+
     private val messageList: MutableList<Message> = ArrayList()
     private val postponedActivityResult = PendingItem<ActivityResult>()
     private val pendingConversationsUuid = PendingItem<String>()
@@ -835,8 +848,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
                 menuContactDetails.isVisible = !conversation!!.withSelf()
                 menuMucDetails.isVisible = false
                 menuInviteContact.isVisible = (
-                    service != null
-                        && service.findConferenceServer(conversation!!.account) != null)
+                    service?.findConferenceServer(conversation!!.account) != null)
             }
             if (conversation!!.isMuted) {
                 menuMute.isVisible = false
@@ -889,6 +901,35 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(), EditMessage.Keyboa
         imageVideoCall.setOnClickListener { checkPermissionAndTriggerVideoCall() }
         imageCall.setOnClickListener { checkPermissionAndTriggerAudioCall() }
         //binding.scrollToBottomButton.setOnClickListener(this.mScrollButtonListener);
+        setupClickListener(imageMore)
+        initObservers()
+    }
+
+    override fun onClick(v: View?) {
+        viewModel.onClick(v)
+    }
+
+    override fun onMoreDialogShow(ignore: Unit) = with(binding) {
+        val popupMenu = PopupMenu(requireContext(), imageMore)
+        popupMenu.inflate(com.topiichat.app.R.menu.chat_menu)
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                com.topiichat.app.R.id.menu_search -> {
+                    viewModel.onSearchClick(conversation?.uuid)
+                    true
+                }
+                else -> {
+                    false
+                }
+            }
+        }
+        popupMenu.show()
+    }
+
+    override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
+
+    private fun initObservers() = with(viewModel) {
+        observe(onMoreDialogShow, ::onMoreDialogShow)
     }
 
     private fun checkForCallsAvailability() = with(binding) {
