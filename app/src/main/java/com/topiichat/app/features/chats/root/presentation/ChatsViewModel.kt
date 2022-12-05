@@ -10,6 +10,7 @@ import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.chats.root.presentation.model.ChatAction
 import com.topiichat.app.features.chats.root.presentation.model.ChatActionUiModel
+import com.topiichat.app.features.chats.search.presentation.SearchParameters
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataParameters
 import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCase
@@ -57,7 +58,7 @@ class ChatsViewModel @AssistedInject constructor(
     }
 
     override fun onSearchClick() {
-        navigate(ChatsScreens.Search)
+        navigate(ChatsScreens.Search(SearchParameters()))
     }
 
     override fun onChatActionClick(action: ChatAction) {

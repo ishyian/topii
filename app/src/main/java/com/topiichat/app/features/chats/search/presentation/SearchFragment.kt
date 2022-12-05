@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.topiichat.app.R
+import com.topiichat.app.core.delegates.parcelableParameters
 import com.topiichat.app.core.extension.getDrawableKtx
 import com.topiichat.app.core.extension.viewModelCreator
 import com.topiichat.app.core.presentation.platform.BaseFragment
@@ -33,7 +34,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(),
 
     @Inject
     lateinit var factory: SearchViewModel.AssistedFactory
-    private val viewModel by viewModelCreator { factory.create() }
+    private val viewModel by viewModelCreator {
+        factory.create(parameters)
+    }
+    private val parameters: SearchParameters by parcelableParameters()
 
     private val chatsActivity by lazy {
         requireActivity() as ChatsActivity
@@ -100,7 +104,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(),
         }
         if (term.size > 0) {
             binding.textMessage.isVisible = false
-            viewModel.search(term, chatsActivity.xmppConnectionService)
+            viewModel.search(term, parameters.uuid, chatsActivity.xmppConnectionService)
         } else {
             binding.textMessage.isVisible = true
             MessageSearchTask.cancelRunningTasks()
