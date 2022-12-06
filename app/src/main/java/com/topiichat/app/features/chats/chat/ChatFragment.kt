@@ -81,7 +81,6 @@ import eu.siacs.conversations.services.QuickConversationsService
 import eu.siacs.conversations.services.XmppConnectionService.OnMoreMessagesLoaded
 import eu.siacs.conversations.ui.BlockContactDialog
 import eu.siacs.conversations.ui.RtpSessionActivity
-import eu.siacs.conversations.ui.SearchActivity
 import eu.siacs.conversations.ui.TrustKeysActivity
 import eu.siacs.conversations.ui.UiCallback
 import eu.siacs.conversations.ui.UiInformableCallback
@@ -93,7 +92,6 @@ import eu.siacs.conversations.ui.util.ConversationMenuConfigurator
 import eu.siacs.conversations.ui.util.DateSeparator
 import eu.siacs.conversations.ui.util.EditMessageActionModeCallback
 import eu.siacs.conversations.ui.util.ListViewUtils
-import eu.siacs.conversations.ui.util.MenuDoubleTabUtil
 import eu.siacs.conversations.ui.util.MucDetailsContextMenuHelper
 import eu.siacs.conversations.ui.util.PendingItem
 import eu.siacs.conversations.ui.util.PresenceSelector
@@ -113,7 +111,6 @@ import eu.siacs.conversations.utils.NickValidityChecker
 import eu.siacs.conversations.utils.PermissionUtils
 import eu.siacs.conversations.utils.QuickLoader
 import eu.siacs.conversations.utils.StylingHelper.MessageEditorStyler
-import eu.siacs.conversations.utils.TimeFrameUtils
 import eu.siacs.conversations.utils.UIHelper
 import eu.siacs.conversations.xml.Namespace
 import eu.siacs.conversations.xmpp.Jid
@@ -1169,58 +1166,6 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
         return super.onContextItemSelected(item)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
-            return false
-        } else if (conversation == null) {
-            return super.onOptionsItemSelected(item)
-        }
-        val itemId = item.itemId
-        if (itemId == R.id.encryption_choice_axolotl || itemId == R.id.encryption_choice_pgp || itemId == R.id.encryption_choice_none) {
-            handleEncryptionSelection(item)
-        } else if (itemId == R.id.attach_choose_picture || itemId == R.id.attach_take_picture || itemId == R.id.attach_record_video || itemId == R.id.attach_choose_file || itemId == R.id.attach_record_voice || itemId == R.id.attach_location) {
-            handleAttachmentSelection(item)
-        } else if (itemId == R.id.action_search) {
-            startSearch()
-        } else if (itemId == R.id.action_archive) {
-            chatsActivity!!.xmppConnectionService.archiveConversation(conversation)
-        } else if (itemId == R.id.action_contact_details) {
-            chatsActivity!!.switchToContactDetails(conversation!!.contact)
-        } else if (itemId == R.id.action_muc_details) {
-            //ConferenceDetailsActivity.open(getActivity(), conversation);
-        } else if (itemId == R.id.action_invite) {
-            /*startActivityForResult(
-                    ChooseContactActivity.create(activity, conversation),
-                    REQUEST_INVITE_TO_CONVERSATION);*/
-        } else if (itemId == R.id.action_clear_history) {
-            clearHistoryDialog(conversation)
-        } else if (itemId == R.id.action_mute) {
-            muteConversationDialog(conversation!!)
-        } else if (itemId == R.id.action_unmute) {
-            unMuteConversation(conversation!!)
-        } else if (itemId == R.id.action_block || itemId == R.id.action_unblock) {
-            val activity: Activity? = activity
-            if (activity is XmppActivity) {
-                BlockContactDialog.show(activity as XmppActivity?, conversation)
-            }
-        } else if (itemId == R.id.action_audio_call) {
-            checkPermissionAndTriggerAudioCall()
-        } else if (itemId == R.id.action_video_call) {
-            checkPermissionAndTriggerVideoCall()
-        } else if (itemId == R.id.action_ongoing_call) {
-            returnToOngoingCall()
-        } else if (itemId == R.id.action_toggle_pinned) {
-            togglePinned()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun startSearch() {
-        val intent = Intent(activity, SearchActivity::class.java)
-        intent.putExtra(SearchActivity.EXTRA_CONVERSATION_UUID, conversation!!.uuid)
-        startActivity(intent)
-    }
-
     private fun returnToOngoingCall() {
         val ongoingRtpSession = chatsActivity!!.xmppConnectionService
             .jingleConnectionManager
@@ -1245,13 +1190,6 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
             }
             startActivity(intent)
         }
-    }
-
-    private fun togglePinned() {
-        val pinned = conversation!!.getBooleanAttribute(Conversation.ATTRIBUTE_PINNED_ON_TOP, false)
-        conversation!!.setAttribute(Conversation.ATTRIBUTE_PINNED_ON_TOP, !pinned)
-        chatsActivity!!.xmppConnectionService.updateConversation(conversation)
-        chatsActivity!!.invalidateOptionsMenu()
     }
 
     private fun checkPermissionAndTriggerAudioCall() {
@@ -1585,36 +1523,6 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
         builder.create().show()
     }
 
-    protected fun muteConversationDialog(conversation: Conversation) {
-        val builder = AlertDialog.Builder(requireActivity())
-        builder.setTitle(R.string.disable_notifications)
-        val durations = resources.getIntArray(R.array.mute_options_durations)
-        val labels = arrayOfNulls<CharSequence>(durations.size)
-        for (i in durations.indices) {
-            if (durations[i] == -1) {
-                labels[i] = getString(R.string.until_further_notice)
-            } else {
-                labels[i] = TimeFrameUtils.resolve(chatsActivity, 1000L * durations[i])
-            }
-        }
-        builder.setItems(
-            labels
-        ) { dialog: DialogInterface?, which: Int ->
-            val till: Long
-            till = if (durations[which] == -1) {
-                Long.MAX_VALUE
-            } else {
-                System.currentTimeMillis() + durations[which] * 1000L
-            }
-            conversation.setMutedTill(till)
-            chatsActivity!!.xmppConnectionService.updateConversation(conversation)
-            chatsActivity!!.onConversationsListItemUpdated()
-            refresh()
-            requireActivity().invalidateOptionsMenu()
-        }
-        builder.create().show()
-    }
-
     private fun hasPermissions(requestCode: Int, permissions: List<String>): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val missingPermissions: MutableList<String> = ArrayList()
@@ -1644,14 +1552,6 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
 
     private fun hasPermissions(requestCode: Int, vararg permissions: String): Boolean {
         return hasPermissions(requestCode, ImmutableList.copyOf(permissions))
-    }
-
-    fun unMuteConversation(conversation: Conversation) {
-        conversation.setMutedTill(0)
-        chatsActivity!!.xmppConnectionService.updateConversation(conversation)
-        chatsActivity!!.onConversationsListItemUpdated()
-        refresh()
-        requireActivity().invalidateOptionsMenu()
     }
 
     private fun invokeAttachFileIntent(attachmentChoice: Int) {
