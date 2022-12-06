@@ -33,6 +33,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/image_avatar" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/scroll_to_bottom_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.85"
+        android:src="@drawable/ic_scroll_to_end"
+        android:visibility="gone"
+        app:backgroundTint="?attr/color_background_primary"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@id/rv_messages_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:useCompatPadding="true"
+        tools:ignore="ContentDescription" />
+
     <TextView
         android:id="@+id/text_recipient_name"
         android:layout_width="0px"

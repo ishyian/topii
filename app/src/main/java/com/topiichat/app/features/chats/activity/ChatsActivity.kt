@@ -42,6 +42,7 @@ import eu.siacs.conversations.ui.util.ActivityResult
 import eu.siacs.conversations.ui.util.ConversationMenuConfigurator
 import eu.siacs.conversations.ui.util.MenuDoubleTabUtil
 import eu.siacs.conversations.ui.util.PendingItem
+import eu.siacs.conversations.utils.AccountUtils
 import eu.siacs.conversations.utils.ExceptionHelper
 import eu.siacs.conversations.xmpp.Jid
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist
@@ -57,7 +58,6 @@ import javax.inject.Inject
 class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated,
     OnConversationRead, OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, OnShowErrorToast,
     OnAffiliationChanged {
-    private var needToBackendConnected = false
     private val pendingViewIntent = PendingItem<Intent?>()
     private val postponedActivityResult = PendingItem<ActivityResult>()
     private lateinit var binding: ActivityChatsBinding
@@ -85,9 +85,10 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     override fun onBackendConnected() {
-        if (performRedirectIfNecessary(true)) {
+        if (performRedirectIfNecessary()) {
             return
         }
+        Timber.d("on Backend connected")
         xmppConnectionService.notificationService.setIsInForeground(true)
         notifyFragmentOfBackendConnected()
         val activityResult = postponedActivityResult.pop()
@@ -95,31 +96,19 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         showDialogsIfMainIsOverview()
     }
 
-    private fun performRedirectIfNecessary(noAnimation: Boolean): Boolean {
-        return performRedirectIfNecessary(null, noAnimation)
+    private fun performRedirectIfNecessary(): Boolean {
+        return performRedirectIfNecessary(null)
     }
 
-    private fun performRedirectIfNecessary(ignore: Conversation?, noAnimation: Boolean): Boolean {
+    private fun performRedirectIfNecessary(ignore: Conversation?): Boolean {
         if (xmppConnectionService == null) {
             return false
         }
         val isConversationsListEmpty = xmppConnectionService.isConversationsListEmpty(ignore)
-        if (isConversationsListEmpty && redirectInProcess.compareAndSet(false, true)) {
-            /*val account = createMockAccount(xmppConnectionService)
-            val intent = Intent(this, EditAccountActivity::class.java)
-            intent.putExtra("jid", account!!.jid.asBareJid().toString())
-            intent.putExtra("init", true)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            Toast.makeText(this, com.yourbestigor.chat.R.string.secure_password_generated, Toast.LENGTH_SHORT).show()
-            runOnUiThread {
-                startActivity(intent)
-                if (noAnimation) {
-                    overridePendingTransition(0, 0)
-                }
-            }*.
-
-             */
-
+        if (isConversationsListEmpty
+            && AccountUtils.getEnabledAccounts(xmppConnectionService).isEmpty()
+            && redirectInProcess.compareAndSet(false, true)
+        ) {
             runOnUiThread {
                 WelcomeActivity.launch(this)
             }
@@ -193,6 +182,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
 
     private fun notifyFragmentOfBackendConnected() {
         val fragment = supportFragmentManager.currentChatFragment
+        Timber.d("is on BackendConnected ${fragment is OnBackendConnected}")
         if (fragment is OnBackendConnected) {
             (fragment as OnBackendConnected).onBackendConnected()
         }
@@ -438,7 +428,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     override fun onConversationArchived(conversation: Conversation?) {
-        if (performRedirectIfNecessary(conversation, false)) {
+        if (performRedirectIfNecessary(conversation)) {
             return
         }
         val fragmentManager = supportFragmentManager
@@ -478,7 +468,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
     }
 
     override fun onConversationUpdate() {
-        if (performRedirectIfNecessary(false)) {
+        if (performRedirectIfNecessary()) {
             return
         }
         refreshUi()

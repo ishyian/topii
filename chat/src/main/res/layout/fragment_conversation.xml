@@ -34,7 +34,7 @@
             android:layout_alignParentRight="true"
             android:alpha="0.85"
             android:src="?attr/icon_scroll_down"
-            android:visibility="gone"
+            android:visibility="visible"
             app:backgroundTint="?attr/color_background_primary"
             app:fabSize="mini"
             app:useCompatPadding="true" />

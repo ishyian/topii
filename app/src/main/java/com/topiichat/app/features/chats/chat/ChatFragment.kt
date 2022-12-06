@@ -418,13 +418,10 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
             lastMessageUuid = null
             hideUnreadMessagesCount()
         } else {
-            //binding.scrollToBottomButton.setEnabled(true);
-            //binding.scrollToBottomButton.show();
+            binding.scrollToBottomButton.isEnabled = true
+            binding.scrollToBottomButton.show()
             if (lastMessageUuid == null) {
                 lastMessageUuid = conversation!!.latestMessage.uuid
-            }
-            if (conversation!!.getReceivedMessagesCountSinceUuid(lastMessageUuid) > 0) {
-                //binding.unreadCountCustomView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -900,7 +897,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
         checkForCallsAvailability()
         imageVideoCall.setOnClickListener { checkPermissionAndTriggerVideoCall() }
         imageCall.setOnClickListener { checkPermissionAndTriggerAudioCall() }
-        //binding.scrollToBottomButton.setOnClickListener(this.mScrollButtonListener);
+        binding.scrollToBottomButton.setOnClickListener(scrollButtonListener)
         setupClickListener(imageMore)
         initObservers()
     }
@@ -2122,9 +2119,10 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
     }
 
     private fun hideUnreadMessagesCount() {
-        //this.binding.scrollToBottomButton.setEnabled(false);
-        //this.binding.scrollToBottomButton.hide();
-        //this.binding.unreadCountCustomView.setVisibility(View.GONE);
+        if (isBindingNotNull) {
+            binding.scrollToBottomButton.isEnabled = false
+            binding.scrollToBottomButton.hide()
+        }
     }
 
     private fun setSelection(pos: Int, jumpToBottom: Boolean) {
