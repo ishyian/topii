@@ -102,6 +102,7 @@ public class NotificationService {
     public static final int MISSED_CALL_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 12;
     private static final int DELIVERY_FAILED_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 13;
     private final XmppConnectionService mXmppConnectionService;
+    private final Class<?> chatActivityClass;
     private final LinkedHashMap<String, ArrayList<Message>> notifications = new LinkedHashMap<>();
     private final HashMap<Conversation, AtomicInteger> mBacklogMessageCounter = new HashMap<>();
     private final LinkedHashMap<Conversational, MissedCallsInfo> mMissedCalls =
@@ -114,8 +115,9 @@ public class NotificationService {
     private Ringtone currentlyPlayingRingtone = null;
     private ScheduledFuture<?> vibrationFuture;
 
-    NotificationService(final XmppConnectionService service) {
+    NotificationService(final XmppConnectionService service, final Class<?> chatActivityClass) {
         this.mXmppConnectionService = service;
+        this.chatActivityClass = chatActivityClass;
     }
 
     private static boolean displaySnoozeAction(List<Message> messages) {
@@ -1497,8 +1499,13 @@ public class NotificationService {
 
     private PendingIntent createContentIntent(
             final String conversationUuid, final String downloadMessageUuid) {
-        final Intent viewConversationIntent =
-                new Intent(mXmppConnectionService, ConversationsActivity.class);
+        Intent viewConversationIntent;
+        if (chatActivityClass != null) {
+            viewConversationIntent = new Intent(mXmppConnectionService, chatActivityClass);
+        } else {
+            viewConversationIntent = new Intent(mXmppConnectionService, ConversationsActivity.class);
+
+        }
         viewConversationIntent.setAction(ConversationsActivity.ACTION_VIEW_CONVERSATION);
         viewConversationIntent.putExtra(ConversationsActivity.EXTRA_CONVERSATION, conversationUuid);
         if (downloadMessageUuid != null) {
@@ -1746,11 +1753,17 @@ public class NotificationService {
     }
 
     private PendingIntent createOpenConversationsIntent() {
+        Intent convIntent;
+        if (chatActivityClass != null) {
+            convIntent = new Intent(mXmppConnectionService, chatActivityClass);
+        } else {
+            convIntent = new Intent(mXmppConnectionService, ConversationsActivity.class);
+        }
         try {
             return PendingIntent.getActivity(
                     mXmppConnectionService,
                     0,
-                    new Intent(mXmppConnectionService, ConversationsActivity.class),
+                    convIntent,
                     s()
                             ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
                             : PendingIntent.FLAG_UPDATE_CURRENT);

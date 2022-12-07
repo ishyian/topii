@@ -214,7 +214,6 @@ public class XmppConnectionService extends Service {
     private long mLastActivity = 0;
     private final FileBackend fileBackend = new FileBackend(this);
     private MemorizingTrustManager mMemorizingTrustManager;
-    private final NotificationService mNotificationService = new NotificationService(this);
     private final ChannelDiscoveryService mChannelDiscoveryService = new ChannelDiscoveryService(this);
     private final ShortcutService mShortcutService = new ShortcutService(this);
     private final AtomicBoolean mInitialAddressbookSyncCompleted = new AtomicBoolean(false);
@@ -243,6 +242,17 @@ public class XmppConnectionService extends Service {
     private final MessageArchiveService mMessageArchiveService = new MessageArchiveService(this);
     private final PushManagementService mPushManagementService = new PushManagementService(this);
     private final QuickConversationsService mQuickConversationsService = new QuickConversationsService(this);
+    private NotificationService mNotificationService;
+
+    {
+        try {
+            mNotificationService = new NotificationService(this, Class.forName("com.topiichat.app.features.chats.activity.ChatsActivity"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            mNotificationService = new NotificationService(this, null);
+        }
+    }
+
     private final ConversationsFileObserver fileObserver = new ConversationsFileObserver(
             Environment.getExternalStorageDirectory().getAbsolutePath()
     ) {
