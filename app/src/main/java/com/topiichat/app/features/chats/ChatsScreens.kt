@@ -1,9 +1,9 @@
 package com.topiichat.app.features.chats
 
-import com.topiichat.app.core.delegates.parcelableParametersBundleOf
 import com.topiichat.app.features.chats.root.presentation.ChatsFragment
 import com.topiichat.app.features.chats.search.presentation.SearchFragment
 import com.topiichat.app.features.chats.search.presentation.SearchParameters
+import com.topiichat.core.delegates.parcelableParametersBundleOf
 import ru.terrakok.cicerone.android.support.FragmentParams
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 

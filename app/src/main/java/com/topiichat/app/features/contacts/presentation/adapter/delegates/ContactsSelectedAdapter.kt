@@ -1,8 +1,8 @@
 package com.topiichat.app.features.contacts.presentation.adapter.delegates
 
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
-import com.topiichat.app.core.adapter.BaseDiffCallback
 import com.topiichat.app.features.contacts.presentation.model.ContactUiModel
+import com.topiichat.core.adapter.BaseDiffCallback
 
 class ContactsSelectedAdapter(
     onRemoveContactClick: (ContactUiModel) -> Unit

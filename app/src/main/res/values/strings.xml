@@ -121,9 +121,6 @@
     <string name="remittance_detail_summary_3">con tasa de cambio</string>
     <string name="remittance_detail_summary_4">y comisión</string>
     <string name="remittance_detail_summary_5">a</string>
-    <string name="remittance_error_btn_text">Regresar</string>
-    <string name="remittance_error_subtitle">Parece que no tienes saldo suficiente para esta transacción.</string>
-    <string name="remittance_error_title">Oops! Algo salió mal.</string>
 
     <string name="request_remittance_title">Solicitar remesa</string>
     <string name="request_remittance_button_text">Solicitar</string>
@@ -165,18 +162,6 @@
     <string name="week">Week</string>
     <string name="month">Month</string>
     <string name="year">Year</string>
-    <string name="error_no_network_title">Sin conexión</string>
-    <string name="error_no_network_description">Conéctate a Internet para continuar</string>
-    <string name="error_no_network_button_text">Regresar</string>
-    <string name="error_wrong_request_title">No hemos podido procesar tu solicitud.</string>
-    <string name="error_wrong_request_description">Presiona el boton de continuar y vuelve a intentarlo.</string>
-    <string name="error_wrong_request_button_text">Continuar</string>
-    <string name="error_unknown_title">Oops! Algo salió mal.</string>
-    <string name="error_unknown_description">Parece que no tienes saldo suficiente para esta transacción.</string>
-    <string name="error_unknown_button_text">Regresar</string>
-    <string name="error_insufficient_funds_title">Saldo insuﬁciente</string>
-    <string name="error_insufficient_funds_description">El saldo de tu cuenta es insuﬁciente</string>
-    <string name="error_insufficient_funds_button_text">Regresar</string>
     <string name="search_results_hints">Here will be the search results</string>
     <string name="no_results">No results</string>
 </resources>

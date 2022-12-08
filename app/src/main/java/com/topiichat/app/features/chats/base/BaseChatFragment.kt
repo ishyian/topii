@@ -2,7 +2,7 @@ package com.topiichat.app.features.chats.base
 
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.topiichat.app.core.presentation.platform.BaseFragment
+import com.topiichat.core.presentation.platform.BaseFragment
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected
 
 /**

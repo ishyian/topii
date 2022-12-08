@@ -1,6 +1,5 @@
 package com.topiichat.app.features.send_remittance.data.mapper
 
-import com.topiichat.app.core.domain.BaseMapper
 import com.topiichat.app.features.send_remittance.data.model.RemittanceDto
 import com.topiichat.app.features.send_remittance.domain.model.ConvertingDomain
 import com.topiichat.app.features.send_remittance.domain.model.FeeDomain
@@ -10,6 +9,7 @@ import com.topiichat.app.features.send_remittance.domain.model.RemittanceDomain
 import com.topiichat.app.features.send_remittance.domain.model.SenderDomain
 import com.topiichat.app.features.send_remittance.domain.model.SendingDomain
 import com.topiichat.app.features.send_remittance.domain.model.toDomain
+import com.topiichat.core.domain.BaseMapper
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 

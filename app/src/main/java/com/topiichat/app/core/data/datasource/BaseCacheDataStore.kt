@@ -1,9 +1,9 @@
 package com.topiichat.app.core.data.datasource
 
 import com.topiichat.app.core.data.Dto
-import com.topiichat.app.core.domain.CacheFailStatus
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.exception.domain.ErrorDomain
+import com.topiichat.core.domain.CacheFailStatus
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.exception.domain.ErrorDomain
 
 abstract class BaseCacheDataStore : CacheDataStore {
 

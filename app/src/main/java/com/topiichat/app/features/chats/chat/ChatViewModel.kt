@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
 import com.topiichat.app.core.annotations.ChatRouterQualifier
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.chats.search.presentation.SearchParameters
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.AssistedInject
 import ru.terrakok.cicerone.Router
 

@@ -119,7 +119,7 @@ class MessageAdapter @JvmOverloads constructor(
     }
 
     private fun getMessageTextColor(onDark: Boolean, primary: Boolean): Int {
-        return ContextCompat.getColor(activity, com.topiichat.app.R.color.chat_text_message_color)
+        return ContextCompat.getColor(activity, com.topiichat.core.R.color.chat_text_message_color)
     }
 
     private fun displayStatus(viewHolder: ViewHolder, message: Message, type: Int, darkBackground: Boolean) {

@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import com.topiichat.app.R
-import com.topiichat.app.core.extension.setupInputMask
-import com.topiichat.app.core.extension.showSelectorDialog
-import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentAddBankAccountBinding
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
+import com.topiichat.core.extension.setupInputMask
+import com.topiichat.core.extension.showSelectorDialog
+import com.topiichat.core.extension.viewModelCreator
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

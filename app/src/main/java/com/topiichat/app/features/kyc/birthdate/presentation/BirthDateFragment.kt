@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import com.topiichat.app.R
-import com.topiichat.app.core.extension.setupDateMask
-import com.topiichat.app.core.extension.showSelectorDialog
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentBirthDateBinding
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
+import com.topiichat.core.extension.setupDateMask
+import com.topiichat.core.extension.showSelectorDialog
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

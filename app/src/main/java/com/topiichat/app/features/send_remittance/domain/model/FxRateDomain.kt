@@ -1,6 +1,6 @@
 package com.topiichat.app.features.send_remittance.domain.model
 
-import com.topiichat.app.core.domain.Domain
+import com.topiichat.core.domain.Domain
 
 data class FxRateDomain(
     val amount: Double,

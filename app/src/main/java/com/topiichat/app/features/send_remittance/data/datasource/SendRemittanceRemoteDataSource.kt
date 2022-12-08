@@ -2,13 +2,13 @@ package com.topiichat.app.features.send_remittance.data.datasource
 
 import com.topiichat.app.core.data.ApiService
 import com.topiichat.app.core.data.datasource.BaseRemoteDataStore
-import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.features.send_remittance.data.model.CardDto
 import com.topiichat.app.features.send_remittance.data.model.FxRateDto
 import com.topiichat.app.features.send_remittance.data.model.RemittanceDto
 import com.topiichat.app.features.send_remittance.data.model.RemittancePurposeDto
 import com.topiichat.app.features.send_remittance.data.model.SendPaymentIntentionRequestDto
 import com.topiichat.app.features.send_remittance.data.model.SendRemittanceRequestDto
+import com.topiichat.core.domain.ResultData
 import javax.inject.Inject
 
 class SendRemittanceRemoteDataSource @Inject constructor(

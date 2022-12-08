@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
 import com.topiichat.app.R
-import com.topiichat.app.core.extension.getDrawableKtx
-import com.topiichat.app.core.extension.viewModelCreator
 import com.topiichat.app.databinding.FragmentChatsBinding
 import com.topiichat.app.features.chats.activity.ChatsActivity
 import com.topiichat.app.features.chats.base.BaseChatFragment
@@ -22,6 +20,8 @@ import com.topiichat.app.features.chats.chat.ChatFragment
 import com.topiichat.app.features.chats.chat.ChatFragment.Companion.STATE_SCROLL_POSITION
 import com.topiichat.app.features.chats.root.presentation.adapter.ChatsAdapter
 import com.topiichat.app.features.chats.root.presentation.adapter.ChatsListAdapter
+import com.topiichat.core.extension.getDrawableKtx
+import com.topiichat.core.extension.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.entities.Account
 import eu.siacs.conversations.entities.Contact

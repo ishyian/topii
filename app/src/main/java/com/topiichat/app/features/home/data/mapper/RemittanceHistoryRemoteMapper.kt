@@ -1,10 +1,10 @@
 package com.topiichat.app.features.home.data.mapper
 
-import com.topiichat.app.core.domain.Mapper
 import com.topiichat.app.features.home.data.model.RemittanceHistoryDto
 import com.topiichat.app.features.home.domain.model.RemittanceDomain
 import com.topiichat.app.features.home.domain.model.RemittanceHistoryDomain
 import com.topiichat.app.features.home.domain.model.RemittanceType
+import com.topiichat.core.domain.Mapper
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 

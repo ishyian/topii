@@ -14,11 +14,11 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.topiichat.app.R
 import com.topiichat.app.core.annotations.ChatNavigatorHolderQualifier
 import com.topiichat.app.core.annotations.ChatRouterQualifier
-import com.topiichat.app.core.extension.currentChatFragment
 import com.topiichat.app.databinding.ActivityChatsBinding
 import com.topiichat.app.features.chats.base.BaseChatFragment
 import com.topiichat.app.features.chats.chat.ChatFragment
@@ -58,6 +58,10 @@ import javax.inject.Inject
 class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated,
     OnConversationRead, OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, OnShowErrorToast,
     OnAffiliationChanged {
+
+    private val FragmentManager.currentChatFragment: Fragment?
+        get() = this.findFragmentById(R.id.chats_container)
+
     private val pendingViewIntent = PendingItem<Intent?>()
     private val postponedActivityResult = PendingItem<ActivityResult>()
     private lateinit var binding: ActivityChatsBinding
@@ -312,7 +316,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
 
     fun clearPendingViewIntent() {
         if (pendingViewIntent.clear()) {
-            Timber.e("cleared pending view intent")
+            Timber.d("cleared pending view intent")
         }
     }
 

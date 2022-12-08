@@ -1,10 +1,10 @@
 package com.topiichat.app.features.request_remittance.presentation
 
-import com.topiichat.app.core.presentation.platform.IBaseViewModel
 import com.topiichat.app.features.home.domain.model.RecentUserDomain
 import com.topiichat.app.features.send_remittance.domain.model.RemittancePurposeDomain
 import com.topiichat.app.features.send_remittance.presentation.model.RecentUserUiModel
 import com.topiichat.app.features.valid_phone_number.presentation.model.PhoneNumber
+import com.topiichat.core.presentation.platform.IBaseViewModel
 
 interface IRequestRemittanceViewModel : IBaseViewModel {
     suspend fun loadRemittancePurposes()

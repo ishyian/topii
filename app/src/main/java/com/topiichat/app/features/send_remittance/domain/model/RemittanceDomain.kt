@@ -1,8 +1,8 @@
 package com.topiichat.app.features.send_remittance.domain.model
 
 import android.os.Parcelable
-import com.topiichat.app.core.domain.Domain
 import com.topiichat.app.features.send_remittance.data.model.ProfileDto
+import com.topiichat.core.domain.Domain
 import kotlinx.parcelize.Parcelize
 import org.threeten.bp.LocalDateTime
 

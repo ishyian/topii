@@ -1,10 +1,10 @@
 package com.topiichat.app.features.kyc.base.domain.usecases
 
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.domain.UseCase
-import com.topiichat.app.core.exception.domain.emitError
 import com.topiichat.app.features.kyc.base.domain.model.TokenAliceDomain
 import com.topiichat.app.features.kyc.base.domain.repo.KYCRepository
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.domain.UseCase
+import com.topiichat.core.exception.domain.emitError
 import javax.inject.Inject
 
 class GetTokenAliceUseCase @Inject constructor(

@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import com.topiichat.app.core.extension.lazyUnsynchronized
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentHomeBinding
 import com.topiichat.app.features.home.domain.model.CountryCode
 import com.topiichat.app.features.home.domain.model.CurrentCountryDomain
@@ -16,6 +14,8 @@ import com.topiichat.app.features.home.presentation.header.HomeHeaderView
 import com.topiichat.app.features.home.presentation.model.HomeRemittanceHistoryUiModel
 import com.topiichat.app.features.home.presentation.model.HomeTransactionsHeaderUiModel
 import com.topiichat.app.features.home.presentation.total_sum.HomeTotalSumByMonthView
+import com.topiichat.core.extension.lazyUnsynchronized
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

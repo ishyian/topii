@@ -84,6 +84,7 @@
         <activity android:name=".features.chats.activity.WelcomeActivity" />
         <activity android:name=".features.chats.activity.PickServerActivity" />
         <activity android:name=".features.chats.activity.MagicCreateActivity" />
+        <activity android:name=".features.chats.calls.RtpSessionActivity" />
 
         <activity
             android:name=".features.chats.activity.ChatsActivity"

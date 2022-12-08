@@ -2,8 +2,8 @@ package com.topiichat.app.features.activate_permission.presentation
 
 import android.view.View
 import com.topiichat.app.R
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject

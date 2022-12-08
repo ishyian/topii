@@ -1,8 +1,8 @@
 package com.topiichat.app.features.otp.presentation
 
-import com.topiichat.app.core.presentation.platform.IBaseFragment
 import com.topiichat.app.features.otp.presentation.model.BtnSendSmsEnablingUi
 import com.topiichat.app.features.otp.presentation.model.TextSendSmsTimerUi
+import com.topiichat.core.presentation.platform.IBaseFragment
 
 interface IOtpFragment : IBaseFragment {
     fun onValidPinCodeRequest()

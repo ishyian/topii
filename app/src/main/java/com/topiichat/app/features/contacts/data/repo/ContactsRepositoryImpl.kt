@@ -1,10 +1,10 @@
 package com.topiichat.app.features.contacts.data.repo
 
-import com.topiichat.app.core.coroutines.AppDispatchers
 import com.topiichat.app.features.contacts.data.datasource.ContactsCacheDataStore
 import com.topiichat.app.features.contacts.data.mapper.ContactsCacheMapper
 import com.topiichat.app.features.contacts.domain.model.ContactDomain
 import com.topiichat.app.features.contacts.domain.repo.ContactsRepository
+import com.topiichat.core.coroutines.AppDispatchers
 import kotlinx.coroutines.withContext
 
 class ContactsRepositoryImpl(

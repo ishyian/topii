@@ -4,13 +4,13 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
 import com.topiichat.app.features.kyc.email.presentation.EnterEmailParameters
 import com.topiichat.app.features.kyc.personal_data.domain.PersonalDataDomain
 import com.topiichat.app.features.kyc.personal_data.presentation.model.PersonalData
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ru.terrakok.cicerone.Router
@@ -30,7 +30,7 @@ class PersonalDataViewModel @AssistedInject constructor(
     init {
         _btnContinueUiState.value = BtnContinueUiState(
             isEnabled = false,
-            backgroundId = R.drawable.bg_button_unenabled
+            backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
         )
     }
 
@@ -56,12 +56,12 @@ class PersonalDataViewModel @AssistedInject constructor(
         val uiState = if (isNameValid && isLastNameValid) {
             BtnContinueUiState(
                 isEnabled = true,
-                backgroundId = R.drawable.bg_button
+                backgroundId = com.topiichat.core.R.drawable.bg_button
             )
         } else {
             BtnContinueUiState(
                 isEnabled = false,
-                backgroundId = R.drawable.bg_button_unenabled
+                backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
             )
         }
         _btnContinueUiState.postValue(uiState)

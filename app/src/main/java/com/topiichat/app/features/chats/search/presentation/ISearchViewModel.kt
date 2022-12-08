@@ -1,6 +1,6 @@
 package com.topiichat.app.features.chats.search.presentation
 
-import com.topiichat.app.core.presentation.platform.IBaseViewModel
+import com.topiichat.core.presentation.platform.IBaseViewModel
 import eu.siacs.conversations.services.XmppConnectionService
 
 interface ISearchViewModel : IBaseViewModel {

@@ -1,6 +1,6 @@
 package com.topiichat.app.features.splash.presentation
 
-import com.topiichat.app.core.domain.ResultData
+import com.topiichat.core.domain.ResultData
 
 interface ISplashViewModel {
     fun onLoaderStart()

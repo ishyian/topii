@@ -1,7 +1,7 @@
 package com.topiichat.app.features.home.presentation
 
-import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.features.home.domain.model.RemittanceDomain
+import com.topiichat.core.domain.ResultData
 
 interface IHomeViewModel {
     fun onSendPaymentClick()

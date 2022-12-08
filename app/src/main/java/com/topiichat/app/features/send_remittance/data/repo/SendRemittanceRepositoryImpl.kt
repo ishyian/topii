@@ -1,7 +1,5 @@
 package com.topiichat.app.features.send_remittance.data.repo
 
-import com.topiichat.app.core.coroutines.AppDispatchers
-import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.features.send_remittance.data.datasource.SendRemittanceRemoteDataSource
 import com.topiichat.app.features.send_remittance.data.mapper.CardsRemoteMapper
 import com.topiichat.app.features.send_remittance.data.mapper.FxRateRemoteMapper
@@ -14,6 +12,8 @@ import com.topiichat.app.features.send_remittance.domain.model.FxRateDomain
 import com.topiichat.app.features.send_remittance.domain.model.RemittanceDomain
 import com.topiichat.app.features.send_remittance.domain.model.RemittancePurposeDomain
 import com.topiichat.app.features.send_remittance.domain.repo.SendRemittanceRepository
+import com.topiichat.core.coroutines.AppDispatchers
+import com.topiichat.core.domain.ResultData
 import kotlinx.coroutines.withContext
 
 class SendRemittanceRepositoryImpl(

@@ -2,12 +2,12 @@ package com.topiichat.app.features.splash.presentation
 
 import android.view.View
 import androidx.lifecycle.viewModelScope
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.kyc.base.domain.usecases.GetKYCStatusUseCase
 import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCase
 import com.topiichat.app.features.registration.domain.usecases.LogOutUseCase
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

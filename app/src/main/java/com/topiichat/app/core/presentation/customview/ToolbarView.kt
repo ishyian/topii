@@ -6,8 +6,8 @@ import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isInvisible
-import com.topiichat.app.R
 import com.topiichat.app.databinding.PartToolbarBinding
+import com.topiichat.core.R
 
 class ToolbarView(
     context: Context,
@@ -39,7 +39,7 @@ class ToolbarView(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.part_toolbar, this, true)
+        inflater.inflate(com.topiichat.app.R.layout.part_toolbar, this, true)
         _binding = PartToolbarBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
     }
@@ -51,16 +51,18 @@ class ToolbarView(
     ) {
         if (attrs == null) return
         context.obtainStyledAttributes(
-            attrs, R.styleable.ToolbarView, defStyleAttr, defStyleRes
+            attrs, com.topiichat.app.R.styleable.ToolbarView, defStyleAttr, defStyleRes
         ).apply {
             try {
-                binding.textViewTitle.text = getString(R.styleable.ToolbarView_toolbarTitle)
-                binding.imageViewBack.isInvisible = !getBoolean(R.styleable.ToolbarView_isBackButtonVisible, true)
-                binding.imageViewClose.isInvisible = !getBoolean(R.styleable.ToolbarView_isCloseButtonVisible, true)
+                binding.textViewTitle.text = getString(com.topiichat.app.R.styleable.ToolbarView_toolbarTitle)
+                binding.imageViewBack.isInvisible =
+                    !getBoolean(com.topiichat.app.R.styleable.ToolbarView_isBackButtonVisible, true)
+                binding.imageViewClose.isInvisible =
+                    !getBoolean(com.topiichat.app.R.styleable.ToolbarView_isCloseButtonVisible, true)
                 binding.textViewTitle.setTextSize(
                     COMPLEX_UNIT_PX,
                     getDimensionPixelSize(
-                        R.styleable.ToolbarView_textSize,
+                        com.topiichat.app.R.styleable.ToolbarView_textSize,
                         resources.getDimensionPixelSize(R.dimen.toolbar_view_default_text_size)
                     ).toFloat()
                 )

@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.contacts.domain.model.ContactDomain
 import com.topiichat.app.features.contacts.domain.usecase.FetchContactsUseCase
 import com.topiichat.app.features.contacts.presentation.mapper.ContactsUiMapper
@@ -13,6 +12,7 @@ import com.topiichat.app.features.contacts.presentation.model.ContactUiModel
 import com.topiichat.app.features.contacts.presentation.model.ContactsListUiModel
 import com.topiichat.app.features.contacts.presentation.model.changeContactCheckedStatus
 import com.topiichat.app.features.contacts.presentation.model.changeContactSingleCheckedStatus
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch

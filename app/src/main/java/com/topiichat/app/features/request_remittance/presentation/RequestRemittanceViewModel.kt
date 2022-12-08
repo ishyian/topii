@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.home.domain.model.AvailableCountriesDomain
 import com.topiichat.app.features.home.domain.model.CountryDomain
 import com.topiichat.app.features.home.domain.model.RecentUserDomain
@@ -26,6 +24,8 @@ import com.topiichat.app.features.send_remittance.presentation.model.RecentUsers
 import com.topiichat.app.features.send_remittance.presentation.model.SendRemittanceUIModel
 import com.topiichat.app.features.send_remittance.presentation.model.changeCheckedStatus
 import com.topiichat.app.features.valid_phone_number.presentation.model.PhoneNumber
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
@@ -82,7 +82,7 @@ class RequestRemittanceViewModel @AssistedInject constructor(
     init {
         _btnRequestEnabling.value = BtnRequestEnablingUi(
             isEnabled = false,
-            backgroundId = R.drawable.bg_button_unenabled
+            backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
         )
 
         viewModelScope.launch {
@@ -248,12 +248,12 @@ class RequestRemittanceViewModel @AssistedInject constructor(
         val btnRequestEnabling = if (isEnabled) {
             BtnRequestEnablingUi(
                 isEnabled = true,
-                backgroundId = R.drawable.bg_button
+                backgroundId = com.topiichat.core.R.drawable.bg_button
             )
         } else {
             BtnRequestEnablingUi(
                 isEnabled = false,
-                backgroundId = R.drawable.bg_button_unenabled
+                backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
             )
         }
         _btnRequestEnabling.value = btnRequestEnabling

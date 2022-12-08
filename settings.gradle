@@ -22,3 +22,4 @@ rootProject.name = "TopiiChat"
 include ':app'
 include ':TopiiChat-SDK'
 include ':chat'
+include ':core'

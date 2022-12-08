@@ -4,11 +4,11 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
-import com.topiichat.app.core.presentation.platform.BaseViewModel
-import com.topiichat.app.core.presentation.platform.SingleLiveData
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.address.domain.AddressDomain
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
+import com.topiichat.core.presentation.platform.BaseViewModel
+import com.topiichat.core.presentation.platform.SingleLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class AddressViewModel @Inject constructor(
     init {
         _btnContinueUiState.value = BtnContinueUiState(
             isEnabled = false,
-            backgroundId = R.drawable.bg_button_unenabled
+            backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
         )
     }
 
@@ -61,12 +61,12 @@ class AddressViewModel @Inject constructor(
         val uiState = if (addressDomain.isValid()) {
             BtnContinueUiState(
                 isEnabled = true,
-                backgroundId = R.drawable.bg_button
+                backgroundId = com.topiichat.core.R.drawable.bg_button
             )
         } else {
             BtnContinueUiState(
                 isEnabled = false,
-                backgroundId = R.drawable.bg_button_unenabled
+                backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
             )
         }
         _btnContinueUiState.postValue(uiState)

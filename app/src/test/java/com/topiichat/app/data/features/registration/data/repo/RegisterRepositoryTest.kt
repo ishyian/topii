@@ -2,7 +2,6 @@ package com.topiichat.app.data.features.registration.data.repo
 
 import com.topiichat.app.core.data.ApiService
 import com.topiichat.app.core.data.EmptyMapper
-import com.topiichat.app.core.exception.data.ErrorParser
 import com.topiichat.app.data.core.MainDispatcherRule
 import com.topiichat.app.data.core.TestAppDispatchers
 import com.topiichat.app.data.features.registration.utils.RegisterTestUtils
@@ -12,6 +11,7 @@ import com.topiichat.app.features.registration.data.datasource.remote.RegisterRe
 import com.topiichat.app.features.registration.data.mapper.RegisterCacheMapper
 import com.topiichat.app.features.registration.data.mapper.RegisterRemoteMapper
 import com.topiichat.app.features.registration.data.repo.RegisterRepositoryImpl
+import com.topiichat.core.exception.data.ErrorParser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

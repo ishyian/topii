@@ -1,8 +1,8 @@
 package com.topiichat.app.core.data.datasource
 
 import com.topiichat.app.core.data.Dto
-import com.topiichat.app.core.domain.CacheFailStatus
-import com.topiichat.app.core.domain.ResultData
+import com.topiichat.core.domain.CacheFailStatus
+import com.topiichat.core.domain.ResultData
 
 interface CacheDataStore {
     suspend fun <T : Dto?> getResult(

@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
 import com.topiichat.app.core.annotations.ChatRouterQualifier
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.chats.root.presentation.model.ChatAction
 import com.topiichat.app.features.chats.root.presentation.model.ChatActionUiModel
@@ -14,6 +13,7 @@ import com.topiichat.app.features.chats.search.presentation.SearchParameters
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataParameters
 import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCase
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router

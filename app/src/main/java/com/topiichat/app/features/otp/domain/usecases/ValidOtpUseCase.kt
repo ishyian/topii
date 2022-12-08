@@ -1,10 +1,10 @@
 package com.topiichat.app.features.otp.domain.usecases
 
 import com.topiichat.app.BuildConfig
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.domain.UseCase
 import com.topiichat.app.features.otp.domain.model.ValidOtpCodeDomain
 import com.topiichat.app.features.otp.domain.repo.OtpCodeRepository
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.domain.UseCase
 import javax.inject.Inject
 
 class ValidOtpUseCase @Inject constructor(

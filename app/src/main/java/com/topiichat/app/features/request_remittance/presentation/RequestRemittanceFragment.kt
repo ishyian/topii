@@ -12,13 +12,6 @@ import androidx.core.widget.doAfterTextChanged
 import com.bumptech.glide.Glide
 import com.topiichat.app.AppActivity
 import com.topiichat.app.core.constants.Constants.INITIAL_COUNTRY_ISO_CODE
-import com.topiichat.app.core.delegates.parcelableParameters
-import com.topiichat.app.core.extension.addStartCircleDrawableFromUrl
-import com.topiichat.app.core.extension.getPhoneNumber
-import com.topiichat.app.core.extension.lazyUnsynchronized
-import com.topiichat.app.core.extension.showDropDownWhenClick
-import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentRequestRemittanceBinding
 import com.topiichat.app.features.home.domain.model.AvailableCountriesDomain
 import com.topiichat.app.features.home.domain.model.CountryDomain
@@ -27,6 +20,13 @@ import com.topiichat.app.features.request_remittance.presentation.model.SenderUi
 import com.topiichat.app.features.send_remittance.domain.model.RemittancePurposeDomain
 import com.topiichat.app.features.send_remittance.presentation.adapter.RecentUsersAdapter
 import com.topiichat.app.features.send_remittance.presentation.model.RecentUsersUiModel
+import com.topiichat.app.features.valid_phone_number.presentation.model.getPhoneNumber
+import com.topiichat.core.delegates.parcelableParameters
+import com.topiichat.core.extension.addStartCircleDrawableFromUrl
+import com.topiichat.core.extension.lazyUnsynchronized
+import com.topiichat.core.extension.showDropDownWhenClick
+import com.topiichat.core.extension.viewModelCreator
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import me.ibrahimsn.lib.PhoneNumberKit
 import javax.inject.Inject

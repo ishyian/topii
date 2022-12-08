@@ -1,6 +1,6 @@
 package com.topiichat.app.features.chats.chat
 
-import com.topiichat.app.core.presentation.platform.IBaseViewModel
+import com.topiichat.core.presentation.platform.IBaseViewModel
 
 interface IChatViewModel : IBaseViewModel {
     fun onMoreDialogShow()

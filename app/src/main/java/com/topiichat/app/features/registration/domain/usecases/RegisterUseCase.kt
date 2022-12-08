@@ -1,9 +1,9 @@
 package com.topiichat.app.features.registration.domain.usecases
 
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.domain.UseCase
 import com.topiichat.app.features.registration.domain.model.RegisterDomain
 import com.topiichat.app.features.registration.domain.repo.RegisterRepository
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.domain.UseCase
 import java.util.UUID
 import javax.inject.Inject
 

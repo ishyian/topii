@@ -1,7 +1,7 @@
 package com.topiichat.app.features.contacts.data.mapper
 
-import com.topiichat.app.core.domain.Mapper
 import com.topiichat.app.features.contacts.domain.model.ContactDomain
+import com.topiichat.core.domain.Mapper
 import contacts.core.entities.Contact
 import javax.inject.Inject
 

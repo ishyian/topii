@@ -1,7 +1,7 @@
 package com.topiichat.app.features.contacts.domain.model
 
-import com.topiichat.app.core.domain.Domain
 import com.topiichat.app.features.contacts.presentation.model.ContactUiModel
+import com.topiichat.core.domain.Domain
 
 data class ContactDomain(
     val displayName: String,

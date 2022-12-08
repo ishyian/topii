@@ -1,10 +1,10 @@
 package com.topiichat.app.features.contacts.presentation.mapper
 
-import com.topiichat.app.core.domain.Mapper
 import com.topiichat.app.features.contacts.domain.model.ContactDomain
 import com.topiichat.app.features.contacts.domain.model.toUi
 import com.topiichat.app.features.contacts.presentation.model.ContactLetterUiModel
 import com.topiichat.app.features.contacts.presentation.model.ContactsListUiModel
+import com.topiichat.core.domain.Mapper
 import javax.inject.Inject
 
 class ContactsUiMapper @Inject constructor() : Mapper<List<ContactDomain>, ContactsListUiModel> {

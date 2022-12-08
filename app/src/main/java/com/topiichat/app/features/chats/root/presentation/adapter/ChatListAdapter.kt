@@ -1,9 +1,9 @@
 package com.topiichat.app.features.chats.root.presentation.adapter
 
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
-import com.topiichat.app.core.adapter.BaseDiffCallback
 import com.topiichat.app.features.chats.root.presentation.adapter.delegates.chatActionItemAD
 import com.topiichat.app.features.chats.root.presentation.model.ChatAction
+import com.topiichat.core.adapter.BaseDiffCallback
 
 class ChatsListAdapter(
     onChatActionClick: (ChatAction) -> Unit,

@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.contacts.presentation.ContactsParameters
 import com.topiichat.app.features.home.domain.model.AvailableCountriesDomain
@@ -29,6 +27,8 @@ import com.topiichat.app.features.send_remittance.presentation.model.RecentUsers
 import com.topiichat.app.features.send_remittance.presentation.model.RecipientUiModel
 import com.topiichat.app.features.send_remittance.presentation.model.SendRemittanceUIModel
 import com.topiichat.app.features.send_remittance.presentation.model.changeCheckedStatus
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Job
@@ -101,7 +101,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
     init {
         _btnSendEnabling.value = BtnSendEnablingUi(
             isEnabled = false,
-            backgroundId = R.drawable.bg_button_unenabled
+            backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
         )
 
         viewModelScope.launch {
@@ -341,12 +341,12 @@ class SendRemittanceViewModel @AssistedInject constructor(
         ) {
             BtnSendEnablingUi(
                 isEnabled = true,
-                backgroundId = R.drawable.bg_button
+                backgroundId = com.topiichat.core.R.drawable.bg_button
             )
         } else {
             BtnSendEnablingUi(
                 isEnabled = false,
-                backgroundId = R.drawable.bg_button_unenabled
+                backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
             )
         }
         _btnSendEnabling.value = btnSendEnabling

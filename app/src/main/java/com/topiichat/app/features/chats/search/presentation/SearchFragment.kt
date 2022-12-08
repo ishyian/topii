@@ -10,13 +10,13 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.topiichat.app.R
-import com.topiichat.app.core.delegates.parcelableParameters
-import com.topiichat.app.core.extension.getDrawableKtx
-import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentSearchBinding
 import com.topiichat.app.features.chats.activity.ChatsActivity
 import com.topiichat.app.features.chats.search.presentation.adapter.SearchMessagesAdapter
+import com.topiichat.core.delegates.parcelableParameters
+import com.topiichat.core.extension.getDrawableKtx
+import com.topiichat.core.extension.viewModelCreator
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.entities.Message
 import eu.siacs.conversations.services.MessageSearchTask

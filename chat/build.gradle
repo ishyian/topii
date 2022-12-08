@@ -45,6 +45,8 @@ android {
 dependencies {
     def notations = rootProject.ext.appDependencies
 
+    implementation project(':core')
+
     for (item in notations.forImplementation) {
         implementation item
     }

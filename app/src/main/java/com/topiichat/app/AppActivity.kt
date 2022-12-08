@@ -4,7 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.topiichat.app.core.extension.currentFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.kyc.email.data.AliceSdkListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +25,9 @@ class AppActivity : AppCompatActivity() {
 
     @Inject
     lateinit var router: Router
+
+    private val FragmentManager.currentFragment: Fragment?
+        get() = this.findFragmentById(R.id.container)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

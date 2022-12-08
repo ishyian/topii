@@ -1,8 +1,8 @@
 package com.topiichat.app.features.request_remittance.data.mapper
 
-import com.topiichat.app.core.domain.BaseMapper
 import com.topiichat.app.features.request_remittance.data.model.RequestRemittanceDto
 import com.topiichat.app.features.request_remittance.domain.model.RequestRemittanceDomain
+import com.topiichat.core.domain.BaseMapper
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 

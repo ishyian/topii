@@ -5,15 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import com.topiichat.app.core.delegates.parcelableParameters
-import com.topiichat.app.core.extension.hideKeyboard
-import com.topiichat.app.core.extension.lazyUnsynchronized
-import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentContactsBinding
 import com.topiichat.app.features.contacts.presentation.adapter.ContactsAdapter
 import com.topiichat.app.features.contacts.presentation.adapter.delegates.ContactsSelectedAdapter
 import com.topiichat.app.features.contacts.presentation.model.ContactsListUiModel
+import com.topiichat.core.delegates.parcelableParameters
+import com.topiichat.core.extension.hideKeyboard
+import com.topiichat.core.extension.lazyUnsynchronized
+import com.topiichat.core.extension.viewModelCreator
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

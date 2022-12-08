@@ -1,8 +1,8 @@
 package com.topiichat.app.features.kyc.base.data.mapper
 
-import com.topiichat.app.core.domain.Mapper
 import com.topiichat.app.features.kyc.base.data.model.KYCStatusDto
 import com.topiichat.app.features.kyc.base.domain.model.KYCStatus
+import com.topiichat.core.domain.Mapper
 import javax.inject.Inject
 
 class KYCStatusRemoteMapper @Inject constructor() : Mapper<KYCStatusDto, KYCStatus> {

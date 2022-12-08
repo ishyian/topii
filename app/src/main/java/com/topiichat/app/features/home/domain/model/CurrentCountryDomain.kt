@@ -1,7 +1,7 @@
 package com.topiichat.app.features.home.domain.model
 
 import android.os.Parcelable
-import com.topiichat.app.core.domain.Domain
+import com.topiichat.core.domain.Domain
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

@@ -22,7 +22,7 @@ fun recentUserAD(
     bind {
         with(binding) {
             if (item.isSelected) {
-                imageAvatar.setStrokeColorResource(R.color.send_payment_currency_divider)
+                imageAvatar.setStrokeColorResource(com.topiichat.core.R.color.send_payment_currency_divider)
             } else {
                 imageAvatar.setStrokeColorResource(android.R.color.transparent)
             }

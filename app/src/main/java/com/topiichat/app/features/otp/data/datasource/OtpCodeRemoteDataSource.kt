@@ -2,11 +2,11 @@ package com.topiichat.app.features.otp.data.datasource
 
 import com.topiichat.app.core.data.ApiService
 import com.topiichat.app.core.data.datasource.BaseRemoteDataStore
-import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.features.otp.data.model.ResendOtpCodeDto
 import com.topiichat.app.features.otp.data.model.ResendOtpCodeRequestDto
 import com.topiichat.app.features.otp.data.model.ValidOtpCodeDto
 import com.topiichat.app.features.otp.data.model.ValidOtpCodeRequestDto
+import com.topiichat.core.domain.ResultData
 import javax.inject.Inject
 
 class OtpCodeRemoteDataSource @Inject constructor(

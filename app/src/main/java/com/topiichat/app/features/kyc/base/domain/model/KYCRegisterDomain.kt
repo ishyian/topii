@@ -1,8 +1,8 @@
 package com.topiichat.app.features.kyc.base.domain.model
 
 import android.os.Parcelable
-import com.topiichat.app.core.domain.Domain
 import com.topiichat.app.features.registration.presentation.RegisterParameters
+import com.topiichat.core.domain.Domain
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

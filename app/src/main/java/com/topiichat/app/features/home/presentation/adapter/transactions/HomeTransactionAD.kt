@@ -5,12 +5,12 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import com.topiichat.app.R
-import com.topiichat.app.core.extension.date.DateFormats
-import com.topiichat.app.core.extension.date.toString
 import com.topiichat.app.databinding.HomeTransactionItemBinding
 import com.topiichat.app.features.home.domain.model.RemittanceDomain
 import com.topiichat.app.features.home.domain.model.RemittanceType
 import com.topiichat.app.features.home.presentation.model.HomeTransactionUiModel
+import com.topiichat.core.extension.date.DateFormats
+import com.topiichat.core.extension.date.toString
 
 @SuppressLint("SetTextI18n")
 fun homeTransactionAD(
@@ -27,10 +27,10 @@ fun homeTransactionAD(
     bind {
         val amountTextColorResource = when (item.transaction.action) {
             RemittanceType.REQUEST -> {
-                R.color.home_transaction_sum_profit
+                com.topiichat.core.R.color.home_transaction_sum_profit
             }
             RemittanceType.SEND -> {
-                R.color.home_transaction_sum_expense
+                com.topiichat.core.R.color.home_transaction_sum_expense
             }
         }
         with(binding) {

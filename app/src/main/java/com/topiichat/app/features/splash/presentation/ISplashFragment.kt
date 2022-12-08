@@ -1,5 +1,5 @@
 package com.topiichat.app.features.splash.presentation
 
-import com.topiichat.app.core.presentation.platform.IBaseFragment
+import com.topiichat.core.presentation.platform.IBaseFragment
 
 interface ISplashFragment : IBaseFragment

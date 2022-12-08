@@ -1,9 +1,9 @@
 package com.topiichat.app.features.home.presentation.mapper
 
-import com.topiichat.app.core.domain.Mapper
 import com.topiichat.app.features.home.domain.model.RemittanceHistoryDomain
 import com.topiichat.app.features.home.presentation.model.HomeRemittanceHistoryUiModel
 import com.topiichat.app.features.home.presentation.model.HomeTransactionUiModel
+import com.topiichat.core.domain.Mapper
 import javax.inject.Inject
 
 class HomeRemittanceUiMapper @Inject constructor() : Mapper<RemittanceHistoryDomain, HomeRemittanceHistoryUiModel> {

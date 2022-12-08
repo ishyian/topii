@@ -1,7 +1,7 @@
 package com.topiichat.app.features.request_remittance.domain.repo
 
-import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.features.request_remittance.domain.model.RequestRemittanceDomain
+import com.topiichat.core.domain.ResultData
 
 interface RequestRemittanceRepository {
     suspend fun requestRemittanceByPhone(

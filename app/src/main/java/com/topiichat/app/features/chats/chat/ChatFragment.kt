@@ -52,13 +52,13 @@ import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.common.base.Optional
 import com.google.common.collect.ImmutableList
-import com.topiichat.app.core.extension.viewModelCreator
 import com.topiichat.app.databinding.DialogAddAttachmentBinding
 import com.topiichat.app.databinding.FragmentChatBinding
 import com.topiichat.app.features.chats.activity.ChatsActivity
 import com.topiichat.app.features.chats.base.BaseChatFragment
 import com.topiichat.app.features.chats.chat.adapter.MediaPreviewAdapter
 import com.topiichat.app.features.chats.chat.adapter.MessageAdapter
+import com.topiichat.core.extension.viewModelCreator
 import com.yourbestigor.chat.R
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.Config

@@ -1,8 +1,8 @@
 package com.topiichat.app.core.data.datasource
 
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.exception.data.ErrorParser
-import com.topiichat.app.core.exception.domain.networkConnectionError
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.exception.data.ErrorParser
+import com.topiichat.core.exception.domain.networkConnectionError
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
