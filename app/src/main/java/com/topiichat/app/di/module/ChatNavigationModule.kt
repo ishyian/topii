@@ -1,7 +1,7 @@
 package com.topiichat.app.di.module
 
-import com.topiichat.app.core.annotations.ChatNavigatorHolderQualifier
-import com.topiichat.app.core.annotations.ChatRouterQualifier
+import com.topiichat.core.annotations.ChatNavigatorHolderQualifier
+import com.topiichat.core.annotations.ChatRouterQualifier
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

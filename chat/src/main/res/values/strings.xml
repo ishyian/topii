@@ -1000,4 +1000,25 @@
     <string name="account_status_temporary_auth_failure">Temporary authentication failure</string>
     <string name="delete_avatar">Delete avatar</string>
     <string name="audio_video_disabled_tor">Calls are disabled when using Tor</string>
+
+    <string name="chat_attachment_camera">Camara</string>
+    <string name="chat_attachment_gallery">Galería</string>
+    <string name="chat_attachment_document">Documentos</string>
+    <string name="chat_attachment_location">Localización</string>
+    <string name="chat_attachment_contact">Contactos</string>
+    <string name="chat_attachment_transfers">Remesas</string>
+    <string name="chat_attachment_share_data">Compartir los datos de mi Wallet</string>
+    <string name="chat_attachment_close">Cerrar</string>
+
+    <string name="chats">Chats</string>
+    <string name="chats_edit">Editar</string>
+    <string name="chats_no_chats">No tienes chats aun</string>
+    <string name="chats_new_chat"><u>Nuevo Mensaje</u></string>
+    <string name="chats_search_hint">Search</string>
+    <string name="chats_action_create_group">Crear Grupo</string>
+    <string name="chats_action_search_by_phone">Encontrar Por Número Telefónico</string>
+    <string name="chats_action_invite_friends">Invitar Amigos </string>
+
+    <string name="search_results_hints">Here will be the search results</string>
+    <string name="no_results">No results</string>
 </resources>

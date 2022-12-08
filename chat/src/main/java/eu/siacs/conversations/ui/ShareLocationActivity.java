@@ -57,7 +57,7 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
         super.onCreate(savedInstanceState);
 
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_share_location);
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(binding.toolbar.getRoot());
         configureActionBar(getSupportActionBar());
         setupMapView(binding.map, LocationProvider.getGeoPoint(this));
 

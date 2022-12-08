@@ -350,7 +350,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         ConversationMenuConfigurator.reloadFeatures(this);
         OmemoSetting.load(this);
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_conversations);
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(binding.toolbar.getRoot());
         configureActionBar(getSupportActionBar());
         this.getFragmentManager().addOnBackStackChangedListener(this::invalidateActionBarTitle);
         this.getFragmentManager().addOnBackStackChangedListener(this::showDialogsIfMainIsOverview);
@@ -613,7 +613,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                 actionBar.setTitle(conversation.getName());
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 ActionBarUtil.setActionBarOnClickListener(
-                        binding.toolbar,
+                        binding.toolbar.getRoot(),
                         (v) -> openConversationDetails(conversation)
                 );
                 return;
@@ -621,7 +621,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         }
         actionBar.setTitle(R.string.app_name);
         actionBar.setDisplayHomeAsUpEnabled(false);
-        ActionBarUtil.resetActionBarOnClickListeners(binding.toolbar);
+        ActionBarUtil.resetActionBarOnClickListeners(binding.toolbar.getRoot());
     }
 
     private void openConversationDetails(final Conversation conversation) {

@@ -80,14 +80,13 @@
         <activity android:name="eu.siacs.conversations.ui.TrustKeysActivity" />
         <activity android:name="eu.siacs.conversations.ui.RtpSessionActivity" />
         <activity android:name="eu.siacs.conversations.ui.SearchActivity" />
-        <activity android:name=".features.chats.activity.EditAccountActivity" />
-        <activity android:name=".features.chats.activity.WelcomeActivity" />
-        <activity android:name=".features.chats.activity.PickServerActivity" />
-        <activity android:name=".features.chats.activity.MagicCreateActivity" />
-        <activity android:name=".features.chats.calls.RtpSessionActivity" />
+        <activity android:name="com.topiichat.chat.activity.EditAccountActivity" />
+        <activity android:name="com.topiichat.chat.activity.WelcomeActivity" />
+        <activity android:name="com.topiichat.chat.activity.PickServerActivity" />
+        <activity android:name="com.topiichat.chat.activity.MagicCreateActivity" />
 
         <activity
-            android:name=".features.chats.activity.ChatsActivity"
+            android:name="com.topiichat.chat.activity.ChatsActivity"
             android:exported="true"
             android:theme="@style/AppTheme" />
 

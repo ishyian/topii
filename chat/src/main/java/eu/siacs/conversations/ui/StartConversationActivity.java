@@ -267,7 +267,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_start_conversation);
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(binding.toolbar.getRoot());
         configureActionBar(getSupportActionBar());
 
         inflateFab(binding.speedDial, R.menu.start_conversation_fab_submenu);

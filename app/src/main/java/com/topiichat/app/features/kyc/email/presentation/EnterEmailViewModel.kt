@@ -6,11 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
 import com.topiichat.app.features.MainScreens
-import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.kyc.base.domain.model.toRegisterParameters
 import com.topiichat.app.features.kyc.base.domain.usecases.GetTokenAliceUseCase
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
 import com.topiichat.app.features.kyc.email.domain.OnboardingDomain
+import com.topiichat.chat.ChatsScreens
 import com.topiichat.core.domain.ResultData
 import com.topiichat.core.extension.isValidEmail
 import com.topiichat.core.extension.toIso3CountryCode

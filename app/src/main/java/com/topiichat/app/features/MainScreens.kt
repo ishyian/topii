@@ -3,7 +3,6 @@ package com.topiichat.app.features
 import android.content.Context
 import android.content.Intent
 import com.topiichat.app.features.activate_permission.presentation.PermissionFragment
-import com.topiichat.app.features.chats.activity.ChatsActivity
 import com.topiichat.app.features.contacts.presentation.ContactsFragment
 import com.topiichat.app.features.contacts.presentation.ContactsParameters
 import com.topiichat.app.features.home.presentation.HomeFragment
@@ -23,6 +22,7 @@ import com.topiichat.app.features.send_remittance.presentation.SendRemittancePar
 import com.topiichat.app.features.splash.presentation.SplashFragment
 import com.topiichat.app.features.terms.presentation.TermsFragment
 import com.topiichat.app.features.valid_phone_number.presentation.ValidPhoneNumberFragment
+import com.topiichat.chat.activity.ChatsActivity
 import com.topiichat.core.delegates.parcelableParametersBundleOf
 import ru.terrakok.cicerone.android.support.FragmentParams
 import ru.terrakok.cicerone.android.support.SupportAppScreen

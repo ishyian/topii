@@ -78,7 +78,7 @@ public class ChannelDiscoveryActivity extends XmppActivity implements MenuItem.O
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_channel_discovery);
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(binding.toolbar.getRoot());
         configureActionBar(getSupportActionBar(), true);
         binding.list.setAdapter(this.adapter);
         this.adapter.setOnChannelSearchResultSelectedListener(this);

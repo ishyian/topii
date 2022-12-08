@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
 import com.topiichat.app.features.MainScreens
-import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.registration.presentation.RegisterParameters
+import com.topiichat.chat.ChatsScreens
 import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.terrakok.cicerone.Router
