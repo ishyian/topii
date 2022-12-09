@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.topiichat.chat.activity.ChatsActivity;
+import com.topiichat.chat.chat.ChatFragment;
 import com.yourbestigor.chat.R;
 
 import androidx.appcompat.app.AlertDialog;
@@ -20,8 +22,6 @@ import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.MucOptions;
 import eu.siacs.conversations.entities.MucOptions.User;
 import eu.siacs.conversations.services.XmppConnectionService;
-import eu.siacs.conversations.ui.ConversationFragment;
-import eu.siacs.conversations.ui.ConversationsActivity;
 import eu.siacs.conversations.ui.XmppActivity;
 import eu.siacs.conversations.xmpp.Jid;
 
@@ -167,8 +167,8 @@ public final class MucDetailsContextMenuHelper {
             }
             return true;
         } else if (itemId == R.id.send_private_message) {
-            if (activity instanceof ConversationsActivity) {
-                ConversationFragment conversationFragment = ConversationFragment.get(activity);
+            if (activity instanceof ChatsActivity) {
+                ChatFragment conversationFragment = ChatFragment.Companion.get(activity);
                 if (conversationFragment != null) {
                     conversationFragment.privateMessageWith(user.getFullJid());
                     return true;

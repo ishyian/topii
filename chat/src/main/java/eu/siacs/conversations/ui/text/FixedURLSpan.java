@@ -38,14 +38,14 @@ import android.os.Build;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.style.URLSpan;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.Toast;
 
+import com.topiichat.chat.activity.ChatsActivity;
 import com.yourbestigor.chat.R;
 
 import java.util.Arrays;
-
-import eu.siacs.conversations.ui.ConversationsActivity;
 
 
 @SuppressLint("ParcelCreator")
@@ -69,11 +69,8 @@ public class FixedURLSpan extends URLSpan {
 		final Uri uri = Uri.parse(getURL());
 		final Context context = widget.getContext();
 		final boolean candidateToProcessDirectly = "xmpp".equals(uri.getScheme()) || ("https".equals(uri.getScheme()) && "conversations.im".equals(uri.getHost()) && uri.getPathSegments().size() > 1 && Arrays.asList("j", "i").contains(uri.getPathSegments().get(0)));
-		if (candidateToProcessDirectly && context instanceof ConversationsActivity) {
-			if (((ConversationsActivity) context).onXmppUriClicked(uri)) {
-				widget.playSoundEffect(0);
-				return;
-			}
+		if (candidateToProcessDirectly && context instanceof ChatsActivity) {
+
 		}
 		final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -82,7 +79,7 @@ public class FixedURLSpan extends URLSpan {
 		//intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
 		try {
 			context.startActivity(intent);
-			widget.playSoundEffect(0);
+			widget.playSoundEffect(SoundEffectConstants.CLICK);
 		} catch (ActivityNotFoundException e) {
 			Toast.makeText(context, R.string.no_application_found_to_open_link, Toast.LENGTH_SHORT).show();
 		}

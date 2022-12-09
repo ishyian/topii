@@ -70,8 +70,6 @@
                 <action android:name="android.media.RINGER_MODE_CHANGED" />
             </intent-filter>
         </receiver>
-
-        <activity android:name="eu.siacs.conversations.ui.ConversationsActivity" />
         <activity android:name="eu.siacs.conversations.ui.SettingsActivity" />
         <activity android:name="eu.siacs.conversations.ui.UriHandlerActivity" />
         <activity android:name="eu.siacs.conversations.ui.ChooseAccountForProfilePictureActivity" />
@@ -79,7 +77,6 @@
         <activity android:name="eu.siacs.conversations.ui.ShowLocationActivity" />
         <activity android:name="eu.siacs.conversations.ui.TrustKeysActivity" />
         <activity android:name="eu.siacs.conversations.ui.RtpSessionActivity" />
-        <activity android:name="eu.siacs.conversations.ui.SearchActivity" />
         <activity android:name="com.topiichat.chat.activity.EditAccountActivity" />
         <activity android:name="com.topiichat.chat.activity.WelcomeActivity" />
         <activity android:name="com.topiichat.chat.activity.PickServerActivity" />

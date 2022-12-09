@@ -1765,7 +1765,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
         conversation?.account?.pgpDecryptionService?.decrypt(message, false)
     }
 
-    private fun privateMessageWith(counterpart: Jid?) {
+    fun privateMessageWith(counterpart: Jid?) {
         if (conversation?.setOutgoingChatState(Config.DEFAULT_CHAT_STATE) == true) {
             chatsActivity?.xmppConnectionService?.sendChatState(conversation)
         }
@@ -3016,7 +3016,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
             fragment?.startDownloadable(message)
         }
 
-        fun registerPendingMessage(activity: AppCompatActivity, message: Message) {
+        fun registerPendingMessage(activity: AppCompatActivity, message: Message?) {
             val fragment = findConversationFragment(activity)
             fragment?.pendingMessage?.push(message)
         }

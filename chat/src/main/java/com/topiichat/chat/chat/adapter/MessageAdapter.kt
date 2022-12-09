@@ -26,6 +26,8 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.common.base.Strings
+import com.topiichat.chat.activity.ChatsActivity
+import com.topiichat.chat.chat.ChatFragment
 import com.yourbestigor.chat.R
 import eu.siacs.conversations.Config
 import eu.siacs.conversations.entities.Conversation
@@ -35,8 +37,6 @@ import eu.siacs.conversations.entities.RtpSessionStatus
 import eu.siacs.conversations.entities.Transferable
 import eu.siacs.conversations.persistance.FileBackend
 import eu.siacs.conversations.services.NotificationService
-import eu.siacs.conversations.ui.ConversationFragment
-import eu.siacs.conversations.ui.ConversationsActivity
 import eu.siacs.conversations.ui.XmppActivity
 import eu.siacs.conversations.ui.text.DividerSpan
 import eu.siacs.conversations.ui.text.QuoteSpan
@@ -495,7 +495,7 @@ class MessageAdapter @JvmOverloads constructor(
         viewHolder.download_button!!.visibility = View.VISIBLE
         viewHolder.download_button!!.text = text
         viewHolder.download_button!!.setOnClickListener { v: View? ->
-            ConversationFragment.downloadFile(
+            ChatFragment.downloadFile(
                 activity,
                 message
             )
@@ -902,11 +902,11 @@ class MessageAdapter @JvmOverloads constructor(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ConversationFragment.registerPendingMessage(activity, message)
+            ChatFragment.registerPendingMessage(activity, message)
             ActivityCompat.requestPermissions(
                 activity,
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                ConversationsActivity.REQUEST_OPEN_MESSAGE
+                ChatsActivity.REQUEST_OPEN_MESSAGE
             )
             return
         }

@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
+import com.topiichat.chat.activity.ChatsActivity;
 import com.yourbestigor.chat.R;
 import com.yourbestigor.chat.databinding.ActivityRtpSessionBinding;
 
@@ -1225,13 +1226,13 @@ public class RtpSessionActivity extends XmppActivity
         final Jid with = Jid.ofEscaped(intent.getStringExtra(EXTRA_WITH));
         final Conversation conversation =
                 xmppConnectionService.findOrCreateConversation(account, with, false, true);
-        final Intent launchIntent = new Intent(this, ConversationsActivity.class);
-        launchIntent.setAction(ConversationsActivity.ACTION_VIEW_CONVERSATION);
-        launchIntent.putExtra(ConversationsActivity.EXTRA_CONVERSATION, conversation.getUuid());
+        final Intent launchIntent = new Intent(this, ChatsActivity.class);
+        launchIntent.setAction(ChatsActivity.ACTION_VIEW_CONVERSATION);
+        launchIntent.putExtra(ChatsActivity.EXTRA_CONVERSATION, conversation.getUuid());
         launchIntent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         launchIntent.putExtra(
-                ConversationsActivity.EXTRA_POST_INIT_ACTION,
-                ConversationsActivity.POST_ACTION_RECORD_VOICE);
+                ChatsActivity.EXTRA_POST_INIT_ACTION,
+                ChatsActivity.POST_ACTION_RECORD_VOICE);
         startActivity(launchIntent);
         finish();
     }

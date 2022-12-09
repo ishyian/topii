@@ -43,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
+import com.topiichat.chat.activity.ChatsActivity;
 import com.yourbestigor.chat.R;
 
 import java.io.IOException;
@@ -484,21 +485,21 @@ public abstract class XmppActivity extends ActionBarActivity {
     }
 
     private void switchToConversation(Conversation conversation, String text, boolean asQuote, String nick, boolean pm, boolean doNotAppend) {
-        Intent intent = new Intent(this, ConversationsActivity.class);
-        intent.setAction(ConversationsActivity.ACTION_VIEW_CONVERSATION);
-        intent.putExtra(ConversationsActivity.EXTRA_CONVERSATION, conversation.getUuid());
+        Intent intent = new Intent(this, ChatsActivity.class);
+        intent.setAction(ChatsActivity.ACTION_VIEW_CONVERSATION);
+        intent.putExtra(ChatsActivity.EXTRA_CONVERSATION, conversation.getUuid());
         if (text != null) {
             intent.putExtra(Intent.EXTRA_TEXT, text);
             if (asQuote) {
-                intent.putExtra(ConversationsActivity.EXTRA_AS_QUOTE, true);
+                intent.putExtra(ChatsActivity.EXTRA_AS_QUOTE, true);
             }
         }
         if (nick != null) {
-            intent.putExtra(ConversationsActivity.EXTRA_NICK, nick);
-            intent.putExtra(ConversationsActivity.EXTRA_IS_PRIVATE_MESSAGE, pm);
+            intent.putExtra(ChatsActivity.EXTRA_NICK, nick);
+            intent.putExtra(ChatsActivity.EXTRA_IS_PRIVATE_MESSAGE, pm);
         }
         if (doNotAppend) {
-            intent.putExtra(ConversationsActivity.EXTRA_DO_NOT_APPEND, true);
+            intent.putExtra(ChatsActivity.EXTRA_DO_NOT_APPEND, true);
         }
         intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

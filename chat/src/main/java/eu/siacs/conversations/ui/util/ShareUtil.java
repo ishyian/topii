@@ -35,12 +35,12 @@ import android.net.Uri;
 import android.text.SpannableStringBuilder;
 import android.widget.Toast;
 
+import com.topiichat.chat.activity.ChatsActivity;
 import com.yourbestigor.chat.R;
 
 import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.persistance.FileBackend;
-import eu.siacs.conversations.ui.ConversationsActivity;
 import eu.siacs.conversations.ui.XmppActivity;
 import eu.siacs.conversations.utils.XmppUri;
 import eu.siacs.conversations.xmpp.Jid;
@@ -56,7 +56,7 @@ public class ShareUtil {
         } else if (!message.isFileOrImage()) {
             shareIntent.putExtra(Intent.EXTRA_TEXT, message.getMergedBody().toString());
             shareIntent.setType("text/plain");
-            shareIntent.putExtra(ConversationsActivity.EXTRA_AS_QUOTE, message.getStatus() == Message.STATUS_RECEIVED);
+            shareIntent.putExtra(ChatsActivity.EXTRA_AS_QUOTE, message.getStatus() == Message.STATUS_RECEIVED);
         } else {
             final DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
             try {

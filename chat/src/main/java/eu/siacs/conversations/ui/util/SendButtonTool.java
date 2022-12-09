@@ -34,11 +34,11 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.preference.PreferenceManager;
 
+import com.topiichat.chat.chat.ChatFragment;
 import com.yourbestigor.chat.R;
 
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Presence;
-import eu.siacs.conversations.ui.ConversationFragment;
 import eu.siacs.conversations.utils.UIHelper;
 
 public class SendButtonTool {
@@ -68,7 +68,7 @@ public class SendButtonTool {
                         return SendButtonAction.SEND_LOCATION;
                     } else {
                         if ("recent".equals(setting)) {
-                            setting = preferences.getString(ConversationFragment.RECENTLY_USED_QUICK_ACTION, SendButtonAction.TEXT.toString());
+                            setting = preferences.getString(ChatFragment.RECENTLY_USED_QUICK_ACTION, SendButtonAction.TEXT.toString());
                             return SendButtonAction.valueOfOrDefault(setting);
                         } else {
                             return SendButtonAction.valueOfOrDefault(setting);

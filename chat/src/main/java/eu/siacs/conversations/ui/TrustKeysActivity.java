@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
+import com.topiichat.chat.chat.ChatFragment;
 import com.yourbestigor.chat.R;
 import com.yourbestigor.chat.databinding.ActivityTrustKeysBinding;
 import com.yourbestigor.chat.databinding.KeysCardBinding;
@@ -391,7 +392,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
 
     private void finishOk(boolean disabled) {
         Intent data = new Intent();
-        data.putExtra("choice", getIntent().getIntExtra("choice", ConversationFragment.ATTACHMENT_CHOICE_INVALID));
+        data.putExtra("choice", getIntent().getIntExtra("choice", ChatFragment.ATTACHMENT_CHOICE_INVALID));
         data.putExtra("disabled", disabled);
         setResult(RESULT_OK, data);
         finish();
