@@ -1,4 +1,4 @@
-package eu.siacs.conversations.ui;
+package com.topiichat.chat.rtc;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.util.Log;
 import android.util.Rational;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -54,6 +53,7 @@ import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.services.AppRTCAudioManager;
 import eu.siacs.conversations.services.XmppConnectionService;
+import eu.siacs.conversations.ui.XmppActivity;
 import eu.siacs.conversations.ui.util.AvatarWorkerTask;
 import eu.siacs.conversations.ui.util.MainThreadExecutor;
 import eu.siacs.conversations.ui.util.Rationals;
@@ -66,6 +66,7 @@ import eu.siacs.conversations.xmpp.jingle.JingleConnectionManager;
 import eu.siacs.conversations.xmpp.jingle.JingleRtpConnection;
 import eu.siacs.conversations.xmpp.jingle.Media;
 import eu.siacs.conversations.xmpp.jingle.RtpEndUserState;
+import timber.log.Timber;
 
 import static eu.siacs.conversations.utils.PermissionUtils.getFirstDenied;
 import static java.util.Arrays.asList;
@@ -139,10 +140,7 @@ public class RtpSessionActivity extends XmppActivity
         try {
             videoTrack.addSink(surfaceViewRenderer);
         } catch (final IllegalStateException e) {
-            Log.e(
-                    Config.LOGTAG,
-                    "possible race condition on trying to display video track. ignoring",
-                    e);
+            Timber.e(e, "possible race condition on trying to display video track. ignoring");
         }
     }
 
@@ -312,7 +310,7 @@ public class RtpSessionActivity extends XmppActivity
             final long start = SystemClock.elapsedRealtime();
             final boolean isMicrophoneAvailable = AppRTCAudioManager.isMicrophoneAvailable();
             final long stop = SystemClock.elapsedRealtime();
-            Log.d(Config.LOGTAG, "checking microphone availability took " + (stop - start) + "ms");
+            Timber.d("checking microphone availability took " + (stop - start) + "ms");
             if (isMicrophoneAvailable) {
                 return;
             }
@@ -353,11 +351,11 @@ public class RtpSessionActivity extends XmppActivity
     private void acquireProximityWakeLock() {
         final PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (powerManager == null) {
-            Log.e(Config.LOGTAG, "power manager not available");
+            Timber.e("power manager not available");
             return;
         }
         if (isFinishing()) {
-            Log.e(Config.LOGTAG, "do not acquire wakelock. activity is finishing");
+            Timber.e("do not acquire wakelock. activity is finishing");
             return;
         }
         if (this.mProximityWakeLock == null) {
@@ -366,14 +364,14 @@ public class RtpSessionActivity extends XmppActivity
                             PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, PROXIMITY_WAKE_LOCK_TAG);
         }
         if (!this.mProximityWakeLock.isHeld()) {
-            Log.d(Config.LOGTAG, "acquiring proximity wake lock");
+            Timber.d("acquiring proximity wake lock");
             this.mProximityWakeLock.acquire();
         }
     }
 
     private void releaseProximityWakeLock() {
         if (this.mProximityWakeLock != null && mProximityWakeLock.isHeld()) {
-            Log.d(Config.LOGTAG, "releasing proximity wake lock");
+            Timber.d("releasing proximity wake lock");
             this.mProximityWakeLock.release(PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY);
             this.mProximityWakeLock = null;
         }
@@ -394,13 +392,11 @@ public class RtpSessionActivity extends XmppActivity
 
     @Override
     public void onNewIntent(final Intent intent) {
-        Log.d(Config.LOGTAG, this.getClass().getName() + ".onNewIntent()");
+        Timber.d("%s.onNewIntent()", this.getClass().getName());
         super.onNewIntent(intent);
         setIntent(intent);
         if (xmppConnectionService == null) {
-            Log.d(
-                    Config.LOGTAG,
-                    "RtpSessionActivity: background service wasn't bound in onNewIntent()");
+            Timber.d("RtpSessionActivity: background service wasn't bound in onNewIntent()");
             return;
         }
         final Account account = extractAccount(intent);
@@ -408,12 +404,12 @@ public class RtpSessionActivity extends XmppActivity
         final Jid with = Jid.ofEscaped(intent.getStringExtra(EXTRA_WITH));
         final String sessionId = intent.getStringExtra(EXTRA_SESSION_ID);
         if (sessionId != null) {
-            Log.d(Config.LOGTAG, "reinitializing from onNewIntent()");
+            Timber.d("reinitializing from onNewIntent()");
             if (initializeActivityWithRunningRtpSession(account, with, sessionId)) {
                 return;
             }
             if (ACTION_ACCEPT_CALL.equals(intent.getAction())) {
-                Log.d(Config.LOGTAG, "accepting call from onNewIntent()");
+                Timber.d("accepting call from onNewIntent()");
                 requestPermissionsAndAcceptCall();
                 resetIntent(intent.getExtras());
             }
@@ -437,7 +433,7 @@ public class RtpSessionActivity extends XmppActivity
                 return;
             }
             if (ACTION_ACCEPT_CALL.equals(intent.getAction())) {
-                Log.d(Config.LOGTAG, "intent action was accept");
+                Timber.d("intent action was accept");
                 requestPermissionsAndAcceptCall();
                 resetIntent(intent.getExtras());
             }
@@ -449,7 +445,7 @@ public class RtpSessionActivity extends XmppActivity
             final RtpEndUserState state =
                     extraLastState == null ? null : RtpEndUserState.valueOf(extraLastState);
             if (state != null) {
-                Log.d(Config.LOGTAG, "restored last state from intent extra");
+                Timber.d("restored last state from intent extra");
                 updateButtonConfiguration(state);
                 updateVerifiedShield(false);
                 updateStateDisplay(state);
@@ -468,7 +464,7 @@ public class RtpSessionActivity extends XmppActivity
                     .hasMatchingProposal(account, with)) {
                 return;
             }
-            Log.d(Config.LOGTAG, "restored state (" + state + ") was not an end card. finishing");
+            Timber.d("restored state (" + state + ") was not an end card. finishing");
             finish();
         }
     }
@@ -616,14 +612,12 @@ public class RtpSessionActivity extends XmppActivity
         try {
             final Rational rational = this.binding.remoteVideo.getAspectRatio();
             final Rational clippedRational = Rationals.clip(rational);
-            Log.d(
-                    Config.LOGTAG,
-                    "suggested rational " + rational + ". clipped to " + clippedRational);
+            Timber.d("suggested rational " + rational + ". clipped to " + clippedRational);
             enterPictureInPictureMode(
                     new PictureInPictureParams.Builder().setAspectRatio(clippedRational).build());
         } catch (final IllegalStateException e) {
             // this sometimes happens on Samsung phones (possibly when Knox is enabled)
-            Log.w(Config.LOGTAG, "unable to enter picture in picture mode", e);
+            Timber.w(e, "unable to enter picture in picture mode");
         }
     }
 
@@ -631,12 +625,10 @@ public class RtpSessionActivity extends XmppActivity
     public void onAspectRatioChanged(final Rational rational) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && isPictureInPicture()) {
             final Rational clippedRational = Rationals.clip(rational);
-            Log.d(
-                    Config.LOGTAG,
-                    "suggested rational after aspect ratio change "
-                            + rational
-                            + ". clipped to "
-                            + clippedRational);
+            Timber.d("suggested rational after aspect ratio change "
+                    + rational
+                    + ". clipped to "
+                    + clippedRational);
             setPictureInPictureParams(
                     new PictureInPictureParams.Builder().setAspectRatio(clippedRational).build());
         }
@@ -711,7 +703,7 @@ public class RtpSessionActivity extends XmppActivity
             final Account account,
             final Jid with,
             final JingleConnectionManager.TerminatedRtpSession terminatedRtpSession) {
-        Log.d(Config.LOGTAG, "initializeWithTerminatedSessionState()");
+        Timber.d("initializeWithTerminatedSessionState()");
         if (terminatedRtpSession.state == RtpEndUserState.ENDED) {
             finish();
             return;
@@ -746,7 +738,7 @@ public class RtpSessionActivity extends XmppActivity
         try {
             surfaceViewRenderer.init(requireRtpConnection().getEglBaseContext(), null);
         } catch (final IllegalStateException e) {
-            // Log.d(Config.LOGTAG, "SurfaceViewRenderer was already initialized");
+            Timber.d("SurfaceViewRenderer was already initialized");
         }
         surfaceViewRenderer.setEnableHardwareScaler(true);
     }
@@ -1020,15 +1012,12 @@ public class RtpSessionActivity extends XmppActivity
                 new FutureCallback<Boolean>() {
                     @Override
                     public void onSuccess(@Nullable Boolean isFrontCamera) {
-                        binding.localVideo.setMirror(isFrontCamera);
+                        binding.localVideo.setMirror(Boolean.TRUE.equals(isFrontCamera));
                     }
 
                     @Override
                     public void onFailure(@NonNull final Throwable throwable) {
-                        Log.d(
-                                Config.LOGTAG,
-                                "could not switch camera",
-                                Throwables.getRootCause(throwable));
+                        Timber.d(Throwables.getRootCause(throwable), "could not switch camera");
                         Toast.makeText(
                                         RtpSessionActivity.this,
                                         R.string.could_not_switch_camera,
@@ -1098,11 +1087,10 @@ public class RtpSessionActivity extends XmppActivity
                                 RtpEndUserState.SECURITY_ERROR)
                         .contains(state)) {
                     binding.pipWarning.setVisibility(View.VISIBLE);
-                    binding.pipWaiting.setVisibility(View.GONE);
                 } else {
                     binding.pipWarning.setVisibility(View.GONE);
-                    binding.pipWaiting.setVisibility(View.GONE);
                 }
+                binding.pipWaiting.setVisibility(View.GONE);
             } else {
                 binding.appBarLayout.setVisibility(View.VISIBLE);
                 binding.pipPlaceholder.setVisibility(View.GONE);
@@ -1212,7 +1200,7 @@ public class RtpSessionActivity extends XmppActivity
         final String action = intent.getAction();
         final Set<Media> media = actionToMedia(lastAction == null ? action : lastAction);
         this.rtpConnectionReference = null;
-        Log.d(Config.LOGTAG, "attempting retry with " + with.toEscapedString());
+        Timber.d("attempting retry with %s", with.toEscapedString());
         proposeJingleRtpSession(account, with, media);
     }
 
@@ -1255,9 +1243,9 @@ public class RtpSessionActivity extends XmppActivity
     @Override
     public void onJingleRtpConnectionUpdate(
             Account account, Jid with, final String sessionId, RtpEndUserState state) {
-        Log.d(Config.LOGTAG, "onJingleRtpConnectionUpdate(" + state + ")");
+        Timber.d("onJingleRtpConnectionUpdate(" + state + ")");
         if (END_CARD.contains(state)) {
-            Log.d(Config.LOGTAG, "end card reached");
+            Timber.d("end card reached");
             releaseProximityWakeLock();
             runOnUiThread(
                     () -> getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON));
@@ -1268,7 +1256,7 @@ public class RtpSessionActivity extends XmppActivity
         }
         if (emptyReference(this.rtpConnectionReference)) {
             if (END_CARD.contains(state)) {
-                Log.d(Config.LOGTAG, "not reinitializing session");
+                Timber.d("not reinitializing session");
                 return;
             }
             // this happens when going from proposed session to actual session
@@ -1301,7 +1289,7 @@ public class RtpSessionActivity extends XmppActivity
                 this.rtpConnectionReference = null;
             }
         } else {
-            Log.d(Config.LOGTAG, "received update for other rtp session");
+            Timber.d("received update for other rtp session");
         }
     }
 
@@ -1309,15 +1297,13 @@ public class RtpSessionActivity extends XmppActivity
     public void onAudioDeviceChanged(
             AppRTCAudioManager.AudioDevice selectedAudioDevice,
             Set<AppRTCAudioManager.AudioDevice> availableAudioDevices) {
-        Log.d(
-                Config.LOGTAG,
-                "onAudioDeviceChanged in activity: selected:"
-                        + selectedAudioDevice
-                        + ", available:"
-                        + availableAudioDevices);
+        Timber.d("onAudioDeviceChanged in activity: selected:"
+                + selectedAudioDevice
+                + ", available:"
+                + availableAudioDevices);
         try {
             if (getMedia().contains(Media.VIDEO)) {
-                Log.d(Config.LOGTAG, "nothing to do; in video mode");
+                Timber.d("nothing to do; in video mode");
                 return;
             }
             final RtpEndUserState endUserState = requireRtpConnection().getEndUserState();
@@ -1327,14 +1313,12 @@ public class RtpSessionActivity extends XmppActivity
                         audioManager.getSelectedAudioDevice(),
                         audioManager.getAudioDevices().size());
             } else if (END_CARD.contains(endUserState)) {
-                Log.d(
-                        Config.LOGTAG,
-                        "onAudioDeviceChanged() nothing to do because end card has been reached");
+                Timber.d("onAudioDeviceChanged() nothing to do because end card has been reached");
             } else {
                 putProximityWakeLockInProperState(selectedAudioDevice);
             }
         } catch (IllegalStateException e) {
-            Log.d(Config.LOGTAG, "RTP connection was not available when audio device changed");
+            Timber.d("RTP connection was not available when audio device changed");
         }
     }
 

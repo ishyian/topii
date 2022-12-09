@@ -29,6 +29,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.topiichat.chat.activity.ChatsActivity;
+import com.topiichat.chat.rtc.RtpSessionActivity;
 import com.yourbestigor.chat.R;
 
 import java.io.File;
@@ -67,7 +68,6 @@ import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.ui.EditAccountActivity;
-import eu.siacs.conversations.ui.RtpSessionActivity;
 import eu.siacs.conversations.ui.TimePreference;
 import eu.siacs.conversations.utils.AccountUtils;
 import eu.siacs.conversations.utils.Compatibility;

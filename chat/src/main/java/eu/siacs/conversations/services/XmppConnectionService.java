@@ -45,6 +45,7 @@ import android.util.Pair;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import com.topiichat.chat.rtc.RtpSessionActivity;
 import com.yourbestigor.chat.R;
 
 import org.conscrypt.Conscrypt;
@@ -114,7 +115,6 @@ import eu.siacs.conversations.parser.PresenceParser;
 import eu.siacs.conversations.persistance.DatabaseBackend;
 import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.ui.ChooseAccountForProfilePictureActivity;
-import eu.siacs.conversations.ui.RtpSessionActivity;
 import eu.siacs.conversations.ui.SettingsActivity;
 import eu.siacs.conversations.ui.UiCallback;
 import eu.siacs.conversations.ui.interfaces.OnAvatarPublication;

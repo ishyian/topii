@@ -56,6 +56,7 @@ import com.topiichat.chat.activity.ChatsActivity
 import com.topiichat.chat.base.BaseChatFragment
 import com.topiichat.chat.chat.adapter.MediaPreviewAdapter
 import com.topiichat.chat.chat.adapter.MessageAdapter
+import com.topiichat.chat.rtc.RtpSessionActivity
 import com.topiichat.core.extension.viewModelCreator
 import com.yourbestigor.chat.R
 import com.yourbestigor.chat.databinding.DialogAddAttachmentBinding
@@ -80,7 +81,6 @@ import eu.siacs.conversations.persistance.FileBackend
 import eu.siacs.conversations.services.QuickConversationsService
 import eu.siacs.conversations.services.XmppConnectionService.OnMoreMessagesLoaded
 import eu.siacs.conversations.ui.BlockContactDialog
-import eu.siacs.conversations.ui.RtpSessionActivity
 import eu.siacs.conversations.ui.TrustKeysActivity
 import eu.siacs.conversations.ui.UiCallback
 import eu.siacs.conversations.ui.UiInformableCallback
