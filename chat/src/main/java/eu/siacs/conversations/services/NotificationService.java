@@ -28,6 +28,7 @@ import android.util.Log;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
+import com.topiichat.chat.activity.ChatsActivity;
 import com.yourbestigor.chat.R;
 
 import java.io.File;
@@ -65,7 +66,6 @@ import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.persistance.FileBackend;
-import eu.siacs.conversations.ui.ConversationsActivity;
 import eu.siacs.conversations.ui.EditAccountActivity;
 import eu.siacs.conversations.ui.RtpSessionActivity;
 import eu.siacs.conversations.ui.TimePreference;
@@ -102,7 +102,6 @@ public class NotificationService {
     public static final int MISSED_CALL_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 12;
     private static final int DELIVERY_FAILED_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 13;
     private final XmppConnectionService mXmppConnectionService;
-    private final Class<?> chatActivityClass;
     private final LinkedHashMap<String, ArrayList<Message>> notifications = new LinkedHashMap<>();
     private final HashMap<Conversation, AtomicInteger> mBacklogMessageCounter = new HashMap<>();
     private final LinkedHashMap<Conversational, MissedCallsInfo> mMissedCalls =
@@ -115,9 +114,8 @@ public class NotificationService {
     private Ringtone currentlyPlayingRingtone = null;
     private ScheduledFuture<?> vibrationFuture;
 
-    NotificationService(final XmppConnectionService service, final Class<?> chatActivityClass) {
+    NotificationService(final XmppConnectionService service) {
         this.mXmppConnectionService = service;
-        this.chatActivityClass = chatActivityClass;
     }
 
     private static boolean displaySnoozeAction(List<Message> messages) {
@@ -1499,18 +1497,12 @@ public class NotificationService {
 
     private PendingIntent createContentIntent(
             final String conversationUuid, final String downloadMessageUuid) {
-        Intent viewConversationIntent;
-        if (chatActivityClass != null) {
-            viewConversationIntent = new Intent(mXmppConnectionService, chatActivityClass);
-        } else {
-            viewConversationIntent = new Intent(mXmppConnectionService, ConversationsActivity.class);
-
-        }
-        viewConversationIntent.setAction(ConversationsActivity.ACTION_VIEW_CONVERSATION);
-        viewConversationIntent.putExtra(ConversationsActivity.EXTRA_CONVERSATION, conversationUuid);
+        Intent viewConversationIntent = new Intent(mXmppConnectionService, ChatsActivity.class);
+        viewConversationIntent.setAction(ChatsActivity.ACTION_VIEW_CONVERSATION);
+        viewConversationIntent.putExtra(ChatsActivity.EXTRA_CONVERSATION, conversationUuid);
         if (downloadMessageUuid != null) {
             viewConversationIntent.putExtra(
-                    ConversationsActivity.EXTRA_DOWNLOAD_UUID, downloadMessageUuid);
+                    ChatsActivity.EXTRA_DOWNLOAD_UUID, downloadMessageUuid);
             return PendingIntent.getActivity(
                     mXmppConnectionService,
                     generateRequestCode(conversationUuid, 8),
@@ -1753,12 +1745,7 @@ public class NotificationService {
     }
 
     private PendingIntent createOpenConversationsIntent() {
-        Intent convIntent;
-        if (chatActivityClass != null) {
-            convIntent = new Intent(mXmppConnectionService, chatActivityClass);
-        } else {
-            convIntent = new Intent(mXmppConnectionService, ConversationsActivity.class);
-        }
+        Intent convIntent = new Intent(mXmppConnectionService, ChatsActivity.class);
         try {
             return PendingIntent.getActivity(
                     mXmppConnectionService,
