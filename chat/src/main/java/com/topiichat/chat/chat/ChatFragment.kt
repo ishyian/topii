@@ -84,6 +84,7 @@ import eu.siacs.conversations.ui.XmppActivity
 import eu.siacs.conversations.ui.XmppActivity.ConferenceInvite
 import eu.siacs.conversations.ui.util.ActivityResult
 import eu.siacs.conversations.ui.util.Attachment
+import eu.siacs.conversations.ui.util.AvatarWorkerTask
 import eu.siacs.conversations.ui.util.DateSeparator
 import eu.siacs.conversations.ui.util.EditMessageActionModeCallback
 import eu.siacs.conversations.ui.util.ListViewUtils
@@ -813,6 +814,8 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
                 customInsertionActionModeCallback = EditMessageActionModeCallback(this)
             }
         }
+
+        AvatarWorkerTask.loadAvatar(conversation?.contact, imageAvatar, R.dimen.avatar)
 
         imageSend.setOnClickListener(sendButtonListener)
         imageAttach.setOnClickListener { showAttachmentsDialog() }
