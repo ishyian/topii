@@ -26,8 +26,6 @@ import android.view.ContextMenu.ContextMenuInfo
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -50,7 +48,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.inputmethod.InputConnectionCompat
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.common.base.Optional
 import com.google.common.collect.ImmutableList
 import com.topiichat.chat.activity.ChatsActivity
 import com.topiichat.chat.base.BaseChatFragment
@@ -63,7 +60,6 @@ import com.yourbestigor.chat.databinding.DialogAddAttachmentBinding
 import com.yourbestigor.chat.databinding.FragmentChatBinding
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.Config
-import eu.siacs.conversations.crypto.axolotl.AxolotlService
 import eu.siacs.conversations.crypto.axolotl.FingerprintStatus
 import eu.siacs.conversations.entities.Account
 import eu.siacs.conversations.entities.Blockable
@@ -88,7 +84,6 @@ import eu.siacs.conversations.ui.XmppActivity
 import eu.siacs.conversations.ui.XmppActivity.ConferenceInvite
 import eu.siacs.conversations.ui.util.ActivityResult
 import eu.siacs.conversations.ui.util.Attachment
-import eu.siacs.conversations.ui.util.ConversationMenuConfigurator
 import eu.siacs.conversations.ui.util.DateSeparator
 import eu.siacs.conversations.ui.util.EditMessageActionModeCallback
 import eu.siacs.conversations.ui.util.ListViewUtils
@@ -805,61 +800,6 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.fragment_conversation, menu)
-        val menuMucDetails = menu.findItem(R.id.action_muc_details)
-        val menuContactDetails = menu.findItem(R.id.action_contact_details)
-        val menuInviteContact = menu.findItem(R.id.action_invite)
-        val menuMute = menu.findItem(R.id.action_mute)
-        val menuUnmute = menu.findItem(R.id.action_unmute)
-        val menuCall = menu.findItem(R.id.action_call)
-        val menuOngoingCall = menu.findItem(R.id.action_ongoing_call)
-        val menuVideoCall = menu.findItem(R.id.action_video_call)
-        val menuTogglePinned = menu.findItem(R.id.action_toggle_pinned)
-        if (conversation != null) {
-            if (conversation!!.mode == Conversation.MODE_MULTI) {
-                menuContactDetails.isVisible = false
-                menuInviteContact.isVisible = conversation!!.mucOptions.canInvite()
-                menuMucDetails.setTitle(
-                    if (conversation!!.mucOptions.isPrivateAndNonAnonymous) R.string.action_muc_details else R.string.channel_details
-                )
-                menuCall.isVisible = false
-                menuOngoingCall.isVisible = false
-            } else {
-                val service = if (chatsActivity == null) null else chatsActivity!!.xmppConnectionService
-                val ongoingRtpSession = if (service == null) Optional.absent() else service.jingleConnectionManager
-                    .getOngoingRtpConnection(conversation!!.contact)
-                if (ongoingRtpSession.isPresent) {
-                    menuOngoingCall.isVisible = true
-                    menuCall.isVisible = false
-                } else {
-                    menuOngoingCall.isVisible = false
-                    val rtpCapability = RtpCapability.check(conversation!!.contact)
-                    val cameraAvailable = chatsActivity != null && chatsActivity!!.isCameraFeatureAvailable
-                    menuCall.isVisible = rtpCapability != RtpCapability.Capability.NONE
-                    menuVideoCall.isVisible = rtpCapability == RtpCapability.Capability.VIDEO && cameraAvailable
-                }
-                menuContactDetails.isVisible = !conversation!!.withSelf()
-                menuMucDetails.isVisible = false
-                menuInviteContact.isVisible = (
-                    service?.findConferenceServer(conversation!!.account) != null)
-            }
-            if (conversation!!.isMuted) {
-                menuMute.isVisible = false
-            } else {
-                menuUnmute.isVisible = false
-            }
-            ConversationMenuConfigurator.configureAttachmentMenu(conversation!!, menu)
-            ConversationMenuConfigurator.configureEncryptionMenu(conversation!!, menu)
-            if (conversation!!.getBooleanAttribute(Conversation.ATTRIBUTE_PINNED_ON_TOP, false)) {
-                menuTogglePinned.setTitle(R.string.remove_from_favorites)
-            } else {
-                menuTogglePinned.setTitle(R.string.add_to_favorites)
-            }
-        }
-        super.onCreateOptionsMenu(menu, menuInflater)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         root.setOnClickListener(null) // TODO why the fuck did we do this?
         textRecipientName.text = conversation?.name
@@ -927,7 +867,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
     }
 
     private fun checkForCallsAvailability() = with(binding) {
-        val rtpCapability = RtpCapability.check(conversation!!.contact)
+        val rtpCapability = RtpCapability.check(conversation?.contact)
         val cameraAvailable = chatsActivity != null && chatsActivity?.isCameraFeatureAvailable == true
         imageCall.isVisible = (rtpCapability != RtpCapability.Capability.NONE)
         imageVideoCall.isVisible = (rtpCapability == RtpCapability.Capability.VIDEO && cameraAvailable)
@@ -1265,64 +1205,6 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
-    }
-
-    private fun handleAttachmentSelection(item: MenuItem) {
-        val itemId = item.itemId
-        if (itemId == R.id.attach_choose_picture) {
-            attachFile(ATTACHMENT_CHOICE_CHOOSE_IMAGE)
-        } else if (itemId == R.id.attach_take_picture) {
-            attachFile(ATTACHMENT_CHOICE_TAKE_PHOTO)
-        } else if (itemId == R.id.attach_record_video) {
-            attachFile(ATTACHMENT_CHOICE_RECORD_VIDEO)
-        } else if (itemId == R.id.attach_choose_file) {
-            attachFile(ATTACHMENT_CHOICE_CHOOSE_FILE)
-        } else if (itemId == R.id.attach_record_voice) {
-            attachFile(ATTACHMENT_CHOICE_RECORD_VOICE)
-        } else if (itemId == R.id.attach_location) {
-            attachFile(ATTACHMENT_CHOICE_LOCATION)
-        }
-    }
-
-    private fun handleEncryptionSelection(item: MenuItem) {
-        if (conversation == null) {
-            return
-        }
-        val updated: Boolean
-        val itemId = item.itemId
-        if (itemId == R.id.encryption_choice_none) {
-            updated = conversation!!.setNextEncryption(Message.ENCRYPTION_NONE)
-            item.isChecked = true
-        } else if (itemId == R.id.encryption_choice_pgp) {
-            if (chatsActivity!!.hasPgp()) {
-                if (conversation!!.account.pgpSignature != null) {
-                    updated = conversation!!.setNextEncryption(Message.ENCRYPTION_PGP)
-                    item.isChecked = true
-                } else {
-                    updated = false
-                    chatsActivity!!.announcePgp(
-                        conversation!!.account,
-                        conversation,
-                        null,
-                        chatsActivity!!.onOpenPGPKeyPublished
-                    )
-                }
-            } else {
-                chatsActivity!!.showInstallPgpDialog()
-                updated = false
-            }
-        } else if (itemId == R.id.encryption_choice_axolotl) {
-            Timber.d(AxolotlService.getLogprefix(conversation!!.account) + "Enabled axolotl for Contact " + conversation!!.contact.jid)
-            updated = conversation!!.setNextEncryption(Message.ENCRYPTION_AXOLOTL)
-            item.isChecked = true
-        } else {
-            updated = conversation!!.setNextEncryption(Message.ENCRYPTION_NONE)
-        }
-        if (updated) {
-            chatsActivity!!.xmppConnectionService.updateConversation(conversation)
-        }
-        requireActivity().invalidateOptionsMenu()
-        chatsActivity!!.refreshUi()
     }
 
     @JvmOverloads fun attachFile(attachmentChoice: Int, updateRecentlyUsed: Boolean = true) {
