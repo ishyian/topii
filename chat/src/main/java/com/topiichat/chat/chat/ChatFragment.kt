@@ -834,9 +834,22 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
         mediaPreviewAdapter = MediaPreviewAdapter(this@ChatFragment)
         mediaPreview.adapter = mediaPreviewAdapter
 
-        checkForCallsAvailability()
-        imageVideoCall.setOnClickListener { checkPermissionAndTriggerVideoCall() }
-        imageCall.setOnClickListener { checkPermissionAndTriggerAudioCall() }
+        imageVideoCall.setOnClickListener {
+            if (isVideoCallsAvailable()) {
+                checkPermissionAndTriggerVideoCall()
+            } else {
+                showErrorMessage(getString(R.string.video_calls_error))
+            }
+        }
+
+        imageCall.setOnClickListener {
+            if (isAudioCallsAvailable()) {
+                checkPermissionAndTriggerAudioCall()
+            } else {
+                showErrorMessage(getString(R.string.audio_calls_error))
+            }
+        }
+
         binding.scrollToBottomButton.setOnClickListener(scrollButtonListener)
         setupClickListener(imageMore)
         initObservers()
@@ -869,11 +882,15 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
         observe(onMoreDialogShow, ::onMoreDialogShow)
     }
 
-    private fun checkForCallsAvailability() = with(binding) {
+    private fun isAudioCallsAvailable(): Boolean = with(binding) {
+        val rtpCapability = RtpCapability.check(conversation?.contact)
+        return rtpCapability != RtpCapability.Capability.NONE
+    }
+
+    private fun isVideoCallsAvailable(): Boolean = with(binding) {
         val rtpCapability = RtpCapability.check(conversation?.contact)
         val cameraAvailable = chatsActivity != null && chatsActivity?.isCameraFeatureAvailable == true
-        imageCall.isVisible = (rtpCapability != RtpCapability.Capability.NONE)
-        imageVideoCall.isVisible = (rtpCapability == RtpCapability.Capability.VIDEO && cameraAvailable)
+        return rtpCapability == RtpCapability.Capability.VIDEO && cameraAvailable
     }
 
     private fun showAttachmentsDialog() {
