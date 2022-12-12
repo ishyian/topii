@@ -1,12 +1,13 @@
-package com.topiichat.chat.presentation
+package com.topiichat.chat.chat_list.presentation
 
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.chat.ChatsScreens
-import com.topiichat.chat.presentation.model.ChatAction
-import com.topiichat.chat.presentation.model.ChatActionUiModel
+import com.topiichat.chat.chat_list.presentation.model.ChatAction
+import com.topiichat.chat.chat_list.presentation.model.ChatActionUiModel
+import com.topiichat.chat.search.presentation.SearchParameters
 import com.topiichat.core.annotations.ChatRouterQualifier
 import com.topiichat.core.presentation.platform.BaseViewModel
 import com.yourbestigor.chat.R

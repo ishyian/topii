@@ -1,4 +1,4 @@
-package com.topiichat.chat.presentation
+package com.topiichat.chat.search.presentation
 
 import android.view.View
 import androidx.lifecycle.LiveData

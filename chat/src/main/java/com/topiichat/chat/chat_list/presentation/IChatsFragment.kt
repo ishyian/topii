@@ -1,4 +1,4 @@
-package com.topiichat.chat.presentation
+package com.topiichat.chat.chat_list.presentation
 
 import com.topiichat.core.presentation.platform.IBaseFragment
 

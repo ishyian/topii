@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.topiichat.chat.base.BaseChatFragment
 import com.topiichat.chat.chat.ChatFragment
-import com.topiichat.chat.presentation.ChatsFragment
+import com.topiichat.chat.chat_list.presentation.ChatsFragment
 import com.topiichat.core.annotations.ChatNavigatorHolderQualifier
 import com.topiichat.core.annotations.ChatRouterQualifier
 import com.yourbestigor.chat.R

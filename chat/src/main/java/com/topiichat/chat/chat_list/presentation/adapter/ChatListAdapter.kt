@@ -1,8 +1,8 @@
-package com.topiichat.chat.presentation.adapter
+package com.topiichat.chat.chat_list.presentation.adapter
 
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
-import com.topiichat.chat.presentation.adapter.delegates.chatActionItemAD
-import com.topiichat.chat.presentation.model.ChatAction
+import com.topiichat.chat.chat_list.presentation.adapter.delegates.chatActionItemAD
+import com.topiichat.chat.chat_list.presentation.model.ChatAction
 import com.topiichat.core.adapter.BaseDiffCallback
 
 class ChatsListAdapter(

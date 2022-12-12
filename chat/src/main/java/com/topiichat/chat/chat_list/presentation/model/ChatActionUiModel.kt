@@ -1,4 +1,4 @@
-package com.topiichat.chat.presentation.model
+package com.topiichat.chat.chat_list.presentation.model
 
 data class ChatActionUiModel(
     val action: ChatAction

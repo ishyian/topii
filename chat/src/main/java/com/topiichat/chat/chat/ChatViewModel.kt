@@ -4,7 +4,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.chat.ChatsScreens
-import com.topiichat.chat.presentation.SearchParameters
+import com.topiichat.chat.search.presentation.SearchParameters
 import com.topiichat.core.annotations.ChatRouterQualifier
 import com.topiichat.core.presentation.platform.BaseViewModel
 import com.yourbestigor.chat.R

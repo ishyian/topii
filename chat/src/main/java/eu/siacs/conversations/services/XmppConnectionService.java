@@ -45,7 +45,7 @@ import android.util.Pair;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
-import com.topiichat.chat.rtc.RtpSessionActivity;
+import com.topiichat.chat.rtc.presentation.RtpSessionActivity;
 import com.yourbestigor.chat.R;
 
 import org.conscrypt.Conscrypt;

@@ -1,4 +1,4 @@
-package com.topiichat.chat.presentation
+package com.topiichat.chat.search.presentation
 
 import com.topiichat.core.presentation.platform.IBaseViewModel
 import eu.siacs.conversations.services.XmppConnectionService

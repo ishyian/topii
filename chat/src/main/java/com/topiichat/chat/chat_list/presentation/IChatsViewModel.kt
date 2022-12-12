@@ -1,6 +1,6 @@
-package com.topiichat.chat.presentation
+package com.topiichat.chat.chat_list.presentation
 
-import com.topiichat.chat.presentation.model.ChatAction
+import com.topiichat.chat.chat_list.presentation.model.ChatAction
 import com.topiichat.core.presentation.platform.IBaseViewModel
 
 interface IChatsViewModel : IBaseViewModel {

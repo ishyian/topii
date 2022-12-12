@@ -1,4 +1,4 @@
-package com.topiichat.chat.presentation
+package com.topiichat.chat.search.presentation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.topiichat.chat.activity.ChatsActivity
-import com.topiichat.chat.presentation.adapter.SearchMessagesAdapter
+import com.topiichat.chat.search.presentation.adapter.SearchMessagesAdapter
 import com.topiichat.core.delegates.parcelableParameters
 import com.topiichat.core.extension.getDrawableKtx
 import com.topiichat.core.extension.viewModelCreator

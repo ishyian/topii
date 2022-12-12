@@ -1,4 +1,4 @@
-package com.topiichat.chat.rtc;
+package com.topiichat.chat.rtc.presentation;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

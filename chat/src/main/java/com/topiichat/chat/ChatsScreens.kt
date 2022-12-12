@@ -1,8 +1,8 @@
 package com.topiichat.chat
 
-import com.topiichat.chat.presentation.ChatsFragment
-import com.topiichat.chat.presentation.SearchFragment
-import com.topiichat.chat.presentation.SearchParameters
+import com.topiichat.chat.chat_list.presentation.ChatsFragment
+import com.topiichat.chat.search.presentation.SearchFragment
+import com.topiichat.chat.search.presentation.SearchParameters
 import com.topiichat.core.delegates.parcelableParametersBundleOf
 import ru.terrakok.cicerone.android.support.FragmentParams
 import ru.terrakok.cicerone.android.support.SupportAppScreen

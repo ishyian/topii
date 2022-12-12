@@ -1,4 +1,4 @@
-package com.topiichat.chat.presentation
+package com.topiichat.chat.chat_list.presentation
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -16,8 +16,8 @@ import com.topiichat.chat.activity.ChatsActivity
 import com.topiichat.chat.base.BaseChatFragment
 import com.topiichat.chat.chat.ChatFragment
 import com.topiichat.chat.chat.ChatFragment.Companion.STATE_SCROLL_POSITION
-import com.topiichat.chat.presentation.adapter.ChatsAdapter
-import com.topiichat.chat.presentation.adapter.ChatsListAdapter
+import com.topiichat.chat.chat_list.presentation.adapter.ChatsAdapter
+import com.topiichat.chat.chat_list.presentation.adapter.ChatsListAdapter
 import com.topiichat.core.extension.getDrawableKtx
 import com.topiichat.core.extension.viewModelCreator
 import com.yourbestigor.chat.R

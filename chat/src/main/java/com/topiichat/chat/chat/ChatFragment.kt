@@ -53,7 +53,7 @@ import com.topiichat.chat.activity.ChatsActivity
 import com.topiichat.chat.base.BaseChatFragment
 import com.topiichat.chat.chat.adapter.MediaPreviewAdapter
 import com.topiichat.chat.chat.adapter.MessageAdapter
-import com.topiichat.chat.rtc.RtpSessionActivity
+import com.topiichat.chat.rtc.presentation.RtpSessionActivity
 import com.topiichat.core.extension.viewModelCreator
 import com.yourbestigor.chat.R
 import com.yourbestigor.chat.databinding.DialogAddAttachmentBinding
@@ -925,14 +925,13 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Timber.d("ConversationFragment.onDestroyView()")
-        messageListAdapter!!.setOnContactPictureClicked(null)
-        messageListAdapter!!.setOnContactPictureLongClicked(null)
+        messageListAdapter?.setOnContactPictureClicked(null)
+        messageListAdapter?.setOnContactPictureLongClicked(null)
     }
 
     private fun quoteText(text: String) {
         if (binding.editMessageInput.isEnabled) {
-            binding.editMessageInput.insertAsQuote(text);
+            binding.editMessageInput.insertAsQuote(text)
             binding.editMessageInput.requestFocus()
             val inputMethodManager =
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
@@ -947,40 +946,39 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
-        // This should cancel any remaining click events that would otherwise trigger links
         v.dispatchTouchEvent(MotionEvent.obtain(0, 0, MotionEvent.ACTION_CANCEL, 0f, 0f, 0))
         synchronized(messageList) {
             super.onCreateContextMenu(menu, v, menuInfo)
-            val acmi = menuInfo as AdapterContextMenuInfo?
-            selectedMessage = messageList[acmi!!.position]
+            val adapterContextMenuInfo = menuInfo as AdapterContextMenuInfo
+            selectedMessage = messageList[adapterContextMenuInfo.position]
             populateContextMenu(menu)
         }
     }
 
     private fun populateContextMenu(menu: ContextMenu) {
-        val m = selectedMessage
-        val t = m!!.transferable
-        var relevantForCorrection = m
+        val message = selectedMessage
+        val transferable = message!!.transferable
+        var relevantForCorrection = message
         while (relevantForCorrection!!.mergeable(relevantForCorrection.next())) {
             relevantForCorrection = relevantForCorrection.next()
         }
-        if (m.type != Message.TYPE_STATUS && m.type != Message.TYPE_RTP_SESSION) {
-            if (m.encryption == Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE
-                || m.encryption == Message.ENCRYPTION_AXOLOTL_FAILED
+        if (message.type != Message.TYPE_STATUS && message.type != Message.TYPE_RTP_SESSION) {
+            if (message.encryption == Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE
+                || message.encryption == Message.ENCRYPTION_AXOLOTL_FAILED
             ) {
                 return
             }
-            if (m.status == Message.STATUS_RECEIVED && t != null && (t.status == Transferable.STATUS_CANCELLED
-                    || t.status == Transferable.STATUS_FAILED)
+            if (message.status == Message.STATUS_RECEIVED && transferable != null && (transferable.status == Transferable.STATUS_CANCELLED
+                    || transferable.status == Transferable.STATUS_FAILED)
             ) {
                 return
             }
-            val deleted = m.isDeleted
-            val encrypted = (m.encryption == Message.ENCRYPTION_DECRYPTION_FAILED
-                || m.encryption == Message.ENCRYPTION_PGP)
-            val receiving = (m.status == Message.STATUS_RECEIVED
-                && (t is JingleFileTransferConnection
-                || t is HttpDownloadConnection))
+            val deleted = message.isDeleted
+            val encrypted = (message.encryption == Message.ENCRYPTION_DECRYPTION_FAILED
+                || message.encryption == Message.ENCRYPTION_PGP)
+            val receiving = (message.status == Message.STATUS_RECEIVED
+                && (transferable is JingleFileTransferConnection
+                || transferable is HttpDownloadConnection))
             chatsActivity!!.menuInflater.inflate(R.menu.message_context, menu)
             menu.setHeaderTitle(R.string.message_options)
             val openWith = menu.findItem(R.id.open_with)
@@ -996,19 +994,19 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
             val cancelTransmission = menu.findItem(R.id.cancel_transmission)
             val deleteFile = menu.findItem(R.id.delete_file)
             val showErrorMessage = menu.findItem(R.id.show_error_message)
-            val unInitiatedButKnownSize = MessageUtils.unInitiatedButKnownSize(m)
+            val unInitiatedButKnownSize = MessageUtils.unInitiatedButKnownSize(message)
             val showError =
-                m.status == Message.STATUS_SEND_FAILED && m.errorMessage != null && Message.ERROR_MESSAGE_CANCELLED != m.errorMessage
-            if (!m.isFileOrImage
+                message.status == Message.STATUS_SEND_FAILED && message.errorMessage != null && Message.ERROR_MESSAGE_CANCELLED != message.errorMessage
+            if (!message.isFileOrImage
                 && !encrypted
-                && !m.isGeoUri
-                && !m.treatAsDownloadable()
+                && !message.isGeoUri
+                && !message.treatAsDownloadable()
                 && !unInitiatedButKnownSize
-                && t == null
+                && transferable == null
             ) {
                 copyMessage.isVisible = true
-                quoteMessage.isVisible = !showError && MessageUtils.prepareQuote(m).length > 0
-                val scheme = ShareUtil.getLinkScheme(m.mergedBody)
+                quoteMessage.isVisible = !showError && MessageUtils.prepareQuote(message).length > 0
+                val scheme = ShareUtil.getLinkScheme(message.mergedBody)
                 if ("xmpp" == scheme) {
                     copyLink.setTitle(R.string.copy_jabber_id)
                     copyLink.isVisible = true
@@ -1016,64 +1014,64 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
                     copyLink.isVisible = true
                 }
             }
-            if (m.encryption == Message.ENCRYPTION_DECRYPTION_FAILED && !deleted) {
+            if (message.encryption == Message.ENCRYPTION_DECRYPTION_FAILED && !deleted) {
                 retryDecryption.isVisible = true
             }
             if (!showError
-                && relevantForCorrection.type == Message.TYPE_TEXT && !m.isGeoUri
+                && relevantForCorrection.type == Message.TYPE_TEXT && !message.isGeoUri
                 && relevantForCorrection.isLastCorrectableMessage
-                && m.conversation is Conversation
+                && message.conversation is Conversation
             ) {
                 correctMessage.isVisible = true
             }
-            if (m.isFileOrImage && !deleted && !receiving
-                || (m.type == Message.TYPE_TEXT && !m.treatAsDownloadable()
+            if (message.isFileOrImage && !deleted && !receiving
+                || (message.type == Message.TYPE_TEXT && !message.treatAsDownloadable()
                     && !unInitiatedButKnownSize
-                    && t == null)
+                    && transferable == null)
             ) {
                 shareWith.isVisible = true
             }
-            if (m.status == Message.STATUS_SEND_FAILED) {
+            if (message.status == Message.STATUS_SEND_FAILED) {
                 sendAgain.isVisible = true
             }
-            if (m.hasFileOnRemoteHost()
-                || m.isGeoUri
-                || m.treatAsDownloadable()
+            if (message.hasFileOnRemoteHost()
+                || message.isGeoUri
+                || message.treatAsDownloadable()
                 || unInitiatedButKnownSize
-                || t is HttpDownloadConnection
+                || transferable is HttpDownloadConnection
             ) {
                 copyUrl.isVisible = true
             }
-            if (m.isFileOrImage && deleted && m.hasFileOnRemoteHost()) {
+            if (message.isFileOrImage && deleted && message.hasFileOnRemoteHost()) {
                 downloadFile.isVisible = true
                 downloadFile.title = chatsActivity!!.getString(
                     R.string.download_x_file,
-                    UIHelper.getFileDescriptionString(chatsActivity, m)
+                    UIHelper.getFileDescriptionString(chatsActivity, message)
                 )
             }
             val waitingOfferedSending =
-                m.status == Message.STATUS_WAITING || m.status == Message.STATUS_UNSEND || m.status == Message.STATUS_OFFERED
-            val cancelable = t != null && !deleted || waitingOfferedSending && m.needsUploading()
+                message.status == Message.STATUS_WAITING || message.status == Message.STATUS_UNSEND || message.status == Message.STATUS_OFFERED
+            val cancelable = transferable != null && !deleted || waitingOfferedSending && message.needsUploading()
             if (cancelable) {
                 cancelTransmission.isVisible = true
             }
-            if (m.isFileOrImage && !deleted && !cancelable) {
-                val path = m.relativeFilePath
+            if (message.isFileOrImage && !deleted && !cancelable) {
+                val path = message.relativeFilePath
                 if (path == null || !path.startsWith("/")
                     || FileBackend.inConversationsDirectory(requireActivity(), path)
                 ) {
                     deleteFile.isVisible = true
                     deleteFile.title = chatsActivity!!.getString(
                         R.string.delete_x_file,
-                        UIHelper.getFileDescriptionString(chatsActivity, m)
+                        UIHelper.getFileDescriptionString(chatsActivity, message)
                     )
                 }
             }
             if (showError) {
                 showErrorMessage.isVisible = true
             }
-            val mime = if (m.isFileOrImage) m.mimeType else null
-            if (m.isGeoUri && GeoHelper.openInOsmAnd(activity, m)
+            val mime = if (message.isFileOrImage) message.mimeType else null
+            if (message.isGeoUri && GeoHelper.openInOsmAnd(activity, message)
                 || mime != null && mime.startsWith("audio/")
             ) {
                 openWith.isVisible = true
@@ -1193,7 +1191,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
     }
 
     private fun triggerRtpSession(action: String) {
-        if (chatsActivity!!.xmppConnectionService.jingleConnectionManager.isBusy) {
+        if (chatsActivity?.xmppConnectionService?.jingleConnectionManager?.isBusy == true) {
             Toast.makeText(activity, R.string.only_one_call_at_a_time, Toast.LENGTH_LONG)
                 .show()
             return

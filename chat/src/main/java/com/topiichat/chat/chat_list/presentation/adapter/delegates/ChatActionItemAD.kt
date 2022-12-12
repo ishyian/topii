@@ -1,8 +1,8 @@
-package com.topiichat.chat.presentation.adapter.delegates
+package com.topiichat.chat.chat_list.presentation.adapter.delegates
 
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
-import com.topiichat.chat.presentation.model.ChatAction
-import com.topiichat.chat.presentation.model.ChatActionUiModel
+import com.topiichat.chat.chat_list.presentation.model.ChatAction
+import com.topiichat.chat.chat_list.presentation.model.ChatActionUiModel
 import com.yourbestigor.chat.R
 import com.yourbestigor.chat.databinding.ChatActionItemBinding
 

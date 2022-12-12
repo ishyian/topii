@@ -1,4 +1,4 @@
-package com.topiichat.chat.presentation.adapter
+package com.topiichat.chat.search.presentation.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
