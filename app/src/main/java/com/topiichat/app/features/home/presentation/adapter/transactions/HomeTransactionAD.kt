@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
-import com.topiichat.app.R
 import com.topiichat.app.databinding.HomeTransactionItemBinding
 import com.topiichat.app.features.home.domain.model.RemittanceDomain
 import com.topiichat.app.features.home.domain.model.RemittanceType
@@ -20,7 +19,7 @@ fun homeTransactionAD(
         HomeTransactionItemBinding.inflate(layoutInflater, parent, false)
     }
 ) {
-    val radius = itemView.resources.getDimension(R.dimen.offset15)
+    val radius = itemView.resources.getDimension(com.topiichat.core.R.dimen.offset15)
     itemView.setOnClickListener {
         onTransactionClick(item.transaction)
     }
