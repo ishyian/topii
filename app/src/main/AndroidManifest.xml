@@ -88,7 +88,7 @@
         <activity android:name="eu.siacs.conversations.ui.ShareLocationActivity" />
         <activity android:name="eu.siacs.conversations.ui.ShowLocationActivity" />
         <activity android:name="eu.siacs.conversations.ui.TrustKeysActivity" />
-        <activity android:name="com.topiichat.chat.rtc.presentation.RtpSessionActivity" />
+        <activity android:name="com.topiichat.chat.rtc.presentation.kotlin.RtpSessionActivity" />
         <activity android:name="com.topiichat.chat.activity.EditAccountActivity" />
         <activity android:name="com.topiichat.chat.activity.WelcomeActivity" />
         <activity android:name="com.topiichat.chat.activity.PickServerActivity" />

@@ -29,7 +29,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.topiichat.chat.activity.ChatsActivity;
-import com.topiichat.chat.rtc.presentation.RtpSessionActivity;
+import com.topiichat.chat.rtc.presentation.kotlin.RtpSessionActivity;
 import com.yourbestigor.chat.R;
 
 import java.io.File;

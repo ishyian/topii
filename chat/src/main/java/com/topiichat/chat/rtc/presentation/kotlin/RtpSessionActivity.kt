@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
 import android.os.SystemClock
@@ -57,13 +58,12 @@ import org.webrtc.SurfaceViewRenderer
 import org.webrtc.VideoTrack
 import timber.log.Timber
 import java.lang.ref.WeakReference
-import java.util.Arrays
 
 class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspectRatioChanged {
     private var rtpConnectionReference: WeakReference<JingleRtpConnection?>? = null
     private lateinit var binding: ActivityRtpSessionBinding
     private var mProximityWakeLock: WakeLock? = null
-    private val mHandler = Handler()
+    private val mHandler = Handler(Looper.getMainLooper())
     private val mTickExecutor: Runnable = object : Runnable {
         override fun run() {
             updateCallDuration()
@@ -71,6 +71,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
         }
     }
 
+    @Suppress("DEPRECATION")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window
@@ -105,7 +106,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
     }
 
     private val isHelpButtonVisible: Boolean
-        private get() = try {
+        get() = try {
             STATES_SHOWING_HELP_BUTTON.contains(requireRtpConnection().endUserState)
         } catch (e: IllegalStateException) {
             val intent = intent
@@ -117,7 +118,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
             }
         }
     private val isSwitchToConversationVisible: Boolean
-        private get() {
+        get() {
             val connection = if (rtpConnectionReference != null) rtpConnectionReference!!.get() else null
             return (connection != null
                 && STATES_SHOWING_SWITCH_TO_CHAT.contains(connection.endUserState))
@@ -151,10 +152,6 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
         }
     }
 
-    private fun endCall(view: View) {
-        endCall()
-    }
-
     private fun endCall() {
         if (rtpConnectionReference == null) {
             retractSessionProposal()
@@ -182,12 +179,12 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
             .retractSessionProposal(account, with.asBareJid())
     }
 
-    private fun rejectCall(view: View) {
+    private fun rejectCall() {
         requireRtpConnection().rejectCall()
         finish()
     }
 
-    private fun acceptCall(view: View) {
+    private fun acceptCall() {
         requestPermissionsAndAcceptCall()
     }
 
@@ -261,7 +258,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
     }
 
     @SuppressLint("WakelockTimeout") private fun acquireProximityWakeLock() {
-        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+        val powerManager = getSystemService(POWER_SERVICE) as PowerManager?
         if (powerManager == null) {
             Timber.e("power manager not available")
             return
@@ -322,7 +319,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
                 requestPermissionsAndAcceptCall()
                 resetIntent(intent.extras)
             }
-        } else if (Arrays.asList(ACTION_MAKE_VIDEO_CALL, ACTION_MAKE_VOICE_CALL).contains(action)) {
+        } else if (listOf(ACTION_MAKE_VIDEO_CALL, ACTION_MAKE_VOICE_CALL).contains(action)) {
             proposeJingleRtpSession(account, with, actionToMedia(action))
             setWith(account.roster.getContact(with), null)
         } else {
@@ -345,7 +342,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
                 requestPermissionsAndAcceptCall()
                 resetIntent(intent.extras)
             }
-        } else if (Arrays.asList(ACTION_MAKE_VIDEO_CALL, ACTION_MAKE_VOICE_CALL).contains(action)) {
+        } else if (listOf(ACTION_MAKE_VIDEO_CALL, ACTION_MAKE_VOICE_CALL).contains(action)) {
             proposeJingleRtpSession(account, with, actionToMedia(action))
             setWith(account.roster.getContact(with), null)
         } else if (Intent.ACTION_VIEW == action) {
@@ -383,14 +380,14 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
     }
 
     private fun setWith(contact: Contact, state: RtpEndUserState?) {
-        binding!!.with.text = contact.displayName
-        if (Arrays.asList(RtpEndUserState.INCOMING_CALL, RtpEndUserState.ACCEPTING_CALL)
+        binding.with.text = contact.displayName
+        if (listOf(RtpEndUserState.INCOMING_CALL, RtpEndUserState.ACCEPTING_CALL)
                 .contains(state)
         ) {
-            binding!!.withJid.text = contact.jid.asBareJid().toEscapedString()
-            binding!!.withJid.visibility = View.VISIBLE
+            binding.withJid.text = contact.jid.asBareJid().toEscapedString()
+            binding.withJid.visibility = View.VISIBLE
         } else {
-            binding!!.withJid.visibility = View.GONE
+            binding.withJid.visibility = View.GONE
         }
     }
 
@@ -441,14 +438,14 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
     public override fun onStart() {
         super.onStart()
         mHandler.postDelayed(mTickExecutor, CALL_DURATION_UPDATE_INTERVAL.toLong())
-        binding!!.remoteVideo.setOnAspectRatioChanged(this)
+        binding.remoteVideo.setOnAspectRatioChanged(this)
     }
 
     public override fun onStop() {
         mHandler.removeCallbacks(mTickExecutor)
-        binding!!.remoteVideo.release()
-        binding!!.remoteVideo.setOnAspectRatioChanged(null)
-        binding!!.localVideo.release()
+        binding.remoteVideo.release()
+        binding.remoteVideo.setOnAspectRatioChanged(null)
+        binding.localVideo.release()
         val weakReference = rtpConnectionReference
         val jingleRtpConnection = weakReference?.get()
         jingleRtpConnection?.let { releaseVideoTracks(it) }
@@ -459,11 +456,11 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
     private fun releaseVideoTracks(jingleRtpConnection: JingleRtpConnection) {
         val remoteVideo = jingleRtpConnection.remoteVideoTrack
         if (remoteVideo.isPresent) {
-            remoteVideo.get().removeSink(binding!!.remoteVideo)
+            remoteVideo.get().removeSink(binding.remoteVideo)
         }
         val localVideo = jingleRtpConnection.localVideoTrack
         if (localVideo.isPresent) {
-            localVideo.get().removeSink(binding!!.localVideo)
+            localVideo.get().removeSink(binding.localVideo)
         }
     }
 
@@ -491,7 +488,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
     }
 
     private val isConnected: Boolean
-        private get() {
+        get() {
             val connection = if (rtpConnectionReference != null) rtpConnectionReference!!.get() else null
             return (connection != null
                 && STATES_CONSIDERED_CONNECTED.contains(connection.endUserState))
@@ -509,7 +506,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
 
     @RequiresApi(api = Build.VERSION_CODES.O) private fun startPictureInPicture() {
         try {
-            val rational = binding!!.remoteVideo.aspectRatio
+            val rational = binding.remoteVideo.aspectRatio
             val clippedRational = Rationals.clip(rational)
             Timber.d("suggested rational $rational. clipped to $clippedRational")
             enterPictureInPictureMode(
@@ -548,7 +545,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
         return try {
             val rtpConnection = requireRtpConnection()
             (rtpConnection.media.contains(Media.VIDEO)
-                && Arrays.asList(
+                && listOf(
                 RtpEndUserState.ACCEPTING_CALL,
                 RtpEndUserState.CONNECTING,
                 RtpEndUserState.CONNECTED
@@ -565,7 +562,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
         val reference = xmppConnectionService
             .jingleConnectionManager
             .findJingleRtpConnection(account, with, sessionId)
-        if (reference == null || reference.get() == null) {
+        if (reference?.get() == null) {
             val terminatedRtpSession = xmppConnectionService
                 .jingleConnectionManager
                 .getTerminalSessionState(with, sessionId)
@@ -651,7 +648,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
     private fun updateStateDisplay(state: RtpEndUserState, media: Set<Media> = emptySet()) {
         when (state) {
             RtpEndUserState.INCOMING_CALL -> {
-                Preconditions.checkArgument(media.size > 0, "Media must not be empty")
+                Preconditions.checkArgument(media.isNotEmpty(), "Media must not be empty")
                 if (media.contains(Media.VIDEO)) {
                     setTitle(R.string.rtp_state_incoming_video_call)
                 } else {
@@ -674,49 +671,48 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
             RtpEndUserState.ENDED -> throw IllegalStateException(
                 "Activity should have called finishAndReleaseWakeLock();"
             )
-            else -> throw IllegalStateException(String.format("State %s has not been handled in UI", state))
         }
     }
 
     private fun updateVerifiedShield(verified: Boolean) {
         if (isPictureInPicture) {
-            binding!!.verified.visibility = View.GONE
+            binding.verified.visibility = View.GONE
             return
         }
-        binding!!.verified.visibility = if (verified) View.VISIBLE else View.GONE
+        binding.verified.visibility = if (verified) View.VISIBLE else View.GONE
     }
 
     private fun updateIncomingCallScreen(state: RtpEndUserState, contact: Contact? = null) {
         if (state == RtpEndUserState.INCOMING_CALL || state == RtpEndUserState.ACCEPTING_CALL) {
             val show = resources.getBoolean(R.bool.show_avatar_incoming_call)
             if (show) {
-                binding!!.contactPhoto.visibility = View.VISIBLE
+                binding.contactPhoto.visibility = View.VISIBLE
                 if (contact == null) {
                     AvatarWorkerTask.loadAvatar(
-                        getWith(), binding!!.contactPhoto, R.dimen.publish_avatar_size
+                        getWith(), binding.contactPhoto, R.dimen.publish_avatar_size
                     )
                 } else {
                     AvatarWorkerTask.loadAvatar(
-                        contact, binding!!.contactPhoto, R.dimen.publish_avatar_size
+                        contact, binding.contactPhoto, R.dimen.publish_avatar_size
                     )
                 }
             } else {
-                binding!!.contactPhoto.visibility = View.GONE
+                binding.contactPhoto.visibility = View.GONE
             }
             val account = if (contact == null) getWith().account else contact.account
-            binding!!.usingAccount.visibility = View.VISIBLE
-            binding!!.usingAccount.text = getString(
+            binding.usingAccount.visibility = View.VISIBLE
+            binding.usingAccount.text = getString(
                 R.string.using_account,
                 account.jid.asBareJid().toEscapedString()
             )
         } else {
-            binding!!.usingAccount.visibility = View.GONE
-            binding!!.contactPhoto.visibility = View.GONE
+            binding.usingAccount.visibility = View.GONE
+            binding.contactPhoto.visibility = View.GONE
         }
     }
 
     private val media: Set<Media>
-        private get() = requireRtpConnection().media
+        get() = requireRtpConnection().media
 
     private fun updateButtonConfiguration(state: RtpEndUserState) {
         updateButtonConfiguration(state, emptySet())
@@ -724,30 +720,30 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
 
     @SuppressLint("RestrictedApi") private fun updateButtonConfiguration(state: RtpEndUserState, media: Set<Media>) {
         if (state == RtpEndUserState.ENDING_CALL || isPictureInPicture) {
-            binding!!.rejectCall.visibility = View.INVISIBLE
-            binding!!.endCall.visibility = View.INVISIBLE
-            binding!!.acceptCall.visibility = View.INVISIBLE
+            binding.rejectCall.visibility = View.INVISIBLE
+            binding.endCall.visibility = View.INVISIBLE
+            binding.acceptCall.visibility = View.INVISIBLE
         } else if (state == RtpEndUserState.INCOMING_CALL) {
-            binding!!.rejectCall.contentDescription = getString(R.string.dismiss_call)
-            binding!!.rejectCall.setOnClickListener { view: View -> rejectCall(view) }
-            binding!!.rejectCall.setImageResource(R.drawable.ic_call_end_white_48dp)
-            binding!!.rejectCall.visibility = View.VISIBLE
-            binding!!.endCall.visibility = View.INVISIBLE
-            binding!!.acceptCall.contentDescription = getString(R.string.answer_call)
-            binding!!.acceptCall.setOnClickListener { view: View -> acceptCall(view) }
-            binding!!.acceptCall.setImageResource(R.drawable.ic_call_white_48dp)
-            binding!!.acceptCall.visibility = View.VISIBLE
+            binding.rejectCall.contentDescription = getString(R.string.dismiss_call)
+            binding.rejectCall.setOnClickListener { rejectCall() }
+            binding.rejectCall.setImageResource(R.drawable.ic_call_end_white_48dp)
+            binding.rejectCall.visibility = View.VISIBLE
+            binding.endCall.visibility = View.INVISIBLE
+            binding.acceptCall.contentDescription = getString(R.string.answer_call)
+            binding.acceptCall.setOnClickListener { acceptCall() }
+            binding.acceptCall.setImageResource(R.drawable.ic_call_white_48dp)
+            binding.acceptCall.visibility = View.VISIBLE
         } else if (state == RtpEndUserState.DECLINED_OR_BUSY) {
-            binding!!.rejectCall.contentDescription = getString(R.string.exit)
-            binding!!.rejectCall.setOnClickListener { view: View -> exit(view) }
-            binding!!.rejectCall.setImageResource(R.drawable.ic_clear_white_48dp)
-            binding!!.rejectCall.visibility = View.VISIBLE
-            binding!!.endCall.visibility = View.INVISIBLE
-            binding!!.acceptCall.contentDescription = getString(R.string.record_voice_mail)
-            binding!!.acceptCall.setOnClickListener { view: View -> recordVoiceMail(view) }
-            binding!!.acceptCall.setImageResource(R.drawable.ic_voicemail_white_24dp)
-            binding!!.acceptCall.visibility = View.VISIBLE
-        } else if (Arrays.asList(
+            binding.rejectCall.contentDescription = getString(R.string.exit)
+            binding.rejectCall.setOnClickListener { exit() }
+            binding.rejectCall.setImageResource(R.drawable.ic_clear_white_48dp)
+            binding.rejectCall.visibility = View.VISIBLE
+            binding.endCall.visibility = View.INVISIBLE
+            binding.acceptCall.contentDescription = getString(R.string.record_voice_mail)
+            binding.acceptCall.setOnClickListener { recordVoiceMail() }
+            binding.acceptCall.setImageResource(R.drawable.ic_voicemail_white_24dp)
+            binding.acceptCall.visibility = View.VISIBLE
+        } else if (listOf(
                 RtpEndUserState.CONNECTIVITY_ERROR,
                 RtpEndUserState.CONNECTIVITY_LOST_ERROR,
                 RtpEndUserState.APPLICATION_ERROR,
@@ -756,28 +752,28 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
             )
                 .contains(state)
         ) {
-            binding!!.rejectCall.contentDescription = getString(R.string.exit)
-            binding!!.rejectCall.setOnClickListener { view: View -> exit(view) }
-            binding!!.rejectCall.setImageResource(R.drawable.ic_clear_white_48dp)
-            binding!!.rejectCall.visibility = View.VISIBLE
-            binding!!.endCall.visibility = View.INVISIBLE
-            binding!!.acceptCall.contentDescription = getString(R.string.try_again)
-            binding!!.acceptCall.setOnClickListener { view: View -> retry(view) }
-            binding!!.acceptCall.setImageResource(R.drawable.ic_replay_white_48dp)
-            binding!!.acceptCall.visibility = View.VISIBLE
+            binding.rejectCall.contentDescription = getString(R.string.exit)
+            binding.rejectCall.setOnClickListener { exit() }
+            binding.rejectCall.setImageResource(R.drawable.ic_clear_white_48dp)
+            binding.rejectCall.visibility = View.VISIBLE
+            binding.endCall.visibility = View.INVISIBLE
+            binding.acceptCall.contentDescription = getString(R.string.try_again)
+            binding.acceptCall.setOnClickListener { retry() }
+            binding.acceptCall.setImageResource(R.drawable.ic_replay_white_48dp)
+            binding.acceptCall.visibility = View.VISIBLE
         } else {
-            binding!!.rejectCall.visibility = View.INVISIBLE
-            binding!!.endCall.contentDescription = getString(R.string.hang_up)
-            binding!!.endCall.setOnClickListener { view: View -> this.endCall(view) }
-            binding!!.endCall.setImageResource(R.drawable.ic_call_end_white_48dp)
-            binding!!.endCall.visibility = View.VISIBLE
-            binding!!.acceptCall.visibility = View.INVISIBLE
+            binding.rejectCall.visibility = View.INVISIBLE
+            binding.endCall.contentDescription = getString(R.string.hang_up)
+            binding.endCall.setOnClickListener { endCall() }
+            binding.endCall.setImageResource(R.drawable.ic_call_end_white_48dp)
+            binding.endCall.visibility = View.VISIBLE
+            binding.acceptCall.visibility = View.INVISIBLE
         }
         updateInCallButtonConfiguration(state, media)
     }
 
     private val isPictureInPicture: Boolean
-        private get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             isInPictureInPictureMode
         } else {
             false
@@ -793,7 +789,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
         state: RtpEndUserState, media: Set<Media>
     ) {
         if (STATES_CONSIDERED_CONNECTED.contains(state) && !isPictureInPicture) {
-            Preconditions.checkArgument(media.size > 0, "Media must not be empty")
+            Preconditions.checkArgument(media.isNotEmpty(), "Media must not be empty")
             if (media.contains(Media.VIDEO)) {
                 val rtpConnection = requireRtpConnection()
                 updateInCallButtonConfigurationVideo(
@@ -805,19 +801,19 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
                     audioManager.selectedAudioDevice,
                     audioManager.audioDevices.size
                 )
-                binding!!.inCallActionFarRight.visibility = View.GONE
+                binding.inCallActionFarRight.visibility = View.GONE
             }
             if (media.contains(Media.AUDIO)) {
                 updateInCallButtonConfigurationMicrophone(
                     requireRtpConnection().isMicrophoneEnabled
                 )
             } else {
-                binding!!.inCallActionLeft.visibility = View.GONE
+                binding.inCallActionLeft.visibility = View.GONE
             }
         } else {
-            binding!!.inCallActionLeft.visibility = View.GONE
-            binding!!.inCallActionRight.visibility = View.GONE
-            binding!!.inCallActionFarRight.visibility = View.GONE
+            binding.inCallActionLeft.visibility = View.GONE
+            binding.inCallActionRight.visibility = View.GONE
+            binding.inCallActionFarRight.visibility = View.GONE
         }
     }
 
@@ -826,69 +822,72 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
     ) {
         when (selectedAudioDevice) {
             AudioDevice.EARPIECE -> {
-                binding!!.inCallActionRight.setImageResource(
+                binding.inCallActionRight.setImageResource(
                     R.drawable.ic_volume_off_black_24dp
                 )
                 if (numberOfChoices >= 2) {
-                    binding!!.inCallActionRight.setOnClickListener { view: View -> switchToSpeaker(view) }
+                    binding.inCallActionRight.setOnClickListener { switchToSpeaker() }
                 } else {
-                    binding!!.inCallActionRight.setOnClickListener(null)
-                    binding!!.inCallActionRight.isClickable = false
+                    binding.inCallActionRight.setOnClickListener(null)
+                    binding.inCallActionRight.isClickable = false
                 }
             }
             AudioDevice.WIRED_HEADSET -> {
-                binding!!.inCallActionRight.setImageResource(R.drawable.ic_headset_black_24dp)
-                binding!!.inCallActionRight.setOnClickListener(null)
-                binding!!.inCallActionRight.isClickable = false
+                binding.inCallActionRight.setImageResource(R.drawable.ic_headset_black_24dp)
+                binding.inCallActionRight.setOnClickListener(null)
+                binding.inCallActionRight.isClickable = false
             }
             AudioDevice.SPEAKER_PHONE -> {
-                binding!!.inCallActionRight.setImageResource(R.drawable.ic_volume_up_black_24dp)
+                binding.inCallActionRight.setImageResource(R.drawable.ic_volume_up_black_24dp)
                 if (numberOfChoices >= 2) {
-                    binding!!.inCallActionRight.setOnClickListener { view: View -> switchToEarpiece(view) }
+                    binding.inCallActionRight.setOnClickListener { switchToEarpiece() }
                 } else {
-                    binding!!.inCallActionRight.setOnClickListener(null)
-                    binding!!.inCallActionRight.isClickable = false
+                    binding.inCallActionRight.setOnClickListener(null)
+                    binding.inCallActionRight.isClickable = false
                 }
             }
             AudioDevice.BLUETOOTH -> {
-                binding!!.inCallActionRight.setImageResource(
+                binding.inCallActionRight.setImageResource(
                     R.drawable.ic_bluetooth_audio_black_24dp
                 )
-                binding!!.inCallActionRight.setOnClickListener(null)
-                binding!!.inCallActionRight.isClickable = false
+                binding.inCallActionRight.setOnClickListener(null)
+                binding.inCallActionRight.isClickable = false
+            }
+            else -> {
+                //Ignore
             }
         }
-        binding!!.inCallActionRight.visibility = View.VISIBLE
+        binding.inCallActionRight.visibility = View.VISIBLE
     }
 
     @SuppressLint("RestrictedApi") private fun updateInCallButtonConfigurationVideo(
         videoEnabled: Boolean, isCameraSwitchable: Boolean
     ) {
-        binding!!.inCallActionRight.visibility = View.VISIBLE
+        binding.inCallActionRight.visibility = View.VISIBLE
         if (isCameraSwitchable) {
-            binding!!.inCallActionFarRight.setImageResource(
+            binding.inCallActionFarRight.setImageResource(
                 R.drawable.ic_flip_camera_android_black_24dp
             )
-            binding!!.inCallActionFarRight.visibility = View.VISIBLE
-            binding!!.inCallActionFarRight.setOnClickListener { view: View -> switchCamera(view) }
+            binding.inCallActionFarRight.visibility = View.VISIBLE
+            binding.inCallActionFarRight.setOnClickListener { switchCamera() }
         } else {
-            binding!!.inCallActionFarRight.visibility = View.GONE
+            binding.inCallActionFarRight.visibility = View.GONE
         }
         if (videoEnabled) {
-            binding!!.inCallActionRight.setImageResource(R.drawable.ic_videocam_black_24dp)
-            binding!!.inCallActionRight.setOnClickListener { view: View -> disableVideo(view) }
+            binding.inCallActionRight.setImageResource(R.drawable.ic_videocam_black_24dp)
+            binding.inCallActionRight.setOnClickListener { disableVideo() }
         } else {
-            binding!!.inCallActionRight.setImageResource(R.drawable.ic_videocam_off_black_24dp)
-            binding!!.inCallActionRight.setOnClickListener { view: View -> enableVideo(view) }
+            binding.inCallActionRight.setImageResource(R.drawable.ic_videocam_off_black_24dp)
+            binding.inCallActionRight.setOnClickListener { enableVideo() }
         }
     }
 
-    private fun switchCamera(view: View) {
+    private fun switchCamera() {
         Futures.addCallback(
             requireRtpConnection().switchCamera(),
             object : FutureCallback<Boolean?> {
                 override fun onSuccess(isFrontCamera: Boolean?) {
-                    binding!!.localVideo.setMirror(java.lang.Boolean.TRUE == isFrontCamera)
+                    binding.localVideo.setMirror(java.lang.Boolean.TRUE == isFrontCamera)
                 }
 
                 override fun onFailure(throwable: Throwable) {
@@ -905,7 +904,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
         )
     }
 
-    private fun enableVideo(view: View) {
+    private fun enableVideo() {
         try {
             requireRtpConnection().isVideoEnabled = true
         } catch (e: IllegalStateException) {
@@ -915,156 +914,157 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
         updateInCallButtonConfigurationVideo(true, requireRtpConnection().isCameraSwitchable)
     }
 
-    private fun disableVideo(view: View) {
+    private fun disableVideo() {
         requireRtpConnection().isVideoEnabled = false
         updateInCallButtonConfigurationVideo(false, requireRtpConnection().isCameraSwitchable)
     }
 
     @SuppressLint("RestrictedApi") private fun updateInCallButtonConfigurationMicrophone(microphoneEnabled: Boolean) {
         if (microphoneEnabled) {
-            binding!!.inCallActionLeft.setImageResource(R.drawable.ic_mic_black_24dp)
-            binding!!.inCallActionLeft.setOnClickListener { view: View -> disableMicrophone(view) }
+            binding.inCallActionLeft.setImageResource(R.drawable.ic_mic_black_24dp)
+            binding.inCallActionLeft.setOnClickListener { disableMicrophone() }
         } else {
-            binding!!.inCallActionLeft.setImageResource(R.drawable.ic_mic_off_black_24dp)
-            binding!!.inCallActionLeft.setOnClickListener { view: View -> enableMicrophone(view) }
+            binding.inCallActionLeft.setImageResource(R.drawable.ic_mic_off_black_24dp)
+            binding.inCallActionLeft.setOnClickListener { enableMicrophone() }
         }
-        binding!!.inCallActionLeft.visibility = View.VISIBLE
+        binding.inCallActionLeft.visibility = View.VISIBLE
     }
 
     private fun updateCallDuration() {
         val connection = if (rtpConnectionReference != null) rtpConnectionReference!!.get() else null
         if (connection == null || connection.media.contains(Media.VIDEO)) {
-            binding!!.duration.visibility = View.GONE
+            binding.duration.visibility = View.GONE
             return
         }
         if (connection.zeroDuration()) {
-            binding!!.duration.visibility = View.GONE
+            binding.duration.visibility = View.GONE
         } else {
-            binding!!.duration.text = TimeFrameUtils.formatElapsedTime(connection.callDuration, false)
-            binding!!.duration.visibility = View.VISIBLE
+            binding.duration.text = TimeFrameUtils.formatElapsedTime(connection.callDuration, false)
+            binding.duration.visibility = View.VISIBLE
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun updateVideoViews(state: RtpEndUserState) {
         if (END_CARD.contains(state) || state == RtpEndUserState.ENDING_CALL) {
-            binding!!.localVideo.visibility = View.GONE
-            binding!!.localVideo.release()
-            binding!!.remoteVideoWrapper.visibility = View.GONE
-            binding!!.remoteVideo.release()
-            binding!!.pipLocalMicOffIndicator.visibility = View.GONE
+            binding.localVideo.visibility = View.GONE
+            binding.localVideo.release()
+            binding.remoteVideoWrapper.visibility = View.GONE
+            binding.remoteVideo.release()
+            binding.pipLocalMicOffIndicator.visibility = View.GONE
             if (isPictureInPicture) {
-                binding!!.appBarLayout.visibility = View.GONE
-                binding!!.pipPlaceholder.visibility = View.VISIBLE
-                if (Arrays.asList(
+                binding.appBarLayout.visibility = View.GONE
+                binding.pipPlaceholder.visibility = View.VISIBLE
+                if (listOf(
                         RtpEndUserState.APPLICATION_ERROR,
                         RtpEndUserState.CONNECTIVITY_ERROR,
                         RtpEndUserState.SECURITY_ERROR
                     )
                         .contains(state)
                 ) {
-                    binding!!.pipWarning.visibility = View.VISIBLE
+                    binding.pipWarning.visibility = View.VISIBLE
                 } else {
-                    binding!!.pipWarning.visibility = View.GONE
+                    binding.pipWarning.visibility = View.GONE
                 }
-                binding!!.pipWaiting.visibility = View.GONE
+                binding.pipWaiting.visibility = View.GONE
             } else {
-                binding!!.appBarLayout.visibility = View.VISIBLE
-                binding!!.pipPlaceholder.visibility = View.GONE
+                binding.appBarLayout.visibility = View.VISIBLE
+                binding.pipPlaceholder.visibility = View.GONE
             }
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             return
         }
         if (isPictureInPicture && STATES_SHOWING_PIP_PLACEHOLDER.contains(state)) {
-            binding!!.localVideo.visibility = View.GONE
-            binding!!.remoteVideoWrapper.visibility = View.GONE
-            binding!!.appBarLayout.visibility = View.GONE
-            binding!!.pipPlaceholder.visibility = View.VISIBLE
-            binding!!.pipWarning.visibility = View.GONE
-            binding!!.pipWaiting.visibility = View.VISIBLE
-            binding!!.pipLocalMicOffIndicator.visibility = View.GONE
+            binding.localVideo.visibility = View.GONE
+            binding.remoteVideoWrapper.visibility = View.GONE
+            binding.appBarLayout.visibility = View.GONE
+            binding.pipPlaceholder.visibility = View.VISIBLE
+            binding.pipWarning.visibility = View.GONE
+            binding.pipWaiting.visibility = View.VISIBLE
+            binding.pipLocalMicOffIndicator.visibility = View.GONE
             return
         }
         val localVideoTrack = localVideoTrack
         if (localVideoTrack.isPresent && !isPictureInPicture) {
-            ensureSurfaceViewRendererIsSetup(binding!!.localVideo)
+            ensureSurfaceViewRendererIsSetup(binding.localVideo)
             // paint local view over remote view
-            binding!!.localVideo.setZOrderMediaOverlay(true)
-            binding!!.localVideo.setMirror(requireRtpConnection().isFrontCamera)
-            addSink(localVideoTrack.get(), binding!!.localVideo)
+            binding.localVideo.setZOrderMediaOverlay(true)
+            binding.localVideo.setMirror(requireRtpConnection().isFrontCamera)
+            addSink(localVideoTrack.get(), binding.localVideo)
         } else {
-            binding!!.localVideo.visibility = View.GONE
+            binding.localVideo.visibility = View.GONE
         }
         val remoteVideoTrack = remoteVideoTrack
         if (remoteVideoTrack.isPresent) {
-            ensureSurfaceViewRendererIsSetup(binding!!.remoteVideo)
-            addSink(remoteVideoTrack.get(), binding!!.remoteVideo)
-            binding!!.remoteVideo.setScalingType(
+            ensureSurfaceViewRendererIsSetup(binding.remoteVideo)
+            addSink(remoteVideoTrack.get(), binding.remoteVideo)
+            binding.remoteVideo.setScalingType(
                 RendererCommon.ScalingType.SCALE_ASPECT_FILL,
                 RendererCommon.ScalingType.SCALE_ASPECT_FIT
             )
             if (state == RtpEndUserState.CONNECTED) {
-                binding!!.appBarLayout.visibility = View.GONE
+                binding.appBarLayout.visibility = View.GONE
                 window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-                binding!!.remoteVideoWrapper.visibility = View.VISIBLE
+                binding.remoteVideoWrapper.visibility = View.VISIBLE
             } else {
-                binding!!.appBarLayout.visibility = View.VISIBLE
+                binding.appBarLayout.visibility = View.VISIBLE
                 window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-                binding!!.remoteVideoWrapper.visibility = View.GONE
+                binding.remoteVideoWrapper.visibility = View.GONE
             }
             if (isPictureInPicture && !requireRtpConnection().isMicrophoneEnabled) {
-                binding!!.pipLocalMicOffIndicator.visibility = View.VISIBLE
+                binding.pipLocalMicOffIndicator.visibility = View.VISIBLE
             } else {
-                binding!!.pipLocalMicOffIndicator.visibility = View.GONE
+                binding.pipLocalMicOffIndicator.visibility = View.GONE
             }
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            binding!!.remoteVideoWrapper.visibility = View.GONE
-            binding!!.pipLocalMicOffIndicator.visibility = View.GONE
+            binding.remoteVideoWrapper.visibility = View.GONE
+            binding.pipLocalMicOffIndicator.visibility = View.GONE
         }
     }
 
     private val localVideoTrack: Optional<VideoTrack>
-        private get() {
+        get() {
             val connection = (if (rtpConnectionReference != null) rtpConnectionReference!!.get() else null)
                 ?: return Optional.absent()
             return connection.localVideoTrack
         }
     private val remoteVideoTrack: Optional<VideoTrack>
-        private get() {
+        get() {
             val connection = (if (rtpConnectionReference != null) rtpConnectionReference!!.get() else null)
                 ?: return Optional.absent()
             return connection.remoteVideoTrack
         }
 
-    private fun disableMicrophone(view: View) {
+    private fun disableMicrophone() {
         val rtpConnection = requireRtpConnection()
         if (rtpConnection.setMicrophoneEnabled(false)) {
             updateInCallButtonConfiguration()
         }
     }
 
-    private fun enableMicrophone(view: View) {
+    private fun enableMicrophone() {
         val rtpConnection = requireRtpConnection()
         if (rtpConnection.setMicrophoneEnabled(true)) {
             updateInCallButtonConfiguration()
         }
     }
 
-    private fun switchToEarpiece(view: View) {
+    private fun switchToEarpiece() {
         requireRtpConnection()
             .audioManager
             .setDefaultAudioDevice(AudioDevice.EARPIECE)
         acquireProximityWakeLock()
     }
 
-    private fun switchToSpeaker(view: View) {
+    private fun switchToSpeaker() {
         requireRtpConnection()
             .audioManager
             .setDefaultAudioDevice(AudioDevice.SPEAKER_PHONE)
         releaseProximityWakeLock()
     }
 
-    private fun retry(view: View) {
+    private fun retry() {
         val intent = intent
         val account = extractAccount(intent)
         val with = Jid.ofEscaped(intent.getStringExtra(EXTRA_WITH))
@@ -1076,11 +1076,11 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
         proposeJingleRtpSession(account, with, media)
     }
 
-    private fun exit(view: View) {
+    private fun exit() {
         finish()
     }
 
-    private fun recordVoiceMail(view: View) {
+    private fun recordVoiceMail() {
         val intent = intent
         val account = extractAccount(intent)
         val with = Jid.ofEscaped(intent.getStringExtra(EXTRA_WITH))
@@ -1254,7 +1254,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
         const val ACTION_MAKE_VOICE_CALL = "action_make_voice_call"
         const val ACTION_MAKE_VIDEO_CALL = "action_make_video_call"
         private const val CALL_DURATION_UPDATE_INTERVAL = 333
-        private val END_CARD = Arrays.asList(
+        private val END_CARD = listOf(
             RtpEndUserState.APPLICATION_ERROR,
             RtpEndUserState.SECURITY_ERROR,
             RtpEndUserState.DECLINED_OR_BUSY,
@@ -1262,18 +1262,18 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
             RtpEndUserState.CONNECTIVITY_LOST_ERROR,
             RtpEndUserState.RETRACTED
         )
-        private val STATES_SHOWING_HELP_BUTTON = Arrays.asList(
+        private val STATES_SHOWING_HELP_BUTTON = listOf(
             RtpEndUserState.APPLICATION_ERROR,
             RtpEndUserState.CONNECTIVITY_ERROR,
             RtpEndUserState.SECURITY_ERROR
         )
-        private val STATES_SHOWING_SWITCH_TO_CHAT = Arrays.asList(
+        private val STATES_SHOWING_SWITCH_TO_CHAT = listOf(
             RtpEndUserState.CONNECTING,
             RtpEndUserState.CONNECTED,
             RtpEndUserState.RECONNECTING
         )
-        private val STATES_CONSIDERED_CONNECTED = Arrays.asList(RtpEndUserState.CONNECTED, RtpEndUserState.RECONNECTING)
-        private val STATES_SHOWING_PIP_PLACEHOLDER = Arrays.asList(
+        private val STATES_CONSIDERED_CONNECTED = listOf(RtpEndUserState.CONNECTED, RtpEndUserState.RECONNECTING)
+        private val STATES_SHOWING_PIP_PLACEHOLDER = listOf(
             RtpEndUserState.ACCEPTING_CALL,
             RtpEndUserState.CONNECTING,
             RtpEndUserState.RECONNECTING
@@ -1302,7 +1302,7 @@ class RtpSessionActivity : XmppActivity(), OnJingleRtpConnectionUpdate, OnAspect
         }
 
         private fun emptyReference(weakReference: WeakReference<*>?): Boolean {
-            return weakReference == null || weakReference.get() == null
+            return weakReference?.get() == null
         }
     }
 }

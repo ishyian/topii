@@ -53,7 +53,7 @@ import com.topiichat.chat.activity.ChatsActivity
 import com.topiichat.chat.base.BaseChatFragment
 import com.topiichat.chat.chat.adapter.MediaPreviewAdapter
 import com.topiichat.chat.chat.adapter.MessageAdapter
-import com.topiichat.chat.rtc.presentation.RtpSessionActivity
+import com.topiichat.chat.rtc.presentation.kotlin.RtpSessionActivity
 import com.topiichat.core.extension.viewModelCreator
 import com.yourbestigor.chat.R
 import com.yourbestigor.chat.databinding.DialogAddAttachmentBinding
@@ -1132,7 +1132,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
             val id = ongoingRtpSession.get()
             val intent = Intent(activity, RtpSessionActivity::class.java)
             intent.putExtra(
-                RtpSessionActivity.EXTRA_ACCOUNT,
+                XmppActivity.EXTRA_ACCOUNT,
                 id.account.jid.asBareJid().toEscapedString()
             )
             intent.putExtra(RtpSessionActivity.EXTRA_WITH, id.with.toEscapedString())
@@ -1218,7 +1218,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
     private fun triggerRtpSession(account: Account, with: Jid, action: String) {
         val intent = Intent(chatsActivity, RtpSessionActivity::class.java)
         intent.action = action
-        intent.putExtra(RtpSessionActivity.EXTRA_ACCOUNT, account.jid.toEscapedString())
+        intent.putExtra(XmppActivity.EXTRA_ACCOUNT, account.jid.toEscapedString())
         intent.putExtra(RtpSessionActivity.EXTRA_WITH, with.toEscapedString())
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
