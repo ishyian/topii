@@ -61,10 +61,10 @@ class PinCodeViewModel @AssistedInject constructor(
             R.id.btn_show_pass -> {
                 onClickShowPass()
             }
-            R.id.image_view_back -> {
+            com.topiichat.core.R.id.image_view_back -> {
                 onClickBack()
             }
-            R.id.image_view_close -> {
+            com.topiichat.core.R.id.image_view_close -> {
                 onClickClose()
             }
         }

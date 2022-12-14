@@ -143,7 +143,7 @@ class RequestRemittanceViewModel @AssistedInject constructor(
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.image_view_back -> onClickBack()
+            com.topiichat.core.R.id.image_view_back -> onClickBack()
             R.id.btn_request -> onRequestClick()
         }
     }

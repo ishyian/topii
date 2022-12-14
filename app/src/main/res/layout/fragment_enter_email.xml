@@ -7,7 +7,7 @@
     android:background="@color/window_background"
     android:layout_height="match_parent">
 
-    <com.topiichat.app.core.presentation.customview.ToolbarView
+    <com.topiichat.core.presentation.customview.ToolbarView
         android:id="@+id/toolbar"
         android:layout_width="0px"
         android:layout_height="wrap_content"

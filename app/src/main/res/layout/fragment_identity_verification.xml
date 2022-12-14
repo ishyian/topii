@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btn_take_picture"
         tools:layout_editor_absoluteX="24dp" />
 
-    <com.topiichat.app.core.presentation.customview.ToolbarView
+    <com.topiichat.core.presentation.customview.ToolbarView
         android:id="@+id/toolbar"
         android:layout_width="0px"
         android:layout_height="wrap_content"

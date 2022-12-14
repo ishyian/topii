@@ -39,10 +39,10 @@ class AddressViewModel @Inject constructor(
             R.id.btn_continue -> {
                 onContinueClick()
             }
-            R.id.image_view_back -> {
+            com.topiichat.core.R.id.image_view_back -> {
                 onClickBack()
             }
-            R.id.image_view_close -> {
+            com.topiichat.core.R.id.image_view_close -> {
                 onClickClose()
             }
             R.id.text_country -> {

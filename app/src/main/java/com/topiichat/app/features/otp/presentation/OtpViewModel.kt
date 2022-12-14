@@ -48,10 +48,10 @@ class OtpViewModel @AssistedInject constructor(
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            com.topiichat.app.R.id.image_view_back -> {
+            R.id.image_view_back -> {
                 onClickBack()
             }
-            com.topiichat.app.R.id.image_view_close -> {
+            R.id.image_view_close -> {
                 onClickClose()
             }
         }

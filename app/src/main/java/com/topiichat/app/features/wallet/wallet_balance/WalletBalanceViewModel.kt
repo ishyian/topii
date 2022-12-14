@@ -53,7 +53,7 @@ class WalletBalanceViewModel @AssistedInject constructor(
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.btn_show_balance -> onShowBalanceClick()
-            R.id.image_view_back -> onClickBack()
+            com.topiichat.core.R.id.image_view_back -> onClickBack()
         }
     }
 

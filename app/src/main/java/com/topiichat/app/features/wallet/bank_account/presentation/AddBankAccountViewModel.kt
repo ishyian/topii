@@ -49,7 +49,7 @@ class AddBankAccountViewModel @AssistedInject constructor(
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.image_view_back -> {
+            com.topiichat.core.R.id.image_view_back -> {
                 onClickBack()
             }
             R.id.layout_bank -> {

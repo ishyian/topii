@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ToolbarView">
-        <attr name="toolbarTitle" format="string" />
-        <attr name="textSize" format="dimension" />
-        <attr name="isBackButtonVisible" format="boolean" />
-        <attr name="isCloseButtonVisible" format="boolean" />
-    </declare-styleable>
-
     <declare-styleable name="HintEditTextView">
         <attr name="hint" format="string" />
         <attr name="text" format="string" />

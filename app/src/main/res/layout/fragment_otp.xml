@@ -9,7 +9,7 @@
     android:fillViewport="true"
     tools:context=".features.otp.presentation.OtpFragment">
 
-    <com.topiichat.app.core.presentation.customview.ToolbarView
+    <com.topiichat.core.presentation.customview.ToolbarView
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
