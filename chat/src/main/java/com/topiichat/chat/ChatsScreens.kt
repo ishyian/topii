@@ -1,5 +1,6 @@
 package com.topiichat.chat
 
+import com.topiichat.chat.chat_contacts.presentation.ChatContactsFragment
 import com.topiichat.chat.chat_list.presentation.ChatsFragment
 import com.topiichat.chat.search.presentation.SearchFragment
 import com.topiichat.chat.search.presentation.SearchParameters
@@ -20,5 +21,9 @@ object ChatsScreens {
             SearchFragment::class.java,
             parcelableParametersBundleOf(parameters)
         )
+    }
+
+    object ChatContacts : SupportAppScreen() {
+        override fun getFragment() = ChatContactsFragment()
     }
 }

@@ -58,7 +58,12 @@ class ChatsViewModel @AssistedInject constructor(
     }
 
     override fun onChatActionClick(action: ChatAction) {
-        _startChat.postValue(true)
+        when (action) {
+            ChatAction.INVITE_FRIENDS -> {
+                navigate(ChatsScreens.ChatContacts)
+            }
+            else -> _startChat.postValue(true)
+        }
     }
 
     override fun onKYCClick() {

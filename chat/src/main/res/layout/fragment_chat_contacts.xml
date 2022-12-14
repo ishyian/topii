@@ -16,18 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:toolbarTitle="@string/contacts_title" />
 
-    <TextView
-        android:id="@+id/text_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/offset30"
-        android:fontFamily="@font/opensans_semibold"
-        android:text="@string/contacts_button_next"
-        android:textColor="@color/contacts_primary_color"
-        android:textSize="@dimen/text14"
-        app:layout_constraintBottom_toTopOf="@+id/edit_text_search"
-        app:layout_constraintEnd_toEndOf="@id/toolbar"
-        app:layout_constraintTop_toTopOf="@id/toolbar" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_text_search"
@@ -53,17 +41,6 @@
         tools:ignore="TouchTargetSizeCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_selected_contacts"
-        android:layout_width="0px"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_search"
-        tools:layout_height="100dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_contacts"
         android:layout_width="0px"
         android:layout_height="0dp"
@@ -72,6 +49,6 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rv_selected_contacts" />
+        app:layout_constraintTop_toBottomOf="@id/edit_text_search"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
