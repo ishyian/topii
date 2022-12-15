@@ -56,7 +56,7 @@ class ChatsAdapter(
         notifyItemRemoved(position)
     }
 
-    interface OnConversationClickListener {
+    fun interface OnConversationClickListener {
         fun onConversationClick(view: View?, conversation: Conversation?)
     }
 
