@@ -1,6 +1,8 @@
 package com.topiichat.chat.chat_contacts.presentation
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,14 +15,12 @@ import com.yourbestigor.chat.databinding.FragmentChatContactsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import eu.siacs.conversations.entities.Contact
 import eu.siacs.conversations.entities.Conversation
-import eu.siacs.conversations.entities.ListItem
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChatContactsFragment : BaseFragment<FragmentChatContactsBinding>(), OnBackendConnected, IChatContactsFragment {
-
-    private val contacts = arrayListOf<ListItem>()
+class ChatContactsFragment : BaseFragment<FragmentChatContactsBinding>(), OnBackendConnected, IChatContactsFragment,
+    TextWatcher {
 
     @Inject
     lateinit var factory: ChatContactsViewModel.AssistedFactory
@@ -40,14 +40,31 @@ class ChatContactsFragment : BaseFragment<FragmentChatContactsBinding>(), OnBack
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         setupClickListener(toolbar.btnBack)
         rvContacts.adapter = chatContactsAdapter
+        editTextSearch.addTextChangedListener(this@ChatContactsFragment)
         initObservers()
         if (chatsActivity.xmppConnectionServiceBound) {
             viewModel.loadContacts(chatsActivity.xmppConnectionService)
         }
     }
 
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        //Ignore
+    }
+
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        //Ignore
+    }
+
+    override fun afterTextChanged(s: Editable?) {
+        viewModel.loadContacts(chatsActivity.xmppConnectionService, s.toString())
+    }
+
     override fun onBackendConnected() {
         //Ignore
+    }
+
+    override fun onClick(v: View?) {
+        viewModel.onClick(v)
     }
 
     override fun onChatContactsLoaded(items: List<Any>) {

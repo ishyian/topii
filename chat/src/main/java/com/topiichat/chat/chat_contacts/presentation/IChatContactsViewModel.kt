@@ -5,6 +5,6 @@ import com.topiichat.core.presentation.platform.IBaseViewModel
 import eu.siacs.conversations.services.XmppConnectionService
 
 interface IChatContactsViewModel : IBaseViewModel {
-    fun loadContacts(xmppConnectionService: XmppConnectionService)
+    fun loadContacts(xmppConnectionService: XmppConnectionService, query: String? = null)
     fun onChatContactClick(item: ChatContactUiModel)
 }

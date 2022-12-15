@@ -7,7 +7,6 @@ import com.topiichat.chat.chat_contacts.presentation.model.ChatContactUiModel
 import com.topiichat.core.annotations.ChatRouterQualifier
 import com.topiichat.core.presentation.platform.BaseViewModel
 import com.topiichat.core.presentation.platform.SingleLiveData
-import com.yourbestigor.chat.R
 import dagger.assisted.AssistedInject
 import eu.siacs.conversations.entities.Account
 import eu.siacs.conversations.entities.Contact
@@ -26,19 +25,23 @@ class ChatContactsViewModel @AssistedInject constructor(
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.image_back -> {
+            com.topiichat.core.R.id.image_view_back -> {
                 onClickBack()
             }
         }
     }
 
-    override fun loadContacts(xmppConnectionService: XmppConnectionService) {
+    override fun loadContacts(xmppConnectionService: XmppConnectionService, query: String?) {
         val contacts = arrayListOf<ChatContactUiModel>()
         val accounts: List<Account> = xmppConnectionService.accounts
         for (account in accounts) {
             if (account.status != Account.State.DISABLED) {
                 for (contact in account.roster.contacts) {
-                    contacts.add(ChatContactUiModel(contact))
+                    if (query != null) {
+                        if (contact.match(xmppConnectionService.applicationContext, query)) {
+                            contacts.add(ChatContactUiModel(contact))
+                        }
+                    } else contacts.add(ChatContactUiModel(contact))
                 }
             }
         }
