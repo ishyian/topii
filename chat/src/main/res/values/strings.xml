@@ -1023,4 +1023,5 @@
     <string name="no_results">No results</string>
     <string name="video_calls_error">Video calls aren\'t available at the moment. The user may be offline.</string>
     <string name="audio_calls_error">Audio calls aren\'t available at the moment. The user may be offline.</string>
+    <string name="contacts_title">Contactos</string>
 </resources>

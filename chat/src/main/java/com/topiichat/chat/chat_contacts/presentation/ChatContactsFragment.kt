@@ -5,18 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.topiichat.chat.activity.ChatsActivity
+import com.topiichat.chat.chat_contacts.presentation.adapter.ChatsContactsAdapter
+import com.topiichat.core.extension.lazyUnsynchronized
 import com.topiichat.core.extension.viewModelCreator
 import com.topiichat.core.presentation.platform.BaseFragment
 import com.yourbestigor.chat.databinding.FragmentChatContactsBinding
 import dagger.hilt.android.AndroidEntryPoint
-import eu.siacs.conversations.entities.Account
+import eu.siacs.conversations.entities.Contact
+import eu.siacs.conversations.entities.Conversation
 import eu.siacs.conversations.entities.ListItem
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChatContactsFragment : BaseFragment<FragmentChatContactsBinding>(), OnBackendConnected {
+class ChatContactsFragment : BaseFragment<FragmentChatContactsBinding>(), OnBackendConnected, IChatContactsFragment {
 
     private val contacts = arrayListOf<ListItem>()
 
@@ -28,25 +30,40 @@ class ChatContactsFragment : BaseFragment<FragmentChatContactsBinding>(), OnBack
         requireActivity() as ChatsActivity
     }
 
+    private val chatContactsAdapter by lazyUnsynchronized {
+        ChatsContactsAdapter(onChatContactClick = viewModel::onChatContactClick)
+    }
+
     override fun initBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentChatContactsBinding.inflate(inflater, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+        setupClickListener(toolbar.btnBack)
+        rvContacts.adapter = chatContactsAdapter
+        initObservers()
         if (chatsActivity.xmppConnectionServiceBound) {
-            contacts.clear()
-            val accounts: List<Account> = chatsActivity.xmppConnectionService.accounts
-            for (account in accounts) {
-                if (account.status != Account.State.DISABLED) {
-                    for (contact in account.roster.contacts) {
-                        contacts.add(contact)
-                    }
-                }
-            }
-            Timber.d(contacts.toString())
+            viewModel.loadContacts(chatsActivity.xmppConnectionService)
         }
     }
 
     override fun onBackendConnected() {
         //Ignore
+    }
+
+    override fun onChatContactsLoaded(items: List<Any>) {
+        chatContactsAdapter.items = items
+    }
+
+    override fun openChatForContact(contact: Contact) {
+        val conversation: Conversation =
+            chatsActivity.xmppConnectionService.findOrCreateConversation(contact.account, contact.jid, false, true)
+        chatsActivity.openConversation(conversation)
+    }
+
+    override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
+
+    private fun initObservers() = with(viewModel) {
+        observe(content, ::onChatContactsLoaded)
+        observe(openChat, ::openChatForContact)
     }
 }

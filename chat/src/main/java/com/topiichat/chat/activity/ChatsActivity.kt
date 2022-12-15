@@ -329,7 +329,7 @@ class ChatsActivity : XmppActivity(), OnConversationSelected, OnConversationArch
         displayToast(getString(resId, jid.asBareJid().toString()))
     }
 
-    fun openConversation(conversation: Conversation, extras: Bundle?) {
+    fun openConversation(conversation: Conversation, extras: Bundle? = null) {
         val fragmentManager = supportFragmentManager
         executePendingTransactions(fragmentManager)
         val mainNeedsRefresh = false
