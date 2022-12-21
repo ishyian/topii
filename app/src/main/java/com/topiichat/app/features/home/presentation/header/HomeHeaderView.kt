@@ -75,8 +75,8 @@ class HomeHeaderView(
     fun renderWith(featuresDomain: CurrentCountryDomain) {
         val options = if (featuresDomain.isAvailable) {
             HomeHeaderViewOptions(
-                isSendPaymentEnabled = featuresDomain.countryInfo?.allowedFrom ?: false,
-                isRequestPaymentEnabled = featuresDomain.countryInfo?.allowedTo ?: false,
+                isSendPaymentEnabled = true, //featuresDomain.countryInfo?.allowedFrom ?: false
+                isRequestPaymentEnabled = true, //featuresDomain.countryInfo?.allowedTo ?: false
                 isWalletEnabled = true,
                 isChatEnabled = true
             )
