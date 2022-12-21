@@ -67,7 +67,7 @@ object DateFormats {
     const val FORMAT_MONTH_YEAR = "MMMM yyyy"
     const val FORMAT_TIME = "HH:mm"
     const val DOT_DAY_FORMAT = "dd.MM.yyyy"
-    const val TRANSACTION_ITEM_FORMAT = "dd.MMMM - HH:mm"
+    const val TRANSACTION_ITEM_FORMAT = "dd MMMM - HH:mm"
     val SERVER_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
     val DOT_DAY_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern(DOT_DAY_FORMAT)
 }

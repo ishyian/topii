@@ -111,15 +111,15 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
                 val swiped = swipedConversation.peek()
                 val title: Int = if (swiped.mode == Conversational.MODE_MULTI) {
                     if (swiped.mucOptions.isPrivateAndNonAnonymous) {
-                        com.yourbestigor.chat.R.string.title_undo_swipe_out_group_chat
+                        R.string.title_undo_swipe_out_group_chat
                     } else {
-                        com.yourbestigor.chat.R.string.title_undo_swipe_out_channel
+                        R.string.title_undo_swipe_out_channel
                     }
                 } else {
-                    com.yourbestigor.chat.R.string.title_undo_swipe_out_conversation
+                    R.string.title_undo_swipe_out_conversation
                 }
                 val snackbar = Snackbar.make(binding.rvChatsList, title, 5000)
-                    .setAction(com.yourbestigor.chat.R.string.undo) {
+                    .setAction(R.string.undo) {
                         pendingActionHelper.undo()
                         val conversation = swipedConversation.pop()
                         chatsListAdapter.insert(conversation, position)

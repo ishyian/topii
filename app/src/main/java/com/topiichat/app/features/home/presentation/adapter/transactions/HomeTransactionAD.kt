@@ -40,7 +40,14 @@ fun homeTransactionAD(
             Glide.with(itemView).load(item.transaction.avatar).into(imageAvatar)
             textUserName.text = item.transaction.userName
             textDate.text = item.transaction.date.toString(DateFormats.TRANSACTION_ITEM_FORMAT)
-            textSum.text = item.transaction.amountText
+            textSum.text = when (item.transaction.action) {
+                RemittanceType.SEND -> {
+                    "- ${item.transaction.currency?.symbol} ${item.transaction.amountText}"
+                }
+                RemittanceType.REQUEST -> {
+                    "+ ${item.transaction.currency?.symbol} ${item.transaction.amountText}"
+                }
+            }
             textSum.setTextColor(ContextCompat.getColor(itemView.context, amountTextColorResource))
         }
     }
