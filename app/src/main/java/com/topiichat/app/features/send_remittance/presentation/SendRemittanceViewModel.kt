@@ -8,6 +8,7 @@ import com.topiichat.app.R
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.contacts.presentation.ContactsParameters
 import com.topiichat.app.features.home.domain.model.AvailableCountriesDomain
+import com.topiichat.app.features.home.domain.model.CountryCode
 import com.topiichat.app.features.home.domain.model.CountryDomain
 import com.topiichat.app.features.home.domain.model.RecentUserDomain
 import com.topiichat.app.features.home.domain.usecase.GetAvailableCountriesUseCase
@@ -110,7 +111,8 @@ class SendRemittanceViewModel @AssistedInject constructor(
                 is ResultData.Success -> {
                     result.data.let {
                         availableCountries.value = it
-                        _receiverCountry.value = result.data.countries.first()
+                        _receiverCountry.value =
+                            result.data.countries.first { it.countryCode == CountryCode.GT } //TODO Remove 'fix'
                     }
                     loadRemittancePurposes()
                     loadRecentUsers()
