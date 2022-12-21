@@ -134,6 +134,7 @@ class RegisterViewModel @AssistedInject constructor(
 
     override fun onFailRegister(error: ErrorDomain) {
         handleError(error)
+        _showLoader.value = false
     }
 
     override fun onKYCStatusNotVerified() = with(parameters) {
