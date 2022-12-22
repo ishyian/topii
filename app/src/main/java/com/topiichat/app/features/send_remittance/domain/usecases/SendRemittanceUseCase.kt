@@ -22,7 +22,7 @@ class SendRemittanceUseCase @Inject constructor(
                 it.fxRateId,
                 it.description,
                 it.purposeCode,
-                it.cardId
+                it.cardTokenized
             )
         } ?: return ResultData.Fail(emitError("SendRemittanceUseCase params is null"))
     }
@@ -32,6 +32,6 @@ class SendRemittanceUseCase @Inject constructor(
         val fxRateId: String,
         val description: String,
         val purposeCode: String,
-        val cardId: String
+        val cardTokenized: String
     )
 }

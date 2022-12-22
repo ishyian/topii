@@ -93,7 +93,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
 
     private var recipientId: String = ""
     private var purposeCode: String = ""
-    private var cardId: String = ""
+    private var cardToken: String = ""
     private var description: String = ""
     private var isCheckedSwitch = false
 
@@ -142,7 +142,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
     override suspend fun loadUserCard() {
         when (val cardsResult = getCards()) {
             is ResultData.Success -> {
-                cardId = cardsResult.data.firstOrNull()?.cardId ?: ""
+                cardToken = cardsResult.data.firstOrNull()?.token ?: ""
             }
             else -> {
                 //Nothing for now
@@ -253,7 +253,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
                     fxRateId = fxRateId,
                     description = description,
                     purposeCode = purposeCode,
-                    cardId = cardId
+                    cardTokenized = cardToken
                 )
             )) {
                 is ResultData.Success -> {
@@ -331,13 +331,13 @@ class SendRemittanceViewModel @AssistedInject constructor(
     override fun onUpdateBtnSend() {
         Timber.d("isCheckedSwitch $isCheckedSwitch")
         Timber.d("recipientId $recipientId")
-        Timber.d("cardId $cardId")
+        Timber.d("cardId $cardToken")
         Timber.d("purposeCode $purposeCode")
         Timber.d("fxRateId $fxRateId")
 
         val btnSendEnabling = if (isCheckedSwitch &&
             recipientId.isNotEmpty() &&
-            cardId.isNotEmpty() &&
+            cardToken.isNotEmpty() &&
             purposeCode.isNotEmpty() &&
             fxRateId.isNotEmpty()
         ) {

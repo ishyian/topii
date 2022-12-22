@@ -82,10 +82,10 @@ class SendRemittanceRepositoryImpl(
         fxRateId: String,
         description: String,
         purposeCode: String,
-        cardId: String
+        cardTokenized: String
     ): ResultData<RemittanceDomain> {
         val request = SendRemittanceRequestDto(
-            cardId = cardId,
+            cardTokenized = cardTokenized,
             description = description,
             fxRateId = fxRateId,
             purposedCode = purposeCode,

@@ -32,6 +32,6 @@ interface SendRemittanceRepository {
         fxRateId: String,
         description: String,
         purposeCode: String,
-        cardId: String
+        cardTokenized: String
     ): ResultData<RemittanceDomain>
 }

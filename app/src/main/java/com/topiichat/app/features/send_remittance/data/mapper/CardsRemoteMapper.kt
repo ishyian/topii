@@ -9,11 +9,11 @@ class CardsRemoteMapper @Inject constructor() : Mapper<List<CardDto>, List<CardD
     override fun map(input: List<CardDto>?): List<CardDomain> {
         return input?.map { card ->
             CardDomain(
-                cardId = card.cardId,
                 expiryMonth = card.expiryMonth,
                 expiryYear = card.expiryYear,
                 last4Digits = card.last4,
-                network = card.network
+                network = card.network,
+                token = card.token
             )
         } ?: emptyList()
     }
