@@ -1,6 +1,8 @@
 package com.topiichat.app.features.home.presentation
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +24,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(),
     IHomeFragment,
     HomeHeaderView.HomeHeaderViewClickListener,
-    HomeTotalSumByMonthView.OnMonthChangedListener {
+    HomeTotalSumByMonthView.OnMonthChangedListener,
+    TextWatcher {
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -43,6 +46,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
             setHasFixedSize(false)
             adapter = homeAdapter
         }
+        binding.editTextSearch.addTextChangedListener(this@HomeFragment)
         binding.homeTotalSumByMonth.setupMonthChangedListener(this@HomeFragment)
     }
 
@@ -67,8 +71,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
         progressBar.isVisible = isVisibleLoader
     }
 
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        // Ignore
+    }
+
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        // Ignore
+    }
+
+    override fun afterTextChanged(s: Editable?) {
+        viewModel.searchTransaction(s?.toString() ?: "")
+    }
+
     private fun initObservers() = with(viewModel) {
         observe(content, ::onContentLoaded)
+        observe(searchContent, ::onContentLoaded)
         observe(availableCountryFeatures, ::onAvailableFeaturesLoaded)
         observe(showMsgError, ::showErrorMessage)
         observe(showLoader, ::onVisibilityLoader)

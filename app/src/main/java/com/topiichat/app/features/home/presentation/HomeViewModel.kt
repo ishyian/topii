@@ -40,6 +40,9 @@ class HomeViewModel @Inject constructor(
     private val _content: MutableLiveData<HomeRemittanceHistoryUiModel> = MutableLiveData()
     val content: LiveData<HomeRemittanceHistoryUiModel> = _content
 
+    private val _searchContent: MutableLiveData<HomeRemittanceHistoryUiModel> = MutableLiveData()
+    val searchContent: LiveData<HomeRemittanceHistoryUiModel> = _searchContent
+
     private val _availableCountryFeatures: MutableLiveData<CurrentCountryDomain> = MutableLiveData()
     val availableCountryFeatures: LiveData<CurrentCountryDomain> = _availableCountryFeatures
 
@@ -151,5 +154,26 @@ class HomeViewModel @Inject constructor(
 
     override fun onWalletClick() {
         navigate(WalletScreens.WalletBalance)
+    }
+
+    override fun searchTransaction(query: String) {
+        if (query.isNotEmpty()) {
+            content.value?.let { contentModel ->
+                val filteredTransactions = content.value?.remittances?.filter { model ->
+                    model.transaction.userName.contains(query, true) ||
+                        model.transaction.amountText.contains(query, true)
+                } ?: emptyList()
+                val searchContent = HomeRemittanceHistoryUiModel(
+                    totalSum = contentModel.totalSum,
+                    remittances = filteredTransactions,
+                    totalReceived = contentModel.totalReceived,
+                    totalSent = contentModel.totalSent,
+                    currency = contentModel.currency
+                )
+                _searchContent.value = searchContent
+            }
+        } else {
+            _searchContent.value = content.value
+        }
     }
 }

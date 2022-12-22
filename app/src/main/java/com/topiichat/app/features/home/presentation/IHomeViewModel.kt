@@ -13,4 +13,5 @@ interface IHomeViewModel {
     fun onFailRemmitanceHistory(failure: ResultData.Fail)
     fun onRequestPaymentClick()
     fun onWalletClick()
+    fun searchTransaction(query: String)
 }
