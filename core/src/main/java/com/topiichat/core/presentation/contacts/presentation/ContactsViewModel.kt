@@ -13,6 +13,7 @@ import com.topiichat.app.features.contacts.presentation.model.ContactsListUiMode
 import com.topiichat.app.features.contacts.presentation.model.changeContactCheckedStatus
 import com.topiichat.app.features.contacts.presentation.model.changeContactSingleCheckedStatus
 import com.topiichat.core.R
+import com.topiichat.core.presentation.contacts.domain.model.ChatContactSelection
 import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -22,9 +23,10 @@ import ru.terrakok.cicerone.Router
 class ContactsViewModel
 @AssistedInject constructor(
     @Assisted("contactsParameters") private val parameters: ContactsParameters,
+    @Assisted("router") appRouter: Router,
+    private val chatContactSelection: ChatContactSelection,
     private val fetchContacts: FetchContactsUseCase,
     private val contactsUiMapper: ContactsUiMapper,
-    appRouter: Router
 ) : BaseViewModel(appRouter), IContactsViewModel {
 
     private val _content: MutableLiveData<ContactsListUiModel> = MutableLiveData()
@@ -74,13 +76,22 @@ class ContactsViewModel
     }
 
     override fun onNextClick() {
+        val contact = content.value?.selectedItems?.firstOrNull()
+        contact?.let {
+            chatContactSelection.selectContact(
+                ContactDomain(
+                    it.displayName, it.lastName, it.telephone
+                )
+            )
+        }
         onClickBack()
     }
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
         fun create(
-            @Assisted("contactsParameters") parameters: ContactsParameters
+            @Assisted("contactsParameters") parameters: ContactsParameters,
+            @Assisted("router") appRouter: Router
         ): ContactsViewModel
     }
 }

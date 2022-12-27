@@ -552,13 +552,12 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
         }
     }
 
-    private fun sendMessage() {
+    private fun sendMessage(text: String? = binding.editMessageInput.text.toString()) {
         if (mediaPreviewAdapter!!.hasAttachments()) {
             commitAttachments()
             return
         }
-        val text = binding.editMessageInput.text
-        val body = text?.toString() ?: ""
+        val body = text ?: ""
         val conversation = conversation
         if (body.isEmpty() || conversation == null) {
             return
@@ -880,6 +879,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
 
     private fun initObservers() = with(viewModel) {
         observe(onMoreDialogShow, ::onMoreDialogShow)
+        observe(sendMessage, ::sendMessage)
     }
 
     private fun isAudioCallsAvailable(): Boolean = with(binding) {
@@ -914,6 +914,7 @@ class ChatFragment : BaseChatFragment<FragmentChatBinding>(),
                 bottomSheetDialog.dismiss()
             }
             layoutContact.setOnClickListener {
+                viewModel.attachContact()
                 bottomSheetDialog.dismiss()
             }
             textClose.setOnClickListener { bottomSheetDialog.dismiss() }

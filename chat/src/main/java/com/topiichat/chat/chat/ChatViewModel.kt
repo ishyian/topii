@@ -6,15 +6,27 @@ import androidx.lifecycle.MutableLiveData
 import com.topiichat.chat.ChatsScreens
 import com.topiichat.chat.search.presentation.SearchParameters
 import com.topiichat.core.annotations.ChatRouterQualifier
+import com.topiichat.core.presentation.contacts.domain.model.ChatContactSelection
+import com.topiichat.core.presentation.contacts.presentation.ContactsParameters
 import com.topiichat.core.presentation.platform.BaseViewModel
+import com.topiichat.core.presentation.platform.SingleLiveData
 import com.yourbestigor.chat.R
 import dagger.assisted.AssistedInject
 import ru.terrakok.cicerone.Router
 
 class ChatViewModel @AssistedInject constructor(
-    @ChatRouterQualifier appRouter: Router
+    chatContactSelection: ChatContactSelection,
+    @ChatRouterQualifier val appRouter: Router
 ) : BaseViewModel(appRouter),
     IChatViewModel {
+
+    val sendMessage = SingleLiveData<String>()
+
+    init {
+        chatContactSelection.setListener {
+            sendMessage.postValue(it.displayName + it.telephone)
+        }
+    }
 
     private val _onMoreDialogShow: MutableLiveData<Unit> = MutableLiveData()
     val onMoreDialogShow: LiveData<Unit> = _onMoreDialogShow
@@ -31,6 +43,17 @@ class ChatViewModel @AssistedInject constructor(
 
     override fun onSearchClick(uuid: String?) {
         navigate(ChatsScreens.Search(SearchParameters(uuid)))
+    }
+
+    override fun attachContact() {
+        navigate(
+            ChatsScreens.Contacts(
+                ContactsParameters(
+                    isChatSelectContact = true,
+                    isSingleSelection = true
+                )
+            )
+        )
     }
 
     @dagger.assisted.AssistedFactory

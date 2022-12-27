@@ -9,6 +9,7 @@ import com.topiichat.app.features.contacts.presentation.IContacsFragment
 import com.topiichat.app.features.contacts.presentation.adapter.ContactsAdapter
 import com.topiichat.app.features.contacts.presentation.adapter.delegates.ContactsSelectedAdapter
 import com.topiichat.app.features.contacts.presentation.model.ContactsListUiModel
+import com.topiichat.core.annotations.ChatRouterQualifier
 import com.topiichat.core.databinding.FragmentContactsBinding
 import com.topiichat.core.delegates.parcelableParameters
 import com.topiichat.core.extension.hideKeyboard
@@ -16,6 +17,7 @@ import com.topiichat.core.extension.lazyUnsynchronized
 import com.topiichat.core.extension.viewModelCreator
 import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -23,9 +25,19 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding>(), IContacsFragme
 
     @Inject
     lateinit var factory: ContactsViewModel.AssistedFactory
+
+    @Inject
+    lateinit var appRouter: Router
+
+    @Inject
+    @ChatRouterQualifier
+    lateinit var chatRouter: Router
+
     private val viewModel by viewModelCreator {
-        factory.create(parameters)
+        val router = if (parameters.isChatSelectContact) chatRouter else appRouter
+        factory.create(parameters, router)
     }
+
     private val parameters: ContactsParameters by parcelableParameters()
 
     private val contactsAdapter by lazyUnsynchronized {

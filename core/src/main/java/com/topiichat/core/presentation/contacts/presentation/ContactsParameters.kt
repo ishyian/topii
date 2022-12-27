@@ -5,5 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ContactsParameters(
+    val isChatSelectContact: Boolean = false,
     val isSingleSelection: Boolean = false
 ) : Parcelable
