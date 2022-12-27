@@ -1,6 +1,6 @@
 package com.topiichat.app.features.send_remittance.domain.model
 
-import com.topiichat.app.core.data.Dto
+import com.topiichat.core.data.Dto
 
 data class CardDomain(
     val expiryMonth: Int?,

@@ -2,10 +2,10 @@ package com.topiichat.app.di.module
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.topiichat.app.features.contacts.data.datasource.ContactsCache
 import com.topiichat.app.features.contacts.data.datasource.ContactsCacheImpl
 import com.topiichat.app.features.registration.data.datasource.cache.RegisterCache
 import com.topiichat.app.features.registration.data.datasource.cache.RegisterCacheImpl
+import com.topiichat.core.presentation.contacts.data.datasource.ContactsCache
 import contacts.core.Contacts
 import dagger.Module
 import dagger.Provides

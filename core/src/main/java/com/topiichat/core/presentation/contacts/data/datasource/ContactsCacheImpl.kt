@@ -1,5 +1,6 @@
 package com.topiichat.app.features.contacts.data.datasource
 
+import com.topiichat.core.presentation.contacts.data.datasource.ContactsCache
 import contacts.core.Contacts
 import contacts.core.entities.Contact
 import contacts.permissions.broadQueryWithPermission

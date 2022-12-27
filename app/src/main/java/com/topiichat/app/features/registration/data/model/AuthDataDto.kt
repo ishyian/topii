@@ -1,6 +1,6 @@
 package com.topiichat.app.features.registration.data.model
 
-import com.topiichat.app.core.data.Dto
+import com.topiichat.core.data.Dto
 
 data class AuthDataDto(
     val token: String?,

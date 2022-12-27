@@ -1,14 +1,15 @@
-package com.topiichat.app.features.contacts.presentation
+package com.topiichat.core.presentation.contacts.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import com.topiichat.app.databinding.FragmentContactsBinding
+import com.topiichat.app.features.contacts.presentation.IContacsFragment
 import com.topiichat.app.features.contacts.presentation.adapter.ContactsAdapter
 import com.topiichat.app.features.contacts.presentation.adapter.delegates.ContactsSelectedAdapter
 import com.topiichat.app.features.contacts.presentation.model.ContactsListUiModel
+import com.topiichat.core.databinding.FragmentContactsBinding
 import com.topiichat.core.delegates.parcelableParameters
 import com.topiichat.core.extension.hideKeyboard
 import com.topiichat.core.extension.lazyUnsynchronized

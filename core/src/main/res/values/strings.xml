@@ -17,4 +17,8 @@
     <string name="remittance_error_title">Oops! Algo salió mal.</string>
     <string name="remittance_error_btn_text">Regresar</string>
     <string name="cancel">Cancel</string>
+
+    <string name="contacts_title">Contactos</string>
+    <string name="contacts_button_next">Siguiente</string>
+    <string name="contacts_search_hint">Search</string>
 </resources>

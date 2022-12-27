@@ -1,4 +1,4 @@
-package com.topiichat.app.features.contacts.data.mapper
+package com.topiichat.core.presentation.contacts.data.mapper
 
 import com.topiichat.app.features.contacts.domain.model.ContactDomain
 import com.topiichat.core.domain.Mapper

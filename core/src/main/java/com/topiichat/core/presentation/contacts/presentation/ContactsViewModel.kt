@@ -1,17 +1,18 @@
-package com.topiichat.app.features.contacts.presentation
+package com.topiichat.core.presentation.contacts.presentation
 
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.topiichat.app.R
 import com.topiichat.app.features.contacts.domain.model.ContactDomain
 import com.topiichat.app.features.contacts.domain.usecase.FetchContactsUseCase
+import com.topiichat.app.features.contacts.presentation.IContactsViewModel
 import com.topiichat.app.features.contacts.presentation.mapper.ContactsUiMapper
 import com.topiichat.app.features.contacts.presentation.model.ContactUiModel
 import com.topiichat.app.features.contacts.presentation.model.ContactsListUiModel
 import com.topiichat.app.features.contacts.presentation.model.changeContactCheckedStatus
 import com.topiichat.app.features.contacts.presentation.model.changeContactSingleCheckedStatus
+import com.topiichat.core.R
 import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -67,7 +68,7 @@ class ContactsViewModel
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            com.topiichat.core.R.id.image_view_back -> onClickBack()
+            R.id.image_view_back -> onClickBack()
             R.id.text_next -> onNextClick()
         }
     }

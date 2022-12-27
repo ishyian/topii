@@ -1,6 +1,6 @@
-package com.topiichat.app.core.data.datasource
+package com.topiichat.core.data.datasource
 
-import com.topiichat.app.core.data.Dto
+import com.topiichat.core.data.Dto
 import com.topiichat.core.domain.CacheFailStatus
 import com.topiichat.core.domain.ResultData
 

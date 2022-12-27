@@ -85,8 +85,6 @@
     <string name="verification_button_text">Conceder acceso a la cámara</string>
     <string name="currency_sample">EUR</string>
 
-    <string name="contacts_title">Contactos</string>
-    <string name="contacts_button_next">Siguiente</string>
     <string name="send_payment_plus">+</string>
     <string name="send_payment_select_recipient">Elija el destinatario</string>
     <string name="select_receiver_currency">Select receiver currency</string>

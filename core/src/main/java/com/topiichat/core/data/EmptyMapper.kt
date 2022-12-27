@@ -1,4 +1,4 @@
-package com.topiichat.app.core.data
+package com.topiichat.core.data
 
 import com.topiichat.core.domain.EmptyDomain
 import com.topiichat.core.domain.Mapper

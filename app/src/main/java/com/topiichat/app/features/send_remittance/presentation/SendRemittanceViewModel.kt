@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
 import com.topiichat.app.features.MainScreens
-import com.topiichat.app.features.contacts.presentation.ContactsParameters
 import com.topiichat.app.features.home.domain.model.AvailableCountriesDomain
 import com.topiichat.app.features.home.domain.model.CountryCode
 import com.topiichat.app.features.home.domain.model.CountryDomain
@@ -29,6 +28,7 @@ import com.topiichat.app.features.send_remittance.presentation.model.RecipientUi
 import com.topiichat.app.features.send_remittance.presentation.model.SendRemittanceUIModel
 import com.topiichat.app.features.send_remittance.presentation.model.changeCheckedStatus
 import com.topiichat.core.domain.ResultData
+import com.topiichat.core.presentation.contacts.presentation.ContactsParameters
 import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject

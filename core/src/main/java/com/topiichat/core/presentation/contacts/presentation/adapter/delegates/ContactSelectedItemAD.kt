@@ -1,9 +1,9 @@
-package com.topiichat.app.features.contacts.presentation.adapter.delegates
+package com.topiichat.core.presentation.contacts.presentation.adapter.delegates
 
 import android.annotation.SuppressLint
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
-import com.topiichat.app.databinding.ContactSelectedItemBinding
 import com.topiichat.app.features.contacts.presentation.model.ContactUiModel
+import com.topiichat.core.databinding.ContactSelectedItemBinding
 
 @SuppressLint("SetTextI18n")
 fun contactSelectedItemAD(

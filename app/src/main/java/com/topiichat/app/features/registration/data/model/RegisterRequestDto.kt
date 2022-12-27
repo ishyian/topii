@@ -1,8 +1,8 @@
 package com.topiichat.app.features.registration.data.model
 
 import com.squareup.moshi.Json
-import com.topiichat.app.core.data.Dto
 import com.topiichat.app.features.valid_phone_number.data.model.PhoneNumberDto
+import com.topiichat.core.data.Dto
 
 data class RegisterRequestDto(
     @Json(name = "authyId")

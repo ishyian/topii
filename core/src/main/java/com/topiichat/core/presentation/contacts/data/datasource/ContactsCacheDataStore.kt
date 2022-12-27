@@ -1,6 +1,6 @@
-package com.topiichat.app.features.contacts.data.datasource
+package com.topiichat.core.presentation.contacts.data.datasource
 
-import com.topiichat.app.core.data.datasource.BaseCacheDataStore
+import com.topiichat.core.data.datasource.BaseCacheDataStore
 import contacts.core.entities.Contact
 import javax.inject.Inject
 

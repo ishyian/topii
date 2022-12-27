@@ -1,9 +1,5 @@
 package com.topiichat.app.di.module
 
-import com.topiichat.app.core.data.EmptyMapper
-import com.topiichat.app.features.contacts.data.datasource.ContactsCacheDataStore
-import com.topiichat.app.features.contacts.data.mapper.ContactsCacheMapper
-import com.topiichat.app.features.contacts.data.repo.ContactsRepositoryImpl
 import com.topiichat.app.features.contacts.domain.repo.ContactsRepository
 import com.topiichat.app.features.home.data.datasource.HomeRemoteDataSource
 import com.topiichat.app.features.home.data.mapper.AvailableCountriesRemoteMapper
@@ -50,6 +46,10 @@ import com.topiichat.app.features.valid_phone_number.data.mapper.VerifyPhoneRemo
 import com.topiichat.app.features.valid_phone_number.data.repo.ValidPhoneRepositoryImpl
 import com.topiichat.app.features.valid_phone_number.domain.repo.ValidPhoneRepository
 import com.topiichat.core.coroutines.AppDispatchers
+import com.topiichat.core.data.EmptyMapper
+import com.topiichat.core.presentation.contacts.data.datasource.ContactsCacheDataStore
+import com.topiichat.core.presentation.contacts.data.mapper.ContactsCacheMapper
+import com.topiichat.core.presentation.contacts.data.repo.ContactsRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

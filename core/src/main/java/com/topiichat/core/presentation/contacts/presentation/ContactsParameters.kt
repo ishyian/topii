@@ -1,4 +1,4 @@
-package com.topiichat.app.features.contacts.presentation
+package com.topiichat.core.presentation.contacts.presentation
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

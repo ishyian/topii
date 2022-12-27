@@ -1,4 +1,4 @@
-package com.topiichat.app.features.contacts.data.datasource
+package com.topiichat.core.presentation.contacts.data.datasource
 
 import contacts.core.entities.Contact
 

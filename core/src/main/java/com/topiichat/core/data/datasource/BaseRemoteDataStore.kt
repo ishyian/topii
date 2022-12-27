@@ -1,4 +1,4 @@
-package com.topiichat.app.core.data.datasource
+package com.topiichat.core.data.datasource
 
 import com.topiichat.core.domain.ResultData
 import com.topiichat.core.exception.data.ErrorParser
