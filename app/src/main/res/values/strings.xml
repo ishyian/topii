@@ -143,4 +143,6 @@
     <string name="month">Month</string>
     <string name="year">Year</string>
     <string name="new_beneficiary_title">New Beneficiary</string>
+    <string name="new_beneficiary_description">Please input the following beneficiary information</string>
+    <string name="new_beneficiary_country_hint">Country</string>
 </resources>
