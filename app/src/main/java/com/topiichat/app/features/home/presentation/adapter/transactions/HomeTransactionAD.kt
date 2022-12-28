@@ -4,13 +4,12 @@ import android.annotation.SuppressLint
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
-import com.topiichat.app.R
-import com.topiichat.app.core.extension.date.DateFormats
-import com.topiichat.app.core.extension.date.toString
 import com.topiichat.app.databinding.HomeTransactionItemBinding
 import com.topiichat.app.features.home.domain.model.RemittanceDomain
 import com.topiichat.app.features.home.domain.model.RemittanceType
 import com.topiichat.app.features.home.presentation.model.HomeTransactionUiModel
+import com.topiichat.core.extension.date.DateFormats
+import com.topiichat.core.extension.date.toString
 
 @SuppressLint("SetTextI18n")
 fun homeTransactionAD(
@@ -20,17 +19,17 @@ fun homeTransactionAD(
         HomeTransactionItemBinding.inflate(layoutInflater, parent, false)
     }
 ) {
-    val radius = itemView.resources.getDimension(R.dimen.offset15)
+    val radius = itemView.resources.getDimension(com.topiichat.core.R.dimen.offset15)
     itemView.setOnClickListener {
         onTransactionClick(item.transaction)
     }
     bind {
         val amountTextColorResource = when (item.transaction.action) {
             RemittanceType.REQUEST -> {
-                R.color.home_transaction_sum_profit
+                com.topiichat.core.R.color.home_transaction_sum_profit
             }
             RemittanceType.SEND -> {
-                R.color.home_transaction_sum_expense
+                com.topiichat.core.R.color.home_transaction_sum_expense
             }
         }
         with(binding) {
@@ -41,7 +40,14 @@ fun homeTransactionAD(
             Glide.with(itemView).load(item.transaction.avatar).into(imageAvatar)
             textUserName.text = item.transaction.userName
             textDate.text = item.transaction.date.toString(DateFormats.TRANSACTION_ITEM_FORMAT)
-            textSum.text = item.transaction.amountText
+            textSum.text = when (item.transaction.action) {
+                RemittanceType.SEND -> {
+                    "- ${item.transaction.currency?.symbol} ${item.transaction.amountText}"
+                }
+                RemittanceType.REQUEST -> {
+                    "+ ${item.transaction.currency?.symbol} ${item.transaction.amountText}"
+                }
+            }
             textSum.setTextColor(ContextCompat.getColor(itemView.context, amountTextColorResource))
         }
     }

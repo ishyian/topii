@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.topiichat.app">
 
     <!--Permissions-->
@@ -11,6 +12,23 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30"
+        android:required="false" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_CONNECT"
+        android:maxSdkVersion="30"
+        android:required="false" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30"
+        android:required="false" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -20,6 +38,11 @@
     <queries>
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:scheme="mailto" />
         </intent>
     </queries>
 
@@ -47,14 +70,44 @@
             </intent-filter>
         </activity>
 
+        <service android:name="eu.siacs.conversations.services.XmppConnectionService" />
+
+        <receiver
+            android:name="eu.siacs.conversations.services.EventReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                <action android:name="android.media.RINGER_MODE_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <activity android:name="eu.siacs.conversations.ui.SettingsActivity" />
+        <activity android:name="eu.siacs.conversations.ui.UriHandlerActivity" />
+        <activity android:name="eu.siacs.conversations.ui.ChooseAccountForProfilePictureActivity" />
+        <activity android:name="eu.siacs.conversations.ui.ShareLocationActivity" />
+        <activity android:name="eu.siacs.conversations.ui.ShowLocationActivity" />
+        <activity android:name="eu.siacs.conversations.ui.TrustKeysActivity" />
+        <activity android:name="com.topiichat.chat.rtc.presentation.kotlin.RtpSessionActivity" />
+        <activity android:name="com.topiichat.chat.activity.EditAccountActivity" />
+        <activity android:name="com.topiichat.chat.activity.WelcomeActivity" />
+        <activity android:name="com.topiichat.chat.activity.PickServerActivity" />
+        <activity android:name="com.topiichat.chat.activity.MagicCreateActivity" />
+
+        <activity
+            android:name="com.topiichat.chat.activity.ChatsActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="${applicationId}.files"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
+                android:resource="@xml/file_paths" />
         </provider>
 
     </application>

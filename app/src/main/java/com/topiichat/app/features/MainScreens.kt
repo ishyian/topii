@@ -1,12 +1,10 @@
 package com.topiichat.app.features
 
-import com.topiichat.app.core.delegates.parcelableParametersBundleOf
+import android.content.Context
+import android.content.Intent
 import com.topiichat.app.features.activate_permission.presentation.PermissionFragment
-import com.topiichat.app.features.contacts.presentation.ContactsFragment
-import com.topiichat.app.features.contacts.presentation.ContactsParameters
-import com.topiichat.app.features.error.presentation.ErrorFragment
-import com.topiichat.app.features.error.presentation.ErrorParameters
 import com.topiichat.app.features.home.presentation.HomeFragment
+import com.topiichat.app.features.new_beneficiary.presentation.NewBeneficiaryFragment
 import com.topiichat.app.features.otp.presentation.OtpFragment
 import com.topiichat.app.features.otp.presentation.OtpParameters
 import com.topiichat.app.features.pin_code.presentation.PinCodeFragment
@@ -23,6 +21,10 @@ import com.topiichat.app.features.send_remittance.presentation.SendRemittancePar
 import com.topiichat.app.features.splash.presentation.SplashFragment
 import com.topiichat.app.features.terms.presentation.TermsFragment
 import com.topiichat.app.features.valid_phone_number.presentation.ValidPhoneNumberFragment
+import com.topiichat.chat.activity.ChatsActivity
+import com.topiichat.core.delegates.parcelableParametersBundleOf
+import com.topiichat.core.presentation.contacts.presentation.ContactsFragment
+import com.topiichat.core.presentation.contacts.presentation.ContactsParameters
 import ru.terrakok.cicerone.android.support.FragmentParams
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
@@ -121,13 +123,13 @@ object MainScreens {
         )
     }
 
-    class Error(
-        private val parameters: ErrorParameters
-    ) : SupportAppScreen() {
-        override fun getFragment() = ErrorFragment()
-        override fun getFragmentParams() = FragmentParams(
-            ErrorFragment::class.java,
-            parcelableParametersBundleOf(parameters)
-        )
+    object WelcomeConversations : SupportAppScreen() {
+        override fun getActivityIntent(context: Context): Intent {
+            return Intent(context, ChatsActivity::class.java)
+        }
+    }
+
+    object NewBeneficiary : SupportAppScreen() {
+        override fun getFragment() = NewBeneficiaryFragment()
     }
 }

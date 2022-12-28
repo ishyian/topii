@@ -4,10 +4,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
-import com.topiichat.app.features.chats.ChatsScreens
 import com.topiichat.app.features.home.domain.model.CurrentCountryDomain
 import com.topiichat.app.features.home.domain.model.RemittanceDomain
 import com.topiichat.app.features.home.domain.usecase.GetCurrentCountryAvailabilityUseCase
@@ -22,6 +19,8 @@ import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCas
 import com.topiichat.app.features.request_remittance.presentation.RequestRemittanceParameters
 import com.topiichat.app.features.send_remittance.presentation.SendRemittanceParameters
 import com.topiichat.app.features.wallet.WalletScreens
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
@@ -40,6 +39,9 @@ class HomeViewModel @Inject constructor(
 
     private val _content: MutableLiveData<HomeRemittanceHistoryUiModel> = MutableLiveData()
     val content: LiveData<HomeRemittanceHistoryUiModel> = _content
+
+    private val _searchContent: MutableLiveData<HomeRemittanceHistoryUiModel> = MutableLiveData()
+    val searchContent: LiveData<HomeRemittanceHistoryUiModel> = _searchContent
 
     private val _availableCountryFeatures: MutableLiveData<CurrentCountryDomain> = MutableLiveData()
     val availableCountryFeatures: LiveData<CurrentCountryDomain> = _availableCountryFeatures
@@ -135,7 +137,7 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onChatsClick() {
-        navigate(ChatsScreens.ChatsList)
+        navigate(MainScreens.WelcomeConversations)
     }
 
     override fun onRequestPaymentClick() {
@@ -152,5 +154,26 @@ class HomeViewModel @Inject constructor(
 
     override fun onWalletClick() {
         navigate(WalletScreens.WalletBalance)
+    }
+
+    override fun searchTransaction(query: String) {
+        if (query.isNotEmpty()) {
+            content.value?.let { contentModel ->
+                val filteredTransactions = content.value?.remittances?.filter { model ->
+                    model.transaction.userName.contains(query, true) ||
+                        model.transaction.amountText.contains(query, true)
+                } ?: emptyList()
+                val searchContent = HomeRemittanceHistoryUiModel(
+                    totalSum = contentModel.totalSum,
+                    remittances = filteredTransactions,
+                    totalReceived = contentModel.totalReceived,
+                    totalSent = contentModel.totalSent,
+                    currency = contentModel.currency
+                )
+                _searchContent.value = searchContent
+            }
+        } else {
+            _searchContent.value = content.value
+        }
     }
 }

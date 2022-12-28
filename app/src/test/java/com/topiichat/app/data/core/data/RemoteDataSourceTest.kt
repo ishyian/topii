@@ -1,10 +1,10 @@
 package com.topiichat.app.data.core.data
 
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.exception.data.ErrorParser
-import com.topiichat.app.core.exception.domain.ErrorDomain
-import com.topiichat.app.core.exception.domain.networkConnectionError
 import com.topiichat.app.data.core.MainDispatcherRule
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.exception.data.ErrorParser
+import com.topiichat.core.exception.domain.ErrorDomain
+import com.topiichat.core.exception.domain.networkConnectionError
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

@@ -1,10 +1,10 @@
 package com.topiichat.app.features.send_remittance.presentation.adapter
 
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
-import com.topiichat.app.core.adapter.BaseDiffCallback
 import com.topiichat.app.features.send_remittance.presentation.adapter.delegates.recentAddUserAD
 import com.topiichat.app.features.send_remittance.presentation.adapter.delegates.recentUserAD
 import com.topiichat.app.features.send_remittance.presentation.model.RecentUserUiModel
+import com.topiichat.core.adapter.BaseDiffCallback
 
 class RecentUsersAdapter(
     onUserClick: (RecentUserUiModel) -> Unit,

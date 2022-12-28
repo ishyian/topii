@@ -40,6 +40,21 @@ ext {
     coreTestingVersion = '2.1.0'
     mockitoInlineVersion = '2.8.47'
     espressoVersion = '3.4.0'
+    jxmppVersion = '1.0.3'
+    osmdroidVersion = '6.1.11'
+    hsluvVersion = '0.2'
+    conscryptVersion = '2.5.2'
+    speedDialVersion = '3.2.0'
+    guavaVersion = '31.1-android'
+    bouncyCastleVersion = '1.64'
+    openGpgVersion = '10.0'
+    libSignalVersion = '2.6.2'
+    webRtcVersion = '100.0.0'
+    transCoderVersion = '0.9.1'
+    zxingVersion = '3.3.3'
+    shortCutBadgerVersion = '1.1.22@aar'
+    emoji2Version = "1.2.0"
+    miniDnsVersion = '0.2.4'
 
     coreKtx = "androidx.core:core-ktx:$coreKtxVersion"
     appCompat = "androidx.appcompat:appcompat:$appCompatVersion"
@@ -95,6 +110,23 @@ ext {
     aliceSdk = "com.alicebiometrics.onboarding:AliceOnboarding:+"
     inputMask = "com.github.RedMadRobot:input-mask-android:$inputMaskAndroidVersion"
 
+    jxmpp = "org.jxmpp:jxmpp-jid:$jxmppVersion"
+    osmdroid = "org.osmdroid:osmdroid-android:$osmdroidVersion"
+    hsluv = "org.hsluv:hsluv:$hsluvVersion"
+    conscrypt = "org.conscrypt:conscrypt-android:$conscryptVersion"
+    speedDial = "com.leinardi.android:speed-dial:$speedDialVersion"
+    guava = "com.google.guava:guava:$guavaVersion"
+    bouncyCastle = "org.bouncycastle:bcmail-jdk15on:$bouncyCastleVersion"
+    openGpg = "org.sufficientlysecure:openpgp-api:$openGpgVersion"
+    libSignal = "org.whispersystems:signal-protocol-java:$libSignalVersion"
+    webRtc = "ch.threema:webrtc-android:$webRtcVersion"
+    transCoder = "com.otaliastudios:transcoder:$transCoderVersion"
+    zxing =  "com.google.zxing:core:$zxingVersion"
+    shortCutBadger = "me.leolin:ShortcutBadger:$shortCutBadgerVersion"
+    emoji2 = "androidx.emoji2:emoji2:$emoji2Version"
+    emojiBundled = "androidx.emoji2:emoji2-bundled:$emoji2Version"
+    miniDns = "de.measite.minidns:minidns-hla:$miniDnsVersion"
+
     junit = "junit:junit:$junitVersion"
     mockito = "org.mockito.kotlin:mockito-kotlin:$mockitoVersion"
     coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion"
@@ -141,7 +173,23 @@ ext {
                     aliceSdk,
                     inputMask,
                     mpAndroidChart,
-                    retrofitGson
+                    retrofitGson,
+                    jxmpp,
+                    osmdroid,
+                    hsluv,
+                    conscrypt,
+                    speedDial,
+                    guava,
+                    bouncyCastle,
+                    openGpg,
+                    libSignal,
+                    webRtc,
+                    transCoder,
+                    zxing,
+                    shortCutBadger,
+                    emoji2,
+                    emojiBundled,
+                    miniDns
             ],
 
             forKapt          : [

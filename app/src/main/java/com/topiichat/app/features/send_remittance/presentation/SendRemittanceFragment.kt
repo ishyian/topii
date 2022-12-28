@@ -11,14 +11,6 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.bumptech.glide.Glide
 import com.topiichat.app.R
-import com.topiichat.app.core.delegates.parcelableParameters
-import com.topiichat.app.core.extension.addStartCircleDrawableFromUrl
-import com.topiichat.app.core.extension.addStartDrawableFromUrl
-import com.topiichat.app.core.extension.lazyUnsynchronized
-import com.topiichat.app.core.extension.showDropDownWhenClick
-import com.topiichat.app.core.extension.showSelectorDialog
-import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentSendRemittanceBinding
 import com.topiichat.app.features.home.domain.model.CountryDomain
 import com.topiichat.app.features.send_remittance.domain.model.FxRateDomain
@@ -28,6 +20,14 @@ import com.topiichat.app.features.send_remittance.presentation.model.BtnSendEnab
 import com.topiichat.app.features.send_remittance.presentation.model.RecentUsersUiModel
 import com.topiichat.app.features.send_remittance.presentation.model.RecipientUiModel
 import com.topiichat.app.features.send_remittance.presentation.model.SendRemittanceUIModel
+import com.topiichat.core.delegates.parcelableParameters
+import com.topiichat.core.extension.addStartCircleDrawableFromUrl
+import com.topiichat.core.extension.addStartDrawableFromUrl
+import com.topiichat.core.extension.lazyUnsynchronized
+import com.topiichat.core.extension.showDropDownWhenClick
+import com.topiichat.core.extension.showSelectorDialog
+import com.topiichat.core.extension.viewModelCreator
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

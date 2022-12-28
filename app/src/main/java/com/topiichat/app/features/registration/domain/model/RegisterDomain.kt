@@ -1,6 +1,6 @@
 package com.topiichat.app.features.registration.domain.model
 
-import com.topiichat.app.core.domain.Domain
+import com.topiichat.core.domain.Domain
 
 class RegisterDomain(
     val accessToken: String,

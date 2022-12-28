@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/image_avatar"
+        android:layout_width="@dimen/offset40"
+        android:layout_height="@dimen/offset40"
+        android:layout_marginStart="@dimen/offset12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:riv_corner_radius="@dimen/offset25" />
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/image_last_image"
+        android:layout_width="@dimen/text12"
+        android:layout_height="@dimen/text12"
+        android:layout_marginTop="@dimen/offset4"
+        android:layout_marginBottom="@dimen/offset8"
+        android:minHeight="@dimen/text12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/text_message_recipient"
+        app:layout_constraintTop_toBottomOf="@id/text_message_recipient" />
+
+    <TextView
+        android:id="@+id/text_message_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offset8"
+        android:layout_marginEnd="@dimen/offset22"
+        android:fontFamily="@font/sfprodisplaymedium"
+        android:textColor="@color/titleColor"
+        android:textSize="@dimen/text12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="14:04" />
+
+    <TextView
+        android:id="@+id/text_message_recipient"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/offset16"
+        android:layout_marginTop="@dimen/offset8"
+        android:fontFamily="@font/sfprodisplaymedium"
+        android:lines="1"
+        android:textColor="@color/titleColor"
+        android:textSize="@dimen/text16"
+        app:layout_constraintEnd_toStartOf="@id/text_message_time"
+        app:layout_constraintStart_toEndOf="@id/image_avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Alberto García" />
+
+    <TextView
+        android:id="@+id/text_message_preview"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offset4"
+        android:layout_marginBottom="@dimen/offset8"
+        android:fontFamily="@font/sfprodisplaymedium"
+        android:lines="1"
+        android:textColor="@color/titleColor"
+        android:textSize="@dimen/text12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/text_message_time"
+        app:layout_constraintStart_toEndOf="@+id/image_last_image"
+        app:layout_constraintTop_toBottomOf="@id/text_message_recipient"
+        tools:text="Hola! Esto es un mensaje" />
+
+    <TextView
+        android:id="@+id/text_unread_messages_count"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/offset16"
+        android:layout_marginEnd="@dimen/offset22"
+        android:background="@drawable/bg_unread_messages_count"
+        android:fontFamily="@font/sfprodisplaybold"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:minWidth="@dimen/offset16"
+        android:paddingHorizontal="@dimen/offset3"
+        android:paddingVertical="@dimen/offset2"
+        android:textColor="@color/whiteColor"
+        android:textSize="@dimen/text10"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/text_message_preview"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="SmallSp"
+        tools:text="23" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image_notification_status"
+        android:layout_width="@dimen/text12"
+        android:layout_height="@dimen/text12"
+        android:layout_marginTop="@dimen/offset4"
+        android:layout_marginBottom="@dimen/offset8"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/text_message_time"
+        app:layout_constraintTop_toBottomOf="@+id/text_message_recipient" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,13 +10,13 @@ import com.alicebiometrics.onboarding.api.DocumentType
 import com.alicebiometrics.onboarding.api.Onboarding
 import com.alicebiometrics.onboarding.config.OnboardingConfig
 import com.topiichat.app.AppActivity
-import com.topiichat.app.core.delegates.parcelableParameters
-import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentEnterEmailBinding
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
 import com.topiichat.app.features.kyc.email.data.AliceSdkListener
 import com.topiichat.app.features.kyc.email.domain.OnboardingDomain
+import com.topiichat.core.delegates.parcelableParameters
+import com.topiichat.core.extension.viewModelCreator
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject

@@ -10,15 +10,15 @@ import androidx.core.text.color
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.topiichat.app.R
-import com.topiichat.app.core.delegates.parcelableParameters
-import com.topiichat.app.core.extension.addStartCircleDrawableFromUrl
-import com.topiichat.app.core.extension.date.DateFormats
-import com.topiichat.app.core.extension.date.toString
-import com.topiichat.app.core.extension.getColorKtx
-import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentRemittanceDetailBinding
 import com.topiichat.app.features.send_remittance.domain.model.RemittanceDomain
+import com.topiichat.core.delegates.parcelableParameters
+import com.topiichat.core.extension.addStartCircleDrawableFromUrl
+import com.topiichat.core.extension.date.DateFormats
+import com.topiichat.core.extension.date.toString
+import com.topiichat.core.extension.getColorKtx
+import com.topiichat.core.extension.viewModelCreator
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -76,7 +76,7 @@ class RemittanceDetailFragment : BaseFragment<FragmentRemittanceDetailBinding>()
         textRemittanceTime.text = SpannableStringBuilder()
             .append(getString(R.string.remittance_time_1))
             .bold {
-                color(requireContext().getColorKtx(R.color.remittance_detail_secondary_text_color)) {
+                color(requireContext().getColorKtx(com.topiichat.core.R.color.remittance_detail_secondary_text_color)) {
                     append(" ${parameters.remittanceSendRequestTimeSeconds} ${getString(R.string.remittance_time_2)} ")
                 }
             }

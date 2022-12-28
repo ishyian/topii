@@ -1,10 +1,10 @@
 package com.topiichat.app.features.kyc.base.domain.usecases
 
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.domain.UseCase
 import com.topiichat.app.features.kyc.base.domain.model.KYCStatus
 import com.topiichat.app.features.kyc.base.domain.repo.KYCRepository
 import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCase
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.domain.UseCase
 import javax.inject.Inject
 
 class GetKYCStatusUseCase @Inject constructor(

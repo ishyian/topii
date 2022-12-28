@@ -1,6 +1,5 @@
 package com.topiichat.app.features.home.data.model
 
-
 import com.squareup.moshi.Json
 
 data class RemittanceHistoryDto(
@@ -57,7 +56,7 @@ data class RemittanceHistoryDto(
     ) {
         data class Converting(
             @Json(name = "amount")
-            val amount: String,
+            val amount: Double,
             @Json(name = "currency")
             val currency: String
         )
@@ -71,7 +70,7 @@ data class RemittanceHistoryDto(
 
         data class Receiving(
             @Json(name = "amount")
-            val amount: String,
+            val amount: Double,
             @Json(name = "currency")
             val currency: String
         )

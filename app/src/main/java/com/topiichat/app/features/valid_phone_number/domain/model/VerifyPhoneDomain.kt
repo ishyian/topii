@@ -1,6 +1,6 @@
 package com.topiichat.app.features.valid_phone_number.domain.model
 
-import com.topiichat.app.core.domain.Domain
+import com.topiichat.core.domain.Domain
 
 data class VerifyPhoneDomain(
     val authyId: String,

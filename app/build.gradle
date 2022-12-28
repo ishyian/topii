@@ -15,7 +15,7 @@ android {
         applicationId "com.fidecorp.chapii"
         minSdk globalConfiguration["androidMinSdkVersion"]
         targetSdk globalConfiguration["androidTargetSdkVersion"]
-        versionCode 21
+        versionCode 32
         versionName "0.1.12"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -44,7 +44,9 @@ android {
             buildConfigField 'String', 'ENDPOINT', "\"https://topiichattest.eu.ngrok.io/\""
         }
     }
-
+    dataBinding {
+        enabled = true
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -65,6 +67,9 @@ android {
 dependencies {
     def notations = rootProject.ext.appDependencies
 
+    implementation project(':core')
+    implementation project(':chat')
+
     for (item in notations.forImplementation) {
         implementation item
     }
@@ -81,6 +86,7 @@ dependencies {
         androidTestImplementation item
     }
 
+    implementation 'com.makeramen:roundedimageview:2.3.0'
     debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
     releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.5.2"
 }

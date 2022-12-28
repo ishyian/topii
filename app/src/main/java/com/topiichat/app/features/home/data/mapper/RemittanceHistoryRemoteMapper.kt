@@ -1,11 +1,12 @@
 package com.topiichat.app.features.home.data.mapper
 
-import com.topiichat.app.core.domain.Mapper
 import com.topiichat.app.features.home.data.model.RemittanceHistoryDto
 import com.topiichat.app.features.home.domain.model.RemittanceDomain
 import com.topiichat.app.features.home.domain.model.RemittanceHistoryDomain
 import com.topiichat.app.features.home.domain.model.RemittanceType
+import com.topiichat.core.domain.Mapper
 import org.threeten.bp.LocalDateTime
+import java.util.Currency
 import javax.inject.Inject
 
 class RemittanceHistoryRemoteMapper @Inject constructor() :
@@ -24,8 +25,9 @@ class RemittanceHistoryRemoteMapper @Inject constructor() :
                     RemittanceDomain(
                         userName = "${recipientProfile.firstName} ${recipientProfile.lastName}",
                         date = LocalDateTime.parse(remittance.createdAt),
-                        amountText = "- ${converting?.currency}${converting?.amount}",
+                        amountText = String.format("%.02f", converting?.amount),
                         action = RemittanceType.SEND,
+                        currency = Currency.getInstance(converting?.currency),
                         avatar = recipientProfile.avatar
                     )
                 } else {
@@ -33,8 +35,9 @@ class RemittanceHistoryRemoteMapper @Inject constructor() :
                     RemittanceDomain(
                         userName = "${senderProfile.firstName} ${senderProfile.lastName}",
                         date = LocalDateTime.parse(remittance.createdAt),
-                        amountText = "+ ${receiving?.currency}${receiving?.amount}",
+                        amountText = String.format("%.02f", receiving?.amount),
                         action = RemittanceType.REQUEST,
+                        currency = Currency.getInstance(receiving?.currency),
                         avatar = senderProfile.avatar
                     )
                 }

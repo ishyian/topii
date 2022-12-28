@@ -1,10 +1,10 @@
 package com.topiichat.app.features.request_remittance.data.datasource
 
 import com.topiichat.app.core.data.ApiService
-import com.topiichat.app.core.data.datasource.BaseRemoteDataStore
-import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.features.request_remittance.data.model.RequestRemittanceDto
 import com.topiichat.app.features.request_remittance.data.model.RequestRemittanceRequestDto
+import com.topiichat.core.data.datasource.BaseRemoteDataStore
+import com.topiichat.core.domain.ResultData
 import javax.inject.Inject
 
 class RequestRemittanceRemoteDataSource @Inject constructor(

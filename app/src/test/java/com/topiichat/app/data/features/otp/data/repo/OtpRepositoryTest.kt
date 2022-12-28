@@ -1,7 +1,6 @@
 package com.topiichat.app.data.features.otp.data.repo
 
 import com.topiichat.app.core.data.ApiService
-import com.topiichat.app.core.exception.data.ErrorParser
 import com.topiichat.app.data.core.MainDispatcherRule
 import com.topiichat.app.data.core.TestAppDispatchers
 import com.topiichat.app.data.features.otp.utils.OtpCodeTestUtils
@@ -9,6 +8,7 @@ import com.topiichat.app.features.otp.data.datasource.OtpCodeRemoteDataSource
 import com.topiichat.app.features.otp.data.mapper.ResendOtpCodeRemoteMapper
 import com.topiichat.app.features.otp.data.mapper.ValidOtpCodeRemoteMapper
 import com.topiichat.app.features.otp.data.repo.OtpCodeRepositoryImpl
+import com.topiichat.core.exception.data.ErrorParser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

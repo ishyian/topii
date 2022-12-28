@@ -1,9 +1,9 @@
 package com.topiichat.app.features.registration.domain.repo
 
-import com.topiichat.app.core.domain.EmptyDomain
-import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.features.registration.domain.model.AuthDataDomain
 import com.topiichat.app.features.registration.domain.model.RegisterDomain
+import com.topiichat.core.domain.EmptyDomain
+import com.topiichat.core.domain.ResultData
 
 interface RegisterRepository {
     suspend fun register(

@@ -1,10 +1,10 @@
 package com.topiichat.app.features.otp.presentation
 
-import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.features.otp.domain.model.ResendOtpCodeDomain
 import com.topiichat.app.features.otp.domain.model.SendSms
 import com.topiichat.app.features.otp.domain.model.ValidOtp
 import com.topiichat.app.features.otp.domain.model.ValidOtpCodeDomain
+import com.topiichat.core.domain.ResultData
 
 interface IOtpViewModel {
     fun onValidOtpCodeRequest(otpCode: String)

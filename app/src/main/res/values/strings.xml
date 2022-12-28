@@ -30,15 +30,6 @@
     <string name="text_switch2_register">He leido y acepto las condiciones legales de TOPii</string>
     <string name="cancel">Cancel</string>
 
-    <string name="chats">Chats</string>
-    <string name="chats_edit">Editar</string>
-    <string name="chats_no_chats">No tienes chats aun</string>
-    <string name="chats_new_chat"><u>Nuevo Mensaje</u></string>
-    <string name="chats_search_hint">Search</string>
-    <string name="chats_action_create_group">Crear Grupo</string>
-    <string name="chats_action_search_by_phone">Encontrar Por Número Telefónico</string>
-    <string name="chats_action_invite_friends">Invitar Amigos </string>
-
     <string name="home_title">Historial</string>
     <string name="home_send_payment_text">Enviar\nRemesa</string>
     <string name="home_request_payment_text">Solicitar\nRemesa</string>
@@ -94,17 +85,6 @@
     <string name="verification_button_text">Conceder acceso a la cámara</string>
     <string name="currency_sample">EUR</string>
 
-    <string name="chat_attachment_camera">Camara</string>
-    <string name="chat_attachment_gallery">Galería</string>
-    <string name="chat_attachment_document">Documentos</string>
-    <string name="chat_attachment_location">Localización</string>
-    <string name="chat_attachment_contact">Contactos</string>
-    <string name="chat_attachment_transfers">Remesas</string>
-    <string name="chat_attachment_share_data">Compartir los datos de mi Wallet</string>
-    <string name="chat_attachment_close">Cerrar</string>
-
-    <string name="contacts_title">Contactos</string>
-    <string name="contacts_button_next">Siguiente</string>
     <string name="send_payment_plus">+</string>
     <string name="send_payment_select_recipient">Elija el destinatario</string>
     <string name="select_receiver_currency">Select receiver currency</string>
@@ -121,9 +101,6 @@
     <string name="remittance_detail_summary_3">con tasa de cambio</string>
     <string name="remittance_detail_summary_4">y comisión</string>
     <string name="remittance_detail_summary_5">a</string>
-    <string name="remittance_error_btn_text">Regresar</string>
-    <string name="remittance_error_subtitle">Parece que no tienes saldo suficiente para esta transacción.</string>
-    <string name="remittance_error_title">Oops! Algo salió mal.</string>
 
     <string name="request_remittance_title">Solicitar remesa</string>
     <string name="request_remittance_button_text">Solicitar</string>
@@ -165,16 +142,7 @@
     <string name="week">Week</string>
     <string name="month">Month</string>
     <string name="year">Year</string>
-    <string name="error_no_network_title">Sin conexión</string>
-    <string name="error_no_network_description">Conéctate a Internet para continuar</string>
-    <string name="error_no_network_button_text">Regresar</string>
-    <string name="error_wrong_request_title">No hemos podido procesar tu solicitud.</string>
-    <string name="error_wrong_request_description">Presiona el boton de continuar y vuelve a intentarlo.</string>
-    <string name="error_wrong_request_button_text">Continuar</string>
-    <string name="error_unknown_title">Oops! Algo salió mal.</string>
-    <string name="error_unknown_description">Parece que no tienes saldo suficiente para esta transacción.</string>
-    <string name="error_unknown_button_text">Regresar</string>
-    <string name="error_insufficient_funds_title">Saldo insuﬁciente</string>
-    <string name="error_insufficient_funds_description">El saldo de tu cuenta es insuﬁciente</string>
-    <string name="error_insufficient_funds_button_text">Regresar</string>
+    <string name="new_beneficiary_title">New Beneficiary</string>
+    <string name="new_beneficiary_description">Please input the following beneficiary information</string>
+    <string name="new_beneficiary_country_hint">Country</string>
 </resources>

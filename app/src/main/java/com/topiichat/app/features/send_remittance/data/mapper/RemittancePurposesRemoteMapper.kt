@@ -1,8 +1,8 @@
 package com.topiichat.app.features.send_remittance.data.mapper
 
-import com.topiichat.app.core.domain.Mapper
 import com.topiichat.app.features.send_remittance.data.model.RemittancePurposeDto
 import com.topiichat.app.features.send_remittance.domain.model.RemittancePurposeDomain
+import com.topiichat.core.domain.Mapper
 import javax.inject.Inject
 
 class RemittancePurposesRemoteMapper @Inject constructor() : Mapper<List<RemittancePurposeDto>,

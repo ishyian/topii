@@ -1,0 +1,9 @@
+package com.topiichat.core.data.datasource
+
+import com.topiichat.core.domain.ResultData
+
+interface RemoteDataStore {
+    suspend fun <T> safeApiCall(
+        apiCall: suspend () -> T
+    ): ResultData<T?>
+}

@@ -5,11 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
-import com.topiichat.app.features.contacts.presentation.ContactsParameters
 import com.topiichat.app.features.home.domain.model.AvailableCountriesDomain
+import com.topiichat.app.features.home.domain.model.CountryCode
 import com.topiichat.app.features.home.domain.model.CountryDomain
 import com.topiichat.app.features.home.domain.model.RecentUserDomain
 import com.topiichat.app.features.home.domain.usecase.GetAvailableCountriesUseCase
@@ -29,6 +27,9 @@ import com.topiichat.app.features.send_remittance.presentation.model.RecentUsers
 import com.topiichat.app.features.send_remittance.presentation.model.RecipientUiModel
 import com.topiichat.app.features.send_remittance.presentation.model.SendRemittanceUIModel
 import com.topiichat.app.features.send_remittance.presentation.model.changeCheckedStatus
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.presentation.contacts.presentation.ContactsParameters
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Job
@@ -92,7 +93,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
 
     private var recipientId: String = ""
     private var purposeCode: String = ""
-    private var cardId: String = ""
+    private var cardToken: String = ""
     private var description: String = ""
     private var isCheckedSwitch = false
 
@@ -101,7 +102,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
     init {
         _btnSendEnabling.value = BtnSendEnablingUi(
             isEnabled = false,
-            backgroundId = R.drawable.bg_button_unenabled
+            backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
         )
 
         viewModelScope.launch {
@@ -110,7 +111,8 @@ class SendRemittanceViewModel @AssistedInject constructor(
                 is ResultData.Success -> {
                     result.data.let {
                         availableCountries.value = it
-                        _receiverCountry.value = result.data.countries.first()
+                        _receiverCountry.value =
+                            result.data.countries.first { it.countryCode == CountryCode.GT } //TODO Remove 'fix'
                     }
                     loadRemittancePurposes()
                     loadRecentUsers()
@@ -140,7 +142,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
     override suspend fun loadUserCard() {
         when (val cardsResult = getCards()) {
             is ResultData.Success -> {
-                cardId = cardsResult.data.firstOrNull()?.cardId ?: ""
+                cardToken = cardsResult.data.firstOrNull()?.token ?: ""
             }
             else -> {
                 //Nothing for now
@@ -207,7 +209,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.image_view_back -> onClickBack()
+            com.topiichat.core.R.id.image_view_back -> onClickBack()
             R.id.btn_send -> onSendRemittanceClick()
         }
     }
@@ -251,7 +253,7 @@ class SendRemittanceViewModel @AssistedInject constructor(
                     fxRateId = fxRateId,
                     description = description,
                     purposeCode = purposeCode,
-                    cardId = cardId
+                    cardTokenized = cardToken
                 )
             )) {
                 is ResultData.Success -> {
@@ -329,24 +331,24 @@ class SendRemittanceViewModel @AssistedInject constructor(
     override fun onUpdateBtnSend() {
         Timber.d("isCheckedSwitch $isCheckedSwitch")
         Timber.d("recipientId $recipientId")
-        Timber.d("cardId $cardId")
+        Timber.d("cardId $cardToken")
         Timber.d("purposeCode $purposeCode")
         Timber.d("fxRateId $fxRateId")
 
         val btnSendEnabling = if (isCheckedSwitch &&
             recipientId.isNotEmpty() &&
-            cardId.isNotEmpty() &&
+            cardToken.isNotEmpty() &&
             purposeCode.isNotEmpty() &&
             fxRateId.isNotEmpty()
         ) {
             BtnSendEnablingUi(
                 isEnabled = true,
-                backgroundId = R.drawable.bg_button
+                backgroundId = com.topiichat.core.R.drawable.bg_button
             )
         } else {
             BtnSendEnablingUi(
                 isEnabled = false,
-                backgroundId = R.drawable.bg_button_unenabled
+                backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
             )
         }
         _btnSendEnabling.value = btnSendEnabling

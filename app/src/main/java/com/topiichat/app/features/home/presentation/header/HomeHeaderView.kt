@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.topiichat.app.R
-import com.topiichat.app.core.extension.setTintColor
 import com.topiichat.app.databinding.ViewHomeHeaderBinding
 import com.topiichat.app.features.home.domain.model.CurrentCountryDomain
+import com.topiichat.core.extension.setTintColor
 
 class HomeHeaderView(
     context: Context,
@@ -75,8 +75,8 @@ class HomeHeaderView(
     fun renderWith(featuresDomain: CurrentCountryDomain) {
         val options = if (featuresDomain.isAvailable) {
             HomeHeaderViewOptions(
-                isSendPaymentEnabled = featuresDomain.countryInfo?.allowedFrom ?: false,
-                isRequestPaymentEnabled = featuresDomain.countryInfo?.allowedTo ?: false,
+                isSendPaymentEnabled = true, //featuresDomain.countryInfo?.allowedFrom ?: false
+                isRequestPaymentEnabled = true, //featuresDomain.countryInfo?.allowedTo ?: false
                 isWalletEnabled = true,
                 isChatEnabled = true
             )
@@ -103,9 +103,9 @@ class HomeHeaderView(
     private fun setSendPaymentEnabled(isEnabled: Boolean) {
         if (isEnabled) {
             btnSendPayment.isEnabled = true
-            binding.imageSendPayment.setTintColor(R.color.home_header_item_icon_color)
+            binding.imageSendPayment.setTintColor(com.topiichat.core.R.color.home_header_item_icon_color)
         } else {
-            binding.imageSendPayment.setTintColor(R.color.home_header_item_icon_disabled_color)
+            binding.imageSendPayment.setTintColor(com.topiichat.core.R.color.home_header_item_icon_disabled_color)
             btnSendPayment.isEnabled = false
         }
     }
@@ -113,19 +113,19 @@ class HomeHeaderView(
     private fun setRequestPaymentEnabled(isEnabled: Boolean) {
         if (isEnabled) {
             btnRequestPayment.isEnabled = true
-            binding.imageRequestPayment.setTintColor(R.color.home_header_item_icon_color)
+            binding.imageRequestPayment.setTintColor(com.topiichat.core.R.color.home_header_item_icon_color)
         } else {
             btnRequestPayment.isEnabled = false
-            binding.imageRequestPayment.setTintColor(R.color.home_header_item_icon_disabled_color)
+            binding.imageRequestPayment.setTintColor(com.topiichat.core.R.color.home_header_item_icon_disabled_color)
         }
     }
 
     private fun setWalletEnabled(isEnabled: Boolean) {
         if (isEnabled) {
             btnWallet.isEnabled = true
-            binding.imageWallet.setTintColor(R.color.home_header_item_icon_color)
+            binding.imageWallet.setTintColor(com.topiichat.core.R.color.home_header_item_icon_color)
         } else {
-            binding.imageWallet.setTintColor(R.color.home_header_item_icon_disabled_color)
+            binding.imageWallet.setTintColor(com.topiichat.core.R.color.home_header_item_icon_disabled_color)
             btnWallet.isEnabled = false
         }
     }
@@ -133,9 +133,9 @@ class HomeHeaderView(
     private fun setChatEnabled(isEnabled: Boolean) {
         if (isEnabled) {
             btnChat.isEnabled = true
-            binding.imageChat.setTintColor(R.color.home_header_item_icon_color)
+            binding.imageChat.setTintColor(com.topiichat.core.R.color.home_header_item_icon_color)
         } else {
-            binding.imageChat.setTintColor(R.color.home_header_item_icon_disabled_color)
+            binding.imageChat.setTintColor(com.topiichat.core.R.color.home_header_item_icon_disabled_color)
             btnChat.isEnabled = false
         }
     }
@@ -143,20 +143,20 @@ class HomeHeaderView(
     private fun selectSendPayment(isSelected: Boolean) {
         if (isSelected) {
             btnSendPayment.background = ContextCompat.getDrawable(context, R.drawable.bg_home_header_selected_item)
-            binding.imageSendPayment.setTintColor(R.color.home_header_item_icon_selected_color)
+            binding.imageSendPayment.setTintColor(com.topiichat.core.R.color.home_header_item_icon_selected_color)
         } else {
             btnSendPayment.background = ContextCompat.getDrawable(context, R.drawable.bg_home_header_item)
-            binding.imageSendPayment.setTintColor(R.color.home_header_item_icon_color)
+            binding.imageSendPayment.setTintColor(com.topiichat.core.R.color.home_header_item_icon_color)
         }
     }
 
     private fun selectRequestPayment(isSelected: Boolean) {
         if (isSelected) {
             btnRequestPayment.background = ContextCompat.getDrawable(context, R.drawable.bg_home_header_selected_item)
-            binding.imageRequestPayment.setTintColor(R.color.home_header_item_icon_selected_color)
+            binding.imageRequestPayment.setTintColor(com.topiichat.core.R.color.home_header_item_icon_selected_color)
         } else {
             btnRequestPayment.background = ContextCompat.getDrawable(context, R.drawable.bg_home_header_item)
-            binding.imageRequestPayment.setTintColor(R.color.home_header_item_icon_color)
+            binding.imageRequestPayment.setTintColor(com.topiichat.core.R.color.home_header_item_icon_color)
         }
     }
 

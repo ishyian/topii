@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.core.view.isVisible
-import com.topiichat.app.core.delegates.parcelableParameters
-import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentRegisterBinding
 import com.topiichat.app.features.registration.presentation.model.BtnRegisterEnablingUi
+import com.topiichat.core.delegates.parcelableParameters
+import com.topiichat.core.extension.viewModelCreator
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

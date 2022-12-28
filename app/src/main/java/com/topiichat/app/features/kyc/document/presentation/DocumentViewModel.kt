@@ -4,9 +4,9 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topiichat.app.R
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
@@ -24,7 +24,7 @@ class DocumentViewModel @Inject constructor(
     init {
         _btnContinueUiState.value = BtnContinueUiState(
             isEnabled = false,
-            backgroundId = R.drawable.bg_button_unenabled
+            backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
         )
     }
 
@@ -38,10 +38,10 @@ class DocumentViewModel @Inject constructor(
             R.id.btn_continue -> {
                 onContinueClick()
             }
-            R.id.image_view_back -> {
+            com.topiichat.core.R.id.image_view_back -> {
                 onClickBack()
             }
-            R.id.image_view_close -> {
+            com.topiichat.core.R.id.image_view_close -> {
                 onClickClose()
             }
         }
@@ -51,12 +51,12 @@ class DocumentViewModel @Inject constructor(
         val uiState = if (email.isNotEmpty()) {
             BtnContinueUiState(
                 isEnabled = true,
-                backgroundId = R.drawable.bg_button
+                backgroundId = com.topiichat.core.R.drawable.bg_button
             )
         } else {
             BtnContinueUiState(
                 isEnabled = false,
-                backgroundId = R.drawable.bg_button_unenabled
+                backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
             )
         }
         _btnContinueUiState.postValue(uiState)

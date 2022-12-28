@@ -1,9 +1,9 @@
 package com.topiichat.app.features.valid_phone_number.domain.usecases
 
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.domain.UseCase
 import com.topiichat.app.features.valid_phone_number.domain.model.VerifyPhoneDomain
 import com.topiichat.app.features.valid_phone_number.domain.repo.ValidPhoneRepository
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.domain.UseCase
 import javax.inject.Inject
 
 class VerifyPhoneNumberUseCase @Inject constructor(

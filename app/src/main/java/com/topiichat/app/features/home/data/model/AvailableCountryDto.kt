@@ -2,7 +2,7 @@ package com.topiichat.app.features.home.data.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import com.topiichat.app.core.data.Dto
+import com.topiichat.core.data.Dto
 
 @JsonClass(generateAdapter = true)
 data class AvailableCountryDto(

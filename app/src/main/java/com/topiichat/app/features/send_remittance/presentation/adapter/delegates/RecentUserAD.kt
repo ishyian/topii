@@ -3,7 +3,6 @@ package com.topiichat.app.features.send_remittance.presentation.adapter.delegate
 import android.annotation.SuppressLint
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
-import com.topiichat.app.R
 import com.topiichat.app.databinding.RecentUserItemBinding
 import com.topiichat.app.features.send_remittance.presentation.model.RecentUserUiModel
 
@@ -15,14 +14,14 @@ fun recentUserAD(
         RecentUserItemBinding.inflate(layoutInflater, parent, false)
     }
 ) {
-    val radius = itemView.resources.getDimension(R.dimen.offset15)
+    val radius = itemView.resources.getDimension(com.topiichat.core.R.dimen.offset15)
     itemView.setOnClickListener {
         onRecentUserClick(item)
     }
     bind {
         with(binding) {
             if (item.isSelected) {
-                imageAvatar.setStrokeColorResource(R.color.send_payment_currency_divider)
+                imageAvatar.setStrokeColorResource(com.topiichat.core.R.color.send_payment_currency_divider)
             } else {
                 imageAvatar.setStrokeColorResource(android.R.color.transparent)
             }

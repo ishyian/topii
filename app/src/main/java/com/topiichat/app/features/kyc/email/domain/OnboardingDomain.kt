@@ -1,6 +1,6 @@
 package com.topiichat.app.features.kyc.email.domain
 
-import com.topiichat.app.core.domain.Domain
+import com.topiichat.core.domain.Domain
 
 data class OnboardingDomain(
     val tokenAlice: String,

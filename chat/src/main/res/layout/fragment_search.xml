@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_text_search"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="@drawable/chats_search_edittext"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="8dp"
+        android:fontFamily="@font/sfprodisplaybold"
+        android:gravity="center_vertical"
+        android:hint="@string/chats_search_hint"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:lines="1"
+        android:maxLines="1"
+        android:layout_marginEnd="@dimen/offset8"
+        android:paddingHorizontal="26dp"
+        android:textColor="@color/pin_code_text_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@id/text_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/offset8"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="@id/edit_text_search"
+        app:layout_constraintBottom_toBottomOf="@id/edit_text_search"
+        android:fontFamily="@font/opensans_regular"
+        android:text="@string/cancel" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_messages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:overScrollMode="never"
+        android:paddingStart="12dp"
+        android:paddingEnd="4dp"
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_search" />
+
+    <TextView
+        android:id="@+id/text_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sfprodisplaymedium"
+        android:text="@string/search_results_hints"
+        android:textColor="@color/titleColor"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_search" />
+</androidx.constraintlayout.widget.ConstraintLayout>

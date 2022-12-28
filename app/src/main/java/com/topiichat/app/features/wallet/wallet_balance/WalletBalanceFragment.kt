@@ -11,15 +11,15 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IFillFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.topiichat.app.R
-import com.topiichat.app.core.extension.getColorKtx
-import com.topiichat.app.core.extension.getDrawableKtx
-import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentWalletBalanceBinding
 import com.topiichat.app.features.home.domain.model.CurrentCountryDomain
 import com.topiichat.app.features.wallet.card.presentation.AddCardBottomSheetFragment
 import com.topiichat.app.features.wallet.wallet_balance.marker.WalletMarkerView
 import com.topiichat.app.features.wallet.wallet_balance.statistics.WalletStatisticsView
+import com.topiichat.core.extension.getColorKtx
+import com.topiichat.core.extension.getDrawableKtx
+import com.topiichat.core.extension.viewModelCreator
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -126,10 +126,10 @@ class WalletBalanceFragment : BaseFragment<FragmentWalletBalanceBinding>(),
 
         val dataSet = LineDataSet(values, "")
         dataSet.setDrawIcons(false)
-        dataSet.highLightColor = requireContext().getColorKtx(R.color.colorPrimary)
+        dataSet.highLightColor = requireContext().getColorKtx(com.topiichat.core.R.color.colorPrimary)
         dataSet.setDrawCircles(false)
         dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
-        dataSet.color = requireContext().getColorKtx(R.color.whiteColor)
+        dataSet.color = requireContext().getColorKtx(com.topiichat.core.R.color.whiteColor)
         dataSet.setDrawCircleHole(false)
         dataSet.setDrawValues(false)
         dataSet.setDrawFilled(true)

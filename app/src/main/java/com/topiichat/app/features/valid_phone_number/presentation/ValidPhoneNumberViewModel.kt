@@ -4,16 +4,15 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.topiichat.app.R
 import com.topiichat.app.core.constants.Constants.INITIAL_COUNTRY_ISO_CODE
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.otp.presentation.OtpParameters
 import com.topiichat.app.features.valid_phone_number.domain.model.ValidPhone
 import com.topiichat.app.features.valid_phone_number.domain.model.VerifyPhoneDomain
 import com.topiichat.app.features.valid_phone_number.domain.usecases.VerifyPhoneNumberUseCase
 import com.topiichat.app.features.valid_phone_number.presentation.model.PhoneNumber
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
@@ -34,10 +33,10 @@ class ValidPhoneNumberViewModel @AssistedInject constructor(
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.image_view_back -> {
+            com.topiichat.core.R.id.image_view_back -> {
                 onClickBack()
             }
-            R.id.image_view_close -> {
+            com.topiichat.core.R.id.image_view_close -> {
                 onClickClose()
             }
         }

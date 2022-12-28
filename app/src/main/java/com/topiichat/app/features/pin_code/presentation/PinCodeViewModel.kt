@@ -8,12 +8,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.pin_code.domain.ValidPinCode
 import com.topiichat.app.features.pin_code.domain.usecases.ValidPinCodeUseCase
 import com.topiichat.app.features.registration.presentation.RegisterParameters
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
@@ -61,10 +61,10 @@ class PinCodeViewModel @AssistedInject constructor(
             R.id.btn_show_pass -> {
                 onClickShowPass()
             }
-            R.id.image_view_back -> {
+            com.topiichat.core.R.id.image_view_back -> {
                 onClickBack()
             }
-            R.id.image_view_close -> {
+            com.topiichat.core.R.id.image_view_close -> {
                 onClickClose()
             }
         }
@@ -145,7 +145,7 @@ class PinCodeViewModel @AssistedInject constructor(
             _visibilityTextContentTitle.value = false
             _visibilityTextDescription.value = true
             _visibilityTextError.value = false
-            _colorEditTextPinCode.value = R.color.pin_code_text_color
+            _colorEditTextPinCode.value = com.topiichat.core.R.color.pin_code_text_color
             navigate(
                 MainScreens.Register(
                     RegisterParameters(
@@ -197,7 +197,7 @@ class PinCodeViewModel @AssistedInject constructor(
     override fun onErrorMatches() {
         _visibilityTextDescription.value = false
         _visibilityTextError.value = true
-        _colorEditTextPinCode.value = R.color.error_color
+        _colorEditTextPinCode.value = com.topiichat.core.R.color.error_color
     }
 
     override fun onClickClose() {

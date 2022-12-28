@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.topiichat.app.R
-import com.topiichat.app.core.delegates.parcelableParameters
-import com.topiichat.app.core.extension.hideKeyboard
-import com.topiichat.app.core.extension.showKeyboard
-import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentOtpBinding
 import com.topiichat.app.features.otp.presentation.model.BtnSendSmsEnablingUi
 import com.topiichat.app.features.otp.presentation.model.TextSendSmsTimerUi
+import com.topiichat.core.delegates.parcelableParameters
+import com.topiichat.core.extension.hideKeyboard
+import com.topiichat.core.extension.showKeyboard
+import com.topiichat.core.extension.viewModelCreator
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

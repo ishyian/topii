@@ -1,6 +1,6 @@
 package com.topiichat.app.features.request_remittance.domain.model
 
-import com.topiichat.app.core.domain.Domain
+import com.topiichat.core.domain.Domain
 import org.threeten.bp.LocalDateTime
 
 data class RequestRemittanceDomain(

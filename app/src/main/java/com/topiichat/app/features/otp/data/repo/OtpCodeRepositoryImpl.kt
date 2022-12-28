@@ -1,13 +1,13 @@
 package com.topiichat.app.features.otp.data.repo
 
-import com.topiichat.app.core.coroutines.AppDispatchers
-import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.features.otp.data.datasource.OtpCodeRemoteDataSource
 import com.topiichat.app.features.otp.data.mapper.ResendOtpCodeRemoteMapper
 import com.topiichat.app.features.otp.data.mapper.ValidOtpCodeRemoteMapper
 import com.topiichat.app.features.otp.domain.model.ResendOtpCodeDomain
 import com.topiichat.app.features.otp.domain.model.ValidOtpCodeDomain
 import com.topiichat.app.features.otp.domain.repo.OtpCodeRepository
+import com.topiichat.core.coroutines.AppDispatchers
+import com.topiichat.core.domain.ResultData
 import kotlinx.coroutines.withContext
 
 class OtpCodeRepositoryImpl(

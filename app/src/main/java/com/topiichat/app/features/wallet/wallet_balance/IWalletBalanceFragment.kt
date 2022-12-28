@@ -1,7 +1,7 @@
 package com.topiichat.app.features.wallet.wallet_balance
 
-import com.topiichat.app.core.presentation.platform.IBaseFragment
 import com.topiichat.app.features.home.domain.model.CurrentCountryDomain
+import com.topiichat.core.presentation.platform.IBaseFragment
 
 interface IWalletBalanceFragment : IBaseFragment {
     fun onShowBalanceImage(imageId: Int)

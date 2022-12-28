@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
-import com.topiichat.app.core.presentation.platform.BaseViewModel
-import com.topiichat.app.core.presentation.platform.SingleLiveData
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
 import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCase
 import com.topiichat.app.features.wallet.WalletScreens
+import com.topiichat.core.presentation.platform.BaseViewModel
+import com.topiichat.core.presentation.platform.SingleLiveData
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
@@ -37,7 +37,7 @@ class AddBankAccountViewModel @AssistedInject constructor(
     init {
         _btnContinueUiState.value = BtnContinueUiState(
             isEnabled = false,
-            backgroundId = R.drawable.bg_button_unenabled
+            backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
         )
 
         viewModelScope.launch {
@@ -49,7 +49,7 @@ class AddBankAccountViewModel @AssistedInject constructor(
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.image_view_back -> {
+            com.topiichat.core.R.id.image_view_back -> {
                 onClickBack()
             }
             R.id.layout_bank -> {
@@ -91,12 +91,12 @@ class AddBankAccountViewModel @AssistedInject constructor(
         ) {
             BtnContinueUiState(
                 isEnabled = true,
-                backgroundId = R.drawable.bg_button
+                backgroundId = com.topiichat.core.R.drawable.bg_button
             )
         } else {
             BtnContinueUiState(
                 isEnabled = false,
-                backgroundId = R.drawable.bg_button_unenabled
+                backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
             )
         }
         _btnContinueUiState.postValue(uiState)

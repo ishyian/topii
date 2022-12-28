@@ -3,8 +3,8 @@ package com.topiichat.app.features.send_remittance.data.model
 import com.squareup.moshi.Json
 
 data class SendRemittanceRequestDto(
-    @Json(name = "cardId")
-    val cardId: String,
+    @Json(name = "cardTokenized")
+    val cardTokenized: String,
     @Json(name = "description")
     val description: String,
     @Json(name = "fxRateId")

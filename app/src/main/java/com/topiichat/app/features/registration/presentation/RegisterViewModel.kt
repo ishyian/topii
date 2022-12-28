@@ -5,9 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.exception.domain.ErrorDomain
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.base.domain.model.KYCRegisterDomain
@@ -18,6 +15,9 @@ import com.topiichat.app.features.registration.domain.model.RegisterDomain
 import com.topiichat.app.features.registration.domain.usecases.RegisterUseCase
 import com.topiichat.app.features.registration.domain.usecases.SaveAuthDataUseCase
 import com.topiichat.app.features.registration.presentation.model.BtnRegisterEnablingUi
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.exception.domain.ErrorDomain
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
@@ -40,16 +40,16 @@ class RegisterViewModel @AssistedInject constructor(
     init {
         _btnRegisterEnabling.value = BtnRegisterEnablingUi(
             isEnabled = false,
-            backgroundId = R.drawable.bg_button_unenabled
+            backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
         )
     }
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.image_view_back -> {
+            com.topiichat.core.R.id.image_view_back -> {
                 onClickBack()
             }
-            R.id.image_view_close -> {
+            com.topiichat.core.R.id.image_view_close -> {
                 onClickClose()
             }
             R.id.btn_register -> {
@@ -79,12 +79,12 @@ class RegisterViewModel @AssistedInject constructor(
         val btnRegisterEnabling = if (isCheckedSwitch1 && isCheckedSwitch2) {
             BtnRegisterEnablingUi(
                 isEnabled = true,
-                backgroundId = R.drawable.bg_button
+                backgroundId = com.topiichat.core.R.drawable.bg_button
             )
         } else {
             BtnRegisterEnablingUi(
                 isEnabled = false,
-                backgroundId = R.drawable.bg_button_unenabled
+                backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
             )
         }
         _btnRegisterEnabling.value = btnRegisterEnabling
@@ -134,6 +134,7 @@ class RegisterViewModel @AssistedInject constructor(
 
     override fun onFailRegister(error: ErrorDomain) {
         handleError(error)
+        _showLoader.value = false
     }
 
     override fun onKYCStatusNotVerified() = with(parameters) {

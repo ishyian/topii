@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.google.android.material.textfield.TextInputLayout
 import com.topiichat.app.AppActivity
-import com.topiichat.app.core.extension.getPhoneNumber
-import com.topiichat.app.core.extension.hideKeyboard
-import com.topiichat.app.core.extension.showKeyboard
-import com.topiichat.app.core.extension.viewModelCreator
-import com.topiichat.app.core.presentation.platform.BaseFragment
 import com.topiichat.app.databinding.FragmentValidPhoneNumberBinding
+import com.topiichat.app.features.valid_phone_number.presentation.model.getPhoneNumber
+import com.topiichat.core.extension.hideKeyboard
+import com.topiichat.core.extension.showKeyboard
+import com.topiichat.core.extension.viewModelCreator
+import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import me.ibrahimsn.lib.PhoneNumberKit
 import javax.inject.Inject

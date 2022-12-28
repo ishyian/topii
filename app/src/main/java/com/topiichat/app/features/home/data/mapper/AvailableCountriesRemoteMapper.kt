@@ -1,9 +1,9 @@
 package com.topiichat.app.features.home.data.mapper
 
-import com.topiichat.app.core.domain.Mapper
 import com.topiichat.app.features.home.data.model.AvailableCountryDto
 import com.topiichat.app.features.home.domain.model.AvailableCountriesDomain
 import com.topiichat.app.features.home.domain.model.CountryDomain
+import com.topiichat.core.domain.Mapper
 import javax.inject.Inject
 
 class AvailableCountriesRemoteMapper @Inject constructor() :

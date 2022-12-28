@@ -4,9 +4,6 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.topiichat.app.R
-import com.topiichat.app.core.domain.ResultData
-import com.topiichat.app.core.presentation.platform.BaseViewModel
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.otp.domain.model.ResendOtpCodeDomain
 import com.topiichat.app.features.otp.domain.model.SendSms
@@ -17,6 +14,9 @@ import com.topiichat.app.features.otp.domain.usecases.ValidOtpUseCase
 import com.topiichat.app.features.otp.presentation.model.BtnSendSmsEnablingUi
 import com.topiichat.app.features.otp.presentation.model.TextSendSmsTimerUi
 import com.topiichat.app.features.pin_code.presentation.PinCodeParameters
+import com.topiichat.core.R
+import com.topiichat.core.domain.ResultData
+import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
@@ -155,7 +155,7 @@ class OtpViewModel @AssistedInject constructor(
             repeat(TIME_BAN_SEND_SMS_OF_SECONDS) { sec ->
                 _textSendSmsTimer.value = TextSendSmsTimerUi(
                     isVisible = true,
-                    colorId = R.color.error_color,
+                    colorId = com.topiichat.core.R.color.error_color,
                     time = sec.toString()
                 )
             }
@@ -165,7 +165,7 @@ class OtpViewModel @AssistedInject constructor(
             )
             _textSendSmsTimer.value = TextSendSmsTimerUi(
                 isVisible = true,
-                colorId = R.color.green,
+                colorId = com.topiichat.core.R.color.green,
                 time = "0:00"
             )
         }

@@ -62,9 +62,9 @@ class HintEditTextView(
         orientation = VERTICAL
 
         val paddingVertical = resources
-            .getDimensionPixelSize(R.dimen.hint_edit_text_padding_vertical)
+            .getDimensionPixelSize(com.topiichat.core.R.dimen.hint_edit_text_padding_vertical)
         val paddingHorizontal = resources
-            .getDimensionPixelSize(R.dimen.hint_edit_text_padding_horizontal)
+            .getDimensionPixelSize(com.topiichat.core.R.dimen.hint_edit_text_padding_horizontal)
         setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
 
         setOnClickListener {

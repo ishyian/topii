@@ -1,9 +1,9 @@
 package com.topiichat.app.features.registration.data.datasource.cache
 
 import android.content.SharedPreferences
-import com.topiichat.app.core.data.EmptyDto
 import com.topiichat.app.features.registration.data.model.AuthDataDto
 import com.topiichat.app.features.registration.domain.model.AuthDataDomain
+import com.topiichat.core.data.EmptyDto
 
 class RegisterCacheImpl(
     private val pref: SharedPreferences

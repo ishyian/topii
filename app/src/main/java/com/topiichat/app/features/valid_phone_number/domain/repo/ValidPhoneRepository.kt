@@ -1,7 +1,7 @@
 package com.topiichat.app.features.valid_phone_number.domain.repo
 
-import com.topiichat.app.core.domain.ResultData
 import com.topiichat.app.features.valid_phone_number.domain.model.VerifyPhoneDomain
+import com.topiichat.core.domain.ResultData
 
 interface ValidPhoneRepository {
     suspend fun verifyPhone(

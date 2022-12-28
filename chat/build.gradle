@@ -1,0 +1,60 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 32
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+        resValue "string", "applicationId", "com.fidecorp.chapii"
+        def appName = "Topii"
+        resValue "string", "app_name", appName
+        buildConfigField "String", "APP_NAME", "\"$appName\"";
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    dataBinding {
+        enabled true
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    def notations = rootProject.ext.appDependencies
+
+    implementation project(':core')
+
+    for (item in notations.forImplementation) {
+        implementation item
+    }
+
+    for (item in notations.forKapt) {
+        kapt item
+    }
+
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    compileOnly "com.wefika:flowlayout:0.4.1"
+}
