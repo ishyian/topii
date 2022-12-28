@@ -23,8 +23,8 @@ class ChatViewModel @AssistedInject constructor(
     val sendMessage = SingleLiveData<String>()
 
     init {
-        chatContactSelection.setListener {
-            sendMessage.postValue(it.displayName + it.telephone)
+        chatContactSelection.setListener { contact ->
+            sendMessage.postValue("${contact.displayName}\n${contact.telephone}")
         }
     }
 
