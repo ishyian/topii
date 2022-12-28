@@ -3,16 +3,15 @@ package com.topiichat.chat.chat_list.presentation
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.topiichat.chat.ChatsScreens
 import com.topiichat.chat.chat_list.presentation.model.ChatAction
 import com.topiichat.chat.chat_list.presentation.model.ChatActionUiModel
 import com.topiichat.chat.search.presentation.SearchParameters
 import com.topiichat.core.annotations.ChatRouterQualifier
 import com.topiichat.core.presentation.platform.BaseViewModel
+import com.topiichat.remittance.features.RemittanceScreens
 import com.yourbestigor.chat.R
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 
 class ChatsViewModel @AssistedInject constructor(
@@ -67,9 +66,7 @@ class ChatsViewModel @AssistedInject constructor(
     }
 
     override fun onKYCClick() {
-        viewModelScope.launch {
-
-        }
+        navigate(RemittanceScreens.NewBeneficiary)
     }
 
     @dagger.assisted.AssistedFactory

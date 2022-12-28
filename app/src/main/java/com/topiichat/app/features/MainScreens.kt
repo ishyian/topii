@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import com.topiichat.app.features.activate_permission.presentation.PermissionFragment
 import com.topiichat.app.features.home.presentation.HomeFragment
-import com.topiichat.app.features.new_beneficiary.presentation.NewBeneficiaryFragment
 import com.topiichat.app.features.otp.presentation.OtpFragment
 import com.topiichat.app.features.otp.presentation.OtpParameters
 import com.topiichat.app.features.pin_code.presentation.PinCodeFragment
@@ -127,9 +126,5 @@ object MainScreens {
         override fun getActivityIntent(context: Context): Intent {
             return Intent(context, ChatsActivity::class.java)
         }
-    }
-
-    object NewBeneficiary : SupportAppScreen() {
-        override fun getFragment() = NewBeneficiaryFragment()
     }
 }

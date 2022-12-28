@@ -12,13 +12,8 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 32
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
-        resValue "string", "applicationId", "com.fidecorp.chapii"
-        def appName = "Topii"
-        resValue "string", "app_name", appName
-        buildConfigField "String", "APP_NAME", "\"$appName\"";
     }
 
     buildTypes {
@@ -26,9 +21,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-    dataBinding {
-        enabled true
     }
     buildFeatures {
         viewBinding true
@@ -46,7 +38,6 @@ dependencies {
     def notations = rootProject.ext.appDependencies
 
     implementation project(':core')
-    implementation project(':remittance')
 
     for (item in notations.forImplementation) {
         implementation item
@@ -55,7 +46,4 @@ dependencies {
     for (item in notations.forKapt) {
         kapt item
     }
-
-    implementation 'com.makeramen:roundedimageview:2.3.0'
-    compileOnly "com.wefika:flowlayout:0.4.1"
 }

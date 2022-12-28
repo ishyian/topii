@@ -69,6 +69,7 @@ dependencies {
 
     implementation project(':core')
     implementation project(':chat')
+    implementation project(':remittance')
 
     for (item in notations.forImplementation) {
         implementation item

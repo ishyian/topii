@@ -1,4 +1,4 @@
-package com.topiichat.app.features.new_beneficiary.presentation
+package com.topiichat.remittance.features.new_beneficiary.presentation
 
 import com.topiichat.core.presentation.platform.IBaseViewModel
 

@@ -1,4 +1,4 @@
-package com.topiichat.app.core.presentation.customview
+package com.topiichat.core.presentation.customview
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
-import com.topiichat.app.R
-import com.topiichat.app.databinding.ViewHintEditTextBinding
+import com.topiichat.core.R
+import com.topiichat.core.databinding.ViewHintEditTextBinding
 
 class HintEditTextView(
     context: Context,

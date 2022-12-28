@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="new_beneficiary_title">New Beneficiary</string>
+    <string name="new_beneficiary_description">Please input the following beneficiary information</string>
+    <string name="new_beneficiary_country_hint">Country</string>
+</resources>
