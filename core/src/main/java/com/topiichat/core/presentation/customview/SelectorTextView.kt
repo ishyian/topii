@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.topiichat.core.R
 import com.topiichat.core.databinding.ViewSelectorTextBinding
+import com.topiichat.core.extension.showSelectorDialog
 
 class SelectorTextView(
     context: Context,
@@ -19,11 +20,13 @@ class SelectorTextView(
     private var _binding: ViewSelectorTextBinding? = null
     private val binding get() = _binding ?: error("hint edit text binding is error")
 
+    private var listener: OnSelectedValueChanged? = null
+
     var text: String = ""
-        get() = binding.etInput.text.toString()
+        get() = binding.textValue.text.toString()
         set(value) {
             field = value
-            binding.etInput.text = value
+            binding.textValue.text = value
         }
     var hint: String = ""
         get() = binding.textHint.text.toString()
@@ -32,7 +35,7 @@ class SelectorTextView(
             binding.textHint.text = value
         }
 
-    val editText: TextView get() = binding.etInput
+    val textView: TextView get() = binding.textValue
 
     constructor(
         context: Context,
@@ -57,6 +60,18 @@ class SelectorTextView(
         initUiParameters()
     }
 
+    fun setValueChangedListener(listener: OnSelectedValueChanged) {
+        this.listener = listener
+    }
+
+    fun setupValues(list: List<String>) {
+        setOnClickListener {
+            context.showSelectorDialog(hint, list) { _, position ->
+                listener?.onChanged(list[position])
+            }
+        }
+    }
+
     private fun initUiParameters() {
         background = ContextCompat.getDrawable(context, R.drawable.rounded_border_edittext)
         orientation = VERTICAL
@@ -66,10 +81,6 @@ class SelectorTextView(
         val paddingHorizontal = resources
             .getDimensionPixelSize(com.topiichat.core.R.dimen.hint_edit_text_padding_horizontal)
         setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
-
-        setOnClickListener {
-            editText.requestFocus()
-        }
     }
 
     private fun initAttributes(
@@ -88,5 +99,9 @@ class SelectorTextView(
                 recycle()
             }
         }
+    }
+
+    fun interface OnSelectedValueChanged {
+        fun onChanged(value: String)
     }
 }

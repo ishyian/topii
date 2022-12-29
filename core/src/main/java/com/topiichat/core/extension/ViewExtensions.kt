@@ -1,5 +1,6 @@
 package com.topiichat.core.extension
 
+import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.ContextWrapper
 import android.content.DialogInterface
@@ -64,18 +65,26 @@ fun EditText.setupDateMask() {
     addTextChangedListener(listener)
 }
 
+fun Context.showSelectorDialog(
+    title: String,
+    items: List<String>,
+    listener: (DialogInterface, Int) -> Unit
+) {
+    val dialog = AlertDialog.Builder(this)
+    dialog.setTitle(title)
+    dialog.setItems(items.toTypedArray(), listener)
+    dialog.setNegativeButton(getString(R.string.cancel)) { dialogInterface: DialogInterface, _: Int ->
+        dialogInterface.dismiss()
+    }
+    dialog.show()
+}
+
 fun Fragment.showSelectorDialog(
     title: String,
     items: List<String>,
     listener: (DialogInterface, Int) -> Unit
 ) {
-    val dialog = AlertDialog.Builder(context!!)
-    dialog.setTitle(title)
-    dialog.setItems(items.toTypedArray(), listener)
-    dialog.setNegativeButton(requireContext().getString(R.string.cancel)) { dialogInterface: DialogInterface, _: Int ->
-        dialogInterface.dismiss()
-    }
-    dialog.show()
+    requireContext().showSelectorDialog(title, items, listener)
 }
 
 fun TextView.addStartDrawableFromUrl(url: String) {

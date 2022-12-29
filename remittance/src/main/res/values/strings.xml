@@ -3,6 +3,5 @@
     <string name="new_beneficiary_title">New Beneficiary</string>
     <string name="new_beneficiary_description">Please input the following beneficiary information</string>
     <string name="new_beneficiary_country_hint">Country</string>
-    <string name="new_beneficiary_recepient_hint">Country</string>
-
+    <string name="new_beneficiary_reception_hint">Reception method</string>
 </resources>
