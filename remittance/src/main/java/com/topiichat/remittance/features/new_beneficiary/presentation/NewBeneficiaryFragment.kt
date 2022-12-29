@@ -7,13 +7,22 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.topiichat.core.constants.Constants
+import com.topiichat.core.extension.viewModelCreator
 import com.topiichat.core.presentation.platform.BaseFragment
 import com.topiichat.remittance.databinding.FragmentNewBeneficiaryBinding
 import dagger.hilt.android.AndroidEntryPoint
 import me.ibrahimsn.lib.PhoneNumberKit
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NewBeneficiaryFragment : BaseFragment<FragmentNewBeneficiaryBinding>(), INewBeneficiaryFragment {
+
+    @Inject
+    lateinit var factory: NewBeneficiaryViewModel.AssistedFactory
+
+    private val viewModel by viewModelCreator {
+        factory.create()
+    }
 
     private val phoneNumberKit by lazy {
         PhoneNumberKit.Builder(requireContext())
@@ -26,7 +35,12 @@ class NewBeneficiaryFragment : BaseFragment<FragmentNewBeneficiaryBinding>(), IN
 
     override fun onVisibilityLoader(isVisibleLoader: Boolean) = Unit
 
+    override fun onClick(v: View?) {
+        viewModel.onClick(v)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+        setupClickListener(toolbar.btnBack)
         setupPhoneNumberInputField(layoutEditPhoneNumber)
         textCountry.setupValues(listOf("Guatemala", "Republica Dominicana"))
         textCountry.setValueChangedListener {
