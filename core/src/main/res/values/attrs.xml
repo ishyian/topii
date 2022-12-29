@@ -5,6 +5,11 @@
         <attr name="text" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="SelectorTextView">
+        <attr name="selector_hint" format="string" />
+        <attr name="selector_text" format="string" />
+    </declare-styleable>
+
     <declare-styleable name="ToolbarView">
         <attr name="toolbarTitle" format="string" />
         <attr name="textSize" format="dimension" />

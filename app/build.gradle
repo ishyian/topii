@@ -35,11 +35,13 @@ android {
     flavorDimensions "environment"
     productFlavors {
         dev {
+            applicationId "com.fidecorp.chapii.dev"
             dimension "environment"
             buildConfigField 'String', 'ENDPOINT', "\"https://develop.api.chapii.com/\""
         }
 
         production {
+            applicationId "com.fidecorp.chapii"
             dimension "environment"
             buildConfigField 'String', 'ENDPOINT', "\"https://topiichattest.eu.ngrok.io/\""
         }

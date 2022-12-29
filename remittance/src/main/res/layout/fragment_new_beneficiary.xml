@@ -46,15 +46,26 @@
             android:textColor="@color/titleColor" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.topiichat.core.presentation.customview.HintEditTextView
+    <com.topiichat.core.presentation.customview.SelectorTextView
         android:id="@+id/text_country"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/offset24"
         android:layout_marginTop="@dimen/offset12"
-        app:hint="@string/new_beneficiary_country_hint"
+        app:selector_hint="@string/new_beneficiary_country_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_edit_phone_number" />
+
+    <com.topiichat.core.presentation.customview.SelectorTextView
+        android:id="@+id/text_reception_method"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/offset24"
+        android:layout_marginTop="@dimen/offset12"
+        app:selector_hint="@string/new_beneficiary_country_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_country" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

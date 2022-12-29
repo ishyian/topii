@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/rounded_border_edittext"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <TextView
+        android:id="@+id/text_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sfprodisplaybold"
+        android:textColor="@color/subtitle_otp"
+        android:textSize="13sp"
+        tools:text="Nombre" />
+
+    <TextView
+        android:id="@+id/et_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@color/rounded_border_background"
+        android:fontFamily="@font/sfprodisplayregular"
+        android:maxLines="1"
+        android:textColor="@color/subtitle_otp"
+        android:textSize="15sp"
+        tools:ignore="TouchTargetSizeCheck"
+        tools:text="Juan Alberto" />
+</merge>
