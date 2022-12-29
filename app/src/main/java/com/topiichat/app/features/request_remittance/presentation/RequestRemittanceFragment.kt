@@ -11,7 +11,6 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.bumptech.glide.Glide
 import com.topiichat.app.AppActivity
-import com.topiichat.app.core.constants.Constants.INITIAL_COUNTRY_ISO_CODE
 import com.topiichat.app.databinding.FragmentRequestRemittanceBinding
 import com.topiichat.app.features.home.domain.model.AvailableCountriesDomain
 import com.topiichat.app.features.home.domain.model.CountryDomain
@@ -21,6 +20,7 @@ import com.topiichat.app.features.send_remittance.domain.model.RemittancePurpose
 import com.topiichat.app.features.send_remittance.presentation.adapter.RecentUsersAdapter
 import com.topiichat.app.features.send_remittance.presentation.model.RecentUsersUiModel
 import com.topiichat.app.features.valid_phone_number.presentation.model.getPhoneNumber
+import com.topiichat.core.constants.Constants.INITIAL_COUNTRY_ISO_CODE
 import com.topiichat.core.delegates.parcelableParameters
 import com.topiichat.core.extension.addStartCircleDrawableFromUrl
 import com.topiichat.core.extension.lazyUnsynchronized

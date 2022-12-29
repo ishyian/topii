@@ -4,4 +4,7 @@
     <string name="new_beneficiary_description">Please input the following beneficiary information</string>
     <string name="new_beneficiary_country_hint">Country</string>
     <string name="new_beneficiary_reception_hint">Reception method</string>
+    <string name="new_beneficiary_holder_name_hint">Holder name</string>
+    <string name="new_beneficiary_holder_account_number">Account number</string>
+    <string name="new_beneficiary_next">Next</string>
 </resources>

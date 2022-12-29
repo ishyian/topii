@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.topiichat.app.core.constants.InputMasks
 import com.topiichat.app.databinding.BottomSheetDialogAddBankCardBinding
+import com.topiichat.core.constants.InputMasks
 import com.topiichat.core.extension.setupInputMask
 import com.topiichat.core.presentation.platform.BaseBottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint

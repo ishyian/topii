@@ -1,4 +1,4 @@
-package com.topiichat.app.core.constants
+package com.topiichat.core.constants
 
 import javax.inject.Singleton
 

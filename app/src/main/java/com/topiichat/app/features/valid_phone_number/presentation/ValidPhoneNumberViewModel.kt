@@ -4,13 +4,13 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.topiichat.app.core.constants.Constants.INITIAL_COUNTRY_ISO_CODE
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.otp.presentation.OtpParameters
 import com.topiichat.app.features.valid_phone_number.domain.model.ValidPhone
 import com.topiichat.app.features.valid_phone_number.domain.model.VerifyPhoneDomain
 import com.topiichat.app.features.valid_phone_number.domain.usecases.VerifyPhoneNumberUseCase
 import com.topiichat.app.features.valid_phone_number.presentation.model.PhoneNumber
+import com.topiichat.core.constants.Constants.INITIAL_COUNTRY_ISO_CODE
 import com.topiichat.core.domain.ResultData
 import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.AssistedInject
