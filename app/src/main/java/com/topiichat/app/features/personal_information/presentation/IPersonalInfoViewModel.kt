@@ -6,4 +6,5 @@ import com.topiichat.core.presentation.platform.IBaseViewModel
 interface IPersonalInfoViewModel : IBaseViewModel {
     fun onUpdateContinueBtn()
     fun onPersonalDataChanged(type: PersonalData, value: String)
+    fun onContinueBtnClick()
 }

@@ -8,7 +8,6 @@ import com.topiichat.app.R
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.base.domain.model.KYCRegisterDomain
-import com.topiichat.app.features.kyc.base.domain.model.KYCStatus
 import com.topiichat.app.features.kyc.base.domain.usecases.GetKYCStatusUseCase
 import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataParameters
 import com.topiichat.app.features.registration.domain.model.RegisterDomain
@@ -115,19 +114,21 @@ class RegisterViewModel @AssistedInject constructor(
 
     override fun onSuccessRegister(accessToken: String, senderId: String) {
         viewModelScope.launch {
-            when (val kycStatusResult = getKYCStatus(GetKYCStatusUseCase.Params(accessToken))) {
-                is ResultData.Success -> {
-                    if (kycStatusResult.data == KYCStatus.KYC_NOT_VERIFIED) {
-                        onKYCStatusNotVerified()
-                    } else {
-                        saveAuthData(SaveAuthDataUseCase.Params(accessToken, senderId, parameters.isoCode))
-                        navigate(MainScreens.Home, true)
-                    }
-                }
-                is ResultData.Fail -> {
-                    _showMsgError.postValue(kycStatusResult.error.message)
-                }
-            }
+            /* when (val kycStatusResult = getKYCStatus(GetKYCStatusUseCase.Params(accessToken))) {
+                 is ResultData.Success -> {
+                     if (kycStatusResult.data == KYCStatus.KYC_NOT_VERIFIED) {
+                         onKYCStatusNotVerified()
+                     } else {
+                         saveAuthData(SaveAuthDataUseCase.Params(accessToken, senderId, parameters.isoCode))
+                         navigate(MainScreens.Home, true)
+                     }
+                 }
+                 is ResultData.Fail -> {
+                     _showMsgError.postValue(kycStatusResult.error.message)
+                 }
+             }*/
+            saveAuthData(SaveAuthDataUseCase.Params(accessToken, senderId, parameters.isoCode))
+            navigate(MainScreens.PersonalInformation)
             _showLoader.value = false
         }
     }
