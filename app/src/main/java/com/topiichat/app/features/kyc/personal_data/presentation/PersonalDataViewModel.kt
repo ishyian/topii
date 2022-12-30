@@ -46,6 +46,9 @@ class PersonalDataViewModel @AssistedInject constructor(
             PersonalData.SECOND_NAME -> {
                 secondLastName = value
             }
+            else -> {
+                //Ignore
+            }
         }
         onUpdateContinueBtn()
     }
