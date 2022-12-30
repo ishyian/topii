@@ -43,7 +43,8 @@ android {
 }
 
 dependencies {
-    def notations = rootProject.ext.appDependencies
+    def notations = rootProject.ext.coreDependencies
+    def chatNotations = rootProject.ext.chatDependencies
 
     implementation project(':core')
     implementation project(':remittance')
@@ -56,5 +57,11 @@ dependencies {
         kapt item
     }
 
-    compileOnly "com.wefika:flowlayout:0.4.1"
+    for (item in chatNotations.forImplementation) {
+        implementation item
+    }
+
+    for (item in chatNotations.forCompileOnly) {
+        compileOnly item
+    }
 }
