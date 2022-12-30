@@ -2,16 +2,97 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/window_background">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.topiichat.core.presentation.customview.ToolbarView
+        android:id="@+id/toolbar"
+        android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:text="Personal Info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:toolbarTitle="@string/personal_info_screen_title" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/layout_content"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="48dp"
+                android:text="@string/personal_info_description"
+                android:textColor="@color/kyc_text_color" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:layout_width="@dimen/offset120"
+                android:layout_height="@dimen/offset120"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/offset24"
+                app:riv_corner_radius="@dimen/offset120"
+                tools:src="@tools:sample/avatars" />
+
+            <com.topiichat.core.presentation.customview.HintEditTextView
+                android:id="@+id/text_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset24"
+                app:hint="@string/personal_data_name_hint" />
+
+            <com.topiichat.core.presentation.customview.HintEditTextView
+                android:id="@+id/text_second_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset16"
+                app:hint="@string/personal_info_second_name_hint" />
+
+            <com.topiichat.core.presentation.customview.HintEditTextView
+                android:id="@+id/text_surname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset16"
+                app:hint="@string/personal_info_surname_hint" />
+
+            <com.topiichat.core.presentation.customview.HintEditTextView
+                android:id="@+id/text_second_surname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/offset24"
+                android:layout_marginTop="@dimen/offset16"
+                app:hint="@string/personal_info_surname_hint" />
+
+            <Button
+                android:id="@+id/btn_continue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="@dimen/offset24"
+                android:background="@drawable/bg_button"
+                android:fontFamily="@font/sfprodisplaybold"
+                android:text="@string/kyc_button_continue"
+                android:textAllCaps="false"
+                android:textColor="@color/whiteColor"
+                android:textSize="@dimen/text_button" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

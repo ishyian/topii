@@ -142,4 +142,10 @@
     <string name="week">Week</string>
     <string name="month">Month</string>
     <string name="year">Year</string>
+
+    <string name="personal_info_screen_title">Información Personal</string>
+    <string name="personal_info_description">Por favor, escribe tu nombre completo y sube tu foto de perfil (opcional).</string>
+    <string name="personal_info_second_name_hint">Segundo Nombre</string>
+    <string name="personal_info_surname_hint">Apellido</string>
+    <string name="personal_info_second_surname_hint">Segundo Apellido</string>
 </resources>

@@ -40,6 +40,8 @@ ext {
     coreTestingVersion = '2.1.0'
     mockitoInlineVersion = '2.8.47'
     espressoVersion = '3.4.0'
+
+    //Chat dependencies
     jxmppVersion = '1.0.3'
     osmdroidVersion = '6.1.11'
     hsluvVersion = '0.2'
@@ -55,6 +57,7 @@ ext {
     shortCutBadgerVersion = '1.1.22@aar'
     emoji2Version = "1.2.0"
     miniDnsVersion = '0.2.4'
+    roundedImageViewVersion = '2.3.0'
 
     coreKtx = "androidx.core:core-ktx:$coreKtxVersion"
     appCompat = "androidx.appcompat:appcompat:$appCompatVersion"
@@ -109,6 +112,7 @@ ext {
 
     aliceSdk = "com.alicebiometrics.onboarding:AliceOnboarding:+"
     inputMask = "com.github.RedMadRobot:input-mask-android:$inputMaskAndroidVersion"
+    roundedImageView = "com.makeramen:roundedimageview:$roundedImageViewVersion"
 
     jxmpp = "org.jxmpp:jxmpp-jid:$jxmppVersion"
     osmdroid = "org.osmdroid:osmdroid-android:$osmdroidVersion"
@@ -189,7 +193,8 @@ ext {
                     shortCutBadger,
                     emoji2,
                     emojiBundled,
-                    miniDns
+                    miniDns,
+                    roundedImageView
             ],
 
             forKapt          : [
