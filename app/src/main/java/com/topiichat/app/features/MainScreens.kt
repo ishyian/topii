@@ -7,6 +7,7 @@ import com.topiichat.app.features.home.presentation.HomeFragment
 import com.topiichat.app.features.otp.presentation.OtpFragment
 import com.topiichat.app.features.otp.presentation.OtpParameters
 import com.topiichat.app.features.personal_information.presentation.PersonalInfoFragment
+import com.topiichat.app.features.personal_information.presentation.PersonalInfoParameters
 import com.topiichat.app.features.pin_code.presentation.PinCodeFragment
 import com.topiichat.app.features.pin_code.presentation.PinCodeParameters
 import com.topiichat.app.features.registration.presentation.RegisterFragment
@@ -129,7 +130,13 @@ object MainScreens {
         }
     }
 
-    object PersonalInformation : SupportAppScreen() {
+    class PersonalInformation(
+        private val parameters: PersonalInfoParameters
+    ) : SupportAppScreen() {
         override fun getFragment() = PersonalInfoFragment()
+        override fun getFragmentParams() = FragmentParams(
+            PersonalInfoFragment::class.java,
+            parcelableParametersBundleOf(parameters)
+        )
     }
 }

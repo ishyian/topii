@@ -4,5 +4,6 @@ import com.topiichat.core.domain.Domain
 
 class RegisterDomain(
     val accessToken: String,
-    val senderId: String
+    val senderId: String,
+    val profile: ProfileDomain
 ) : Domain

@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
+import com.bumptech.glide.Glide
 import com.topiichat.app.databinding.FragmentPersonalInfoBinding
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
 import com.topiichat.app.features.kyc.personal_data.presentation.model.PersonalData
+import com.topiichat.app.features.registration.domain.model.ProfileDomain
+import com.topiichat.core.delegates.parcelableParameters
 import com.topiichat.core.extension.viewModelCreator
 import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,14 +22,18 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(), IPerso
     @Inject
     lateinit var factory: PersonalInfoViewModel.AssistedFactory
     private val viewModel by viewModelCreator {
-        factory.create()
+        factory.create(parameters)
     }
+
+    private val parameters: PersonalInfoParameters by parcelableParameters()
 
     override fun initBinding(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentPersonalInfoBinding.inflate(inflater, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         setupClickListener(btnContinue, toolbar.btnBack)
+
+        initInputFields(parameters.profileDomain)
 
         textName.editText.doAfterTextChanged { text ->
             viewModel.onPersonalDataChanged(PersonalData.NAME, text.toString())
@@ -42,6 +49,14 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(), IPerso
         }
 
         initObservers()
+    }
+
+    private fun initInputFields(profile: ProfileDomain) = with(binding) {
+        textName.text = profile.firstName
+        textSurname.text = profile.lastName
+        textSecondName.text = profile.firstNameSecond
+        textSecondSurname.text = profile.lastNameSecond
+        Glide.with(this@PersonalInfoFragment).load(profile.avatar).into(imageAvatar)
     }
 
     override fun onClick(v: View?) {

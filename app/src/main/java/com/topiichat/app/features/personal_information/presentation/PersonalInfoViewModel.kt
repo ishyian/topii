@@ -8,10 +8,12 @@ import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
 import com.topiichat.app.features.kyc.personal_data.presentation.model.PersonalData
 import com.topiichat.core.presentation.platform.BaseViewModel
+import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ru.terrakok.cicerone.Router
 
 class PersonalInfoViewModel @AssistedInject constructor(
+    @Assisted private val parameters: PersonalInfoParameters,
     appRouter: Router
 ) : BaseViewModel(appRouter), IPersonalInfoViewModel {
 
@@ -20,14 +22,23 @@ class PersonalInfoViewModel @AssistedInject constructor(
 
     private var name: String = ""
     private var secondName: String = ""
-    private var lastName: String = ""
-    private var secondLastName: String = ""
+    private var surname: String = ""
+    private var secondSurname: String = ""
 
     init {
         _btnContinueUiState.value = BtnContinueUiState(
             isEnabled = false,
             backgroundId = com.topiichat.core.R.drawable.bg_button_unenabled
         )
+
+        with(parameters.profileDomain) {
+            name = firstName
+            secondSurname = lastNameSecond
+            surname = lastName
+            secondName = firstNameSecond
+        }
+
+        onUpdateContinueBtn()
     }
 
     override fun onPersonalDataChanged(type: PersonalData, value: String) {
@@ -36,14 +47,14 @@ class PersonalInfoViewModel @AssistedInject constructor(
                 name = value
             }
             PersonalData.LAST_NAME -> {
-                lastName = value
+                surname = value
             }
 
             PersonalData.SECOND_NAME -> {
                 secondName = value
             }
             PersonalData.SECOND_LAST_NAME -> {
-                secondLastName = value
+                secondSurname = value
             }
         }
         onUpdateContinueBtn()
@@ -51,7 +62,7 @@ class PersonalInfoViewModel @AssistedInject constructor(
 
     override fun onUpdateContinueBtn() {
         val isNameValid = name.isNotEmpty()
-        val isLastNameValid = lastName.isNotEmpty()
+        val isLastNameValid = surname.isNotEmpty()
         val uiState = if (isNameValid && isLastNameValid) {
             BtnContinueUiState(
                 isEnabled = true,
@@ -79,6 +90,8 @@ class PersonalInfoViewModel @AssistedInject constructor(
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
-        fun create(): PersonalInfoViewModel
+        fun create(
+            @Assisted parameters: PersonalInfoParameters
+        ): PersonalInfoViewModel
     }
 }

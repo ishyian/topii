@@ -41,6 +41,7 @@
                 android:textColor="@color/kyc_text_color" />
 
             <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/image_avatar"
                 android:layout_width="@dimen/offset120"
                 android:layout_height="@dimen/offset120"
                 android:layout_gravity="center_horizontal"

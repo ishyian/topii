@@ -10,6 +10,8 @@ import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.base.domain.model.KYCRegisterDomain
 import com.topiichat.app.features.kyc.base.domain.usecases.GetKYCStatusUseCase
 import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataParameters
+import com.topiichat.app.features.personal_information.presentation.PersonalInfoParameters
+import com.topiichat.app.features.registration.domain.model.ProfileDomain
 import com.topiichat.app.features.registration.domain.model.RegisterDomain
 import com.topiichat.app.features.registration.domain.usecases.RegisterUseCase
 import com.topiichat.app.features.registration.domain.usecases.SaveAuthDataUseCase
@@ -106,13 +108,13 @@ class RegisterViewModel @AssistedInject constructor(
     override fun onRenderRegister(result: ResultData<RegisterDomain>) {
         when (result) {
             is ResultData.Success -> {
-                onSuccessRegister(result.data.accessToken, result.data.senderId)
+                onSuccessRegister(result.data.accessToken, result.data.senderId, result.data.profile)
             }
             is ResultData.Fail -> onFailRegister(result.error)
         }
     }
 
-    override fun onSuccessRegister(accessToken: String, senderId: String) {
+    override fun onSuccessRegister(accessToken: String, senderId: String, profile: ProfileDomain) {
         viewModelScope.launch {
             /* when (val kycStatusResult = getKYCStatus(GetKYCStatusUseCase.Params(accessToken))) {
                  is ResultData.Success -> {
@@ -128,7 +130,7 @@ class RegisterViewModel @AssistedInject constructor(
                  }
              }*/
             saveAuthData(SaveAuthDataUseCase.Params(accessToken, senderId, parameters.isoCode))
-            navigate(MainScreens.PersonalInformation)
+            navigate(MainScreens.PersonalInformation(PersonalInfoParameters(profile)))
             _showLoader.value = false
         }
     }
