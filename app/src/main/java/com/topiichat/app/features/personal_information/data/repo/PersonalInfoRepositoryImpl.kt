@@ -15,6 +15,7 @@ class PersonalInfoRepositoryImpl(
 ) : PersonalInfoRepository {
 
     override suspend fun updatePersonalInfo(
+        accessToken: String,
         firstName: String?,
         lastName: String?,
         firstNameSecond: String?,
@@ -22,6 +23,7 @@ class PersonalInfoRepositoryImpl(
     ): ResultData<RegisterDomain> {
         return withContext(appDispatchers.network) {
             updatePersonalInfoRemoteDataSource.updateProfile(
+                accessToken = accessToken,
                 firstName = firstName,
                 lastName = lastName,
                 firstNameSecond = firstNameSecond,

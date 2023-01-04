@@ -12,6 +12,7 @@ class PersonalInfoRemoteDataSource @Inject constructor(
 ) : BaseRemoteDataStore() {
 
     suspend fun updateProfile(
+        accessToken: String,
         firstName: String? = null,
         lastName: String? = null,
         firstNameSecond: String? = null,
@@ -19,6 +20,7 @@ class PersonalInfoRemoteDataSource @Inject constructor(
     ): ResultData<RegisterDto> {
         return safeApiCall {
             apiService.updateProfile(
+                accessToken,
                 UpdateProfileInfoDto(
                     firstName, lastName, firstNameSecond, lastNameSecond
                 )

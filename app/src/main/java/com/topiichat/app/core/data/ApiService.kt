@@ -60,8 +60,9 @@ interface ApiService {
         @Body registerRequestDto: RegisterRequestDto
     ): RegisterDto?
 
-    @PATCH("api/v1/user/profile")
+    @PATCH("api/v1/user/profile/")
     suspend fun updateProfile(
+        @Header("Authorization") accessToken: String,
         @Body updateProfileInfoDto: UpdateProfileInfoDto
     ): RegisterDto
 

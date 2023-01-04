@@ -8,6 +8,8 @@ import com.topiichat.app.R
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
 import com.topiichat.app.features.kyc.personal_data.presentation.model.PersonalData
+import com.topiichat.app.features.personal_information.domain.usecases.UpdatePersonalInfoUseCase
+import com.topiichat.core.domain.ResultData
 import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -16,6 +18,7 @@ import ru.terrakok.cicerone.Router
 
 class PersonalInfoViewModel @AssistedInject constructor(
     @Assisted private val parameters: PersonalInfoParameters,
+    private val updatePersonalInfo: UpdatePersonalInfoUseCase,
     appRouter: Router
 ) : BaseViewModel(appRouter), IPersonalInfoViewModel {
 
@@ -97,9 +100,31 @@ class PersonalInfoViewModel @AssistedInject constructor(
 
     override fun onContinueBtnClick() {
         viewModelScope.launch {
+            _showLoader.postValue(true)
+            val requestParameters = UpdatePersonalInfoUseCase.Params()
+            if (isNameChanged) {
+                requestParameters.firstName = name
+            }
+            if (isSurnameChanged) {
+                requestParameters.lastName = surname
+            }
+            if (isNameSecondChanged) {
+                requestParameters.firstNameSecond = secondName
+            }
+            if (isSurnameSecondChanged) {
+                requestParameters.lastNameSecond = secondSurname
+            }
 
+            when (val result = updatePersonalInfo(requestParameters)) {
+                is ResultData.Success -> {
+                    navigate(MainScreens.Home, true)
+                }
+                is ResultData.Fail -> {
+                    handleError(result.error)
+                }
+            }
+            _showLoader.postValue(false)
         }
-        navigate(MainScreens.Home, true)
     }
 
     @dagger.assisted.AssistedFactory

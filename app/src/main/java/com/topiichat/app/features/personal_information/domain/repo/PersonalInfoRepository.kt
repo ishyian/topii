@@ -5,6 +5,7 @@ import com.topiichat.core.domain.ResultData
 
 interface PersonalInfoRepository {
     suspend fun updatePersonalInfo(
+        accessToken: String,
         firstName: String?,
         lastName: String?,
         firstNameSecond: String?,
