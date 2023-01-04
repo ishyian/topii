@@ -8,7 +8,6 @@ import com.topiichat.app.R
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.base.domain.model.KYCRegisterDomain
-import com.topiichat.app.features.kyc.base.domain.usecases.GetKYCStatusUseCase
 import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataParameters
 import com.topiichat.app.features.personal_information.presentation.PersonalInfoParameters
 import com.topiichat.app.features.registration.domain.model.ProfileDomain
@@ -27,7 +26,6 @@ import ru.terrakok.cicerone.Router
 class RegisterViewModel @AssistedInject constructor(
     @Assisted("registerParameters") private val parameters: RegisterParameters,
     private val register: RegisterUseCase,
-    private val getKYCStatus: GetKYCStatusUseCase,
     private val saveAuthData: SaveAuthDataUseCase,
     appRouter: Router
 ) : BaseViewModel(appRouter), IRegisterViewModel {
@@ -116,19 +114,6 @@ class RegisterViewModel @AssistedInject constructor(
 
     override fun onSuccessRegister(accessToken: String, senderId: String, profile: ProfileDomain) {
         viewModelScope.launch {
-            /* when (val kycStatusResult = getKYCStatus(GetKYCStatusUseCase.Params(accessToken))) {
-                 is ResultData.Success -> {
-                     if (kycStatusResult.data == KYCStatus.KYC_NOT_VERIFIED) {
-                         onKYCStatusNotVerified()
-                     } else {
-                         saveAuthData(SaveAuthDataUseCase.Params(accessToken, senderId, parameters.isoCode))
-                         navigate(MainScreens.Home, true)
-                     }
-                 }
-                 is ResultData.Fail -> {
-                     _showMsgError.postValue(kycStatusResult.error.message)
-                 }
-             }*/
             saveAuthData(SaveAuthDataUseCase.Params(accessToken, senderId, parameters.isoCode))
             navigate(MainScreens.PersonalInformation(PersonalInfoParameters(profile)))
             _showLoader.value = false

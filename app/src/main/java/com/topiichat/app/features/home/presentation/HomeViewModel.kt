@@ -11,11 +11,7 @@ import com.topiichat.app.features.home.domain.usecase.GetCurrentCountryAvailabil
 import com.topiichat.app.features.home.domain.usecase.GetRemittanceHistoryUseCase
 import com.topiichat.app.features.home.presentation.mapper.HomeRemittanceUiMapper
 import com.topiichat.app.features.home.presentation.model.HomeRemittanceHistoryUiModel
-import com.topiichat.app.features.kyc.KYCScreens
 import com.topiichat.app.features.kyc.base.domain.model.KYCStatus
-import com.topiichat.app.features.kyc.base.domain.usecases.GetKYCStatusUseCase
-import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataParameters
-import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCase
 import com.topiichat.app.features.request_remittance.presentation.RequestRemittanceParameters
 import com.topiichat.app.features.send_remittance.presentation.SendRemittanceParameters
 import com.topiichat.app.features.wallet.WalletScreens
@@ -31,8 +27,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getRemittanceHistory: GetRemittanceHistoryUseCase,
     private val getCurrentCountryAvailability: GetCurrentCountryAvailabilityUseCase,
-    private val getKYCStatus: GetKYCStatusUseCase,
-    private val getAuthData: GetAuthDataUseCase,
     private val remittanceUiMapper: HomeRemittanceUiMapper,
     appRouter: Router
 ) : BaseViewModel(appRouter), IHomeViewModel {
@@ -65,14 +59,6 @@ class HomeViewModel @Inject constructor(
             when (val result = getCurrentCountryAvailability()) {
                 is ResultData.Success -> {
                     _availableCountryFeatures.postValue(result.data)
-                }
-                else -> {
-                    //Nothing
-                }
-            }
-            when (val result = getKYCStatus(GetKYCStatusUseCase.Params())) {
-                is ResultData.Success -> {
-                    kycStatus.postValue(result.data)
                 }
                 else -> {
                     //Nothing
@@ -118,21 +104,14 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onSendPaymentClick() {
-        if (kycStatus.value == KYCStatus.KYC_NOT_VERIFIED) {
-            viewModelScope.launch {
-                val parameters = PersonalDataParameters(getAuthData().isoCode)
-                navigate(KYCScreens.PersonalData(parameters))
-            }
-        } else {
-            availableCountryFeatures.value?.countryInfo?.let { countryDomain ->
-                navigate(
-                    MainScreens.SendRemittance(
-                        parameters = SendRemittanceParameters(
-                            countryDomain
-                        )
+        availableCountryFeatures.value?.countryInfo?.let { countryDomain ->
+            navigate(
+                MainScreens.SendRemittance(
+                    parameters = SendRemittanceParameters(
+                        countryDomain
                     )
                 )
-            }
+            )
         }
     }
 
