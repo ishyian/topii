@@ -11,6 +11,7 @@ import com.topiichat.app.features.otp.data.model.ResendOtpCodeDto
 import com.topiichat.app.features.otp.data.model.ResendOtpCodeRequestDto
 import com.topiichat.app.features.otp.data.model.ValidOtpCodeDto
 import com.topiichat.app.features.otp.data.model.ValidOtpCodeRequestDto
+import com.topiichat.app.features.personal_information.data.model.UpdateProfileInfoDto
 import com.topiichat.app.features.pin_code.data.model.ValidPinCodeDto
 import com.topiichat.app.features.pin_code.data.model.ValidPinCodeRequestDto
 import com.topiichat.app.features.registration.data.model.RegisterDto
@@ -28,6 +29,7 @@ import com.topiichat.app.features.valid_phone_number.data.model.VerifyPhoneNumbe
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -57,6 +59,11 @@ interface ApiService {
     suspend fun register(
         @Body registerRequestDto: RegisterRequestDto
     ): RegisterDto?
+
+    @PATCH("api/v1/user/profile")
+    suspend fun updateProfile(
+        @Body updateProfileInfoDto: UpdateProfileInfoDto
+    ): RegisterDto
 
     @POST("api/v1/remittance/by_month/")
     suspend fun getRemittanceHistory(

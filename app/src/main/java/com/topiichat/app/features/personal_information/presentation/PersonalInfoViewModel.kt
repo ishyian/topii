@@ -3,6 +3,7 @@ package com.topiichat.app.features.personal_information.presentation
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.topiichat.app.R
 import com.topiichat.app.features.MainScreens
 import com.topiichat.app.features.kyc.base.presentation.model.BtnContinueUiState
@@ -10,6 +11,7 @@ import com.topiichat.app.features.kyc.personal_data.presentation.model.PersonalD
 import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 
 class PersonalInfoViewModel @AssistedInject constructor(
@@ -24,6 +26,11 @@ class PersonalInfoViewModel @AssistedInject constructor(
     private var secondName: String = ""
     private var surname: String = ""
     private var secondSurname: String = ""
+
+    private var isNameChanged = false
+    private var isSurnameChanged = false
+    private var isNameSecondChanged = false
+    private var isSurnameSecondChanged = false
 
     init {
         _btnContinueUiState.value = BtnContinueUiState(
@@ -45,16 +52,20 @@ class PersonalInfoViewModel @AssistedInject constructor(
         when (type) {
             PersonalData.NAME -> {
                 name = value
+                isNameChanged = true
             }
             PersonalData.LAST_NAME -> {
                 surname = value
+                isSurnameChanged = true
             }
 
             PersonalData.SECOND_NAME -> {
                 secondName = value
+                isNameSecondChanged = true
             }
             PersonalData.SECOND_LAST_NAME -> {
                 secondSurname = value
+                isSurnameSecondChanged = true
             }
         }
         onUpdateContinueBtn()
@@ -85,6 +96,9 @@ class PersonalInfoViewModel @AssistedInject constructor(
     }
 
     override fun onContinueBtnClick() {
+        viewModelScope.launch {
+
+        }
         navigate(MainScreens.Home, true)
     }
 

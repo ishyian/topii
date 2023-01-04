@@ -17,6 +17,9 @@ import com.topiichat.app.features.otp.data.mapper.ResendOtpCodeRemoteMapper
 import com.topiichat.app.features.otp.data.mapper.ValidOtpCodeRemoteMapper
 import com.topiichat.app.features.otp.data.repo.OtpCodeRepositoryImpl
 import com.topiichat.app.features.otp.domain.repo.OtpCodeRepository
+import com.topiichat.app.features.personal_information.data.datasource.PersonalInfoRemoteDataSource
+import com.topiichat.app.features.personal_information.data.repo.PersonalInfoRepositoryImpl
+import com.topiichat.app.features.personal_information.domain.repo.PersonalInfoRepository
 import com.topiichat.app.features.pin_code.data.datasource.PinCodeRemoteDataSource
 import com.topiichat.app.features.pin_code.data.mapper.ValidPinCodeRemoteMapper
 import com.topiichat.app.features.pin_code.data.repo.PinCodeRepositoryImpl
@@ -216,6 +219,20 @@ object RepositoryModule {
         return RequestRemittanceRepositoryImpl(
             requestRemittanceDataSource = requestRemittanceDataSource,
             requestRemittanceMapper = requestRemittanceMapper,
+            appDispatchers = appDispatchers
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providesPersonalInfoRepository(
+        updatePersonalInfoRemoteDataSource: PersonalInfoRemoteDataSource,
+        registerRemoteMapper: RegisterRemoteMapper,
+        appDispatchers: AppDispatchers
+    ): PersonalInfoRepository {
+        return PersonalInfoRepositoryImpl(
+            updatePersonalInfoRemoteDataSource = updatePersonalInfoRemoteDataSource,
+            registerRemoteMapper = registerRemoteMapper,
             appDispatchers = appDispatchers
         )
     }
