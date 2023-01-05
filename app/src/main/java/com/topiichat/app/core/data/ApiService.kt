@@ -24,6 +24,7 @@ import com.topiichat.app.features.send_remittance.data.model.RemittanceDto
 import com.topiichat.app.features.send_remittance.data.model.RemittancePurposeDto
 import com.topiichat.app.features.send_remittance.data.model.SendPaymentIntentionRequestDto
 import com.topiichat.app.features.send_remittance.data.model.SendRemittanceRequestDto
+import com.topiichat.app.features.splash.data.model.ValidateAppDto
 import com.topiichat.app.features.valid_phone_number.data.model.VerifyPhoneNumberDto
 import com.topiichat.app.features.valid_phone_number.data.model.VerifyPhoneNumberRequestDto
 import retrofit2.http.Body
@@ -135,4 +136,7 @@ interface ApiService {
         @Header("Authorization") accessToken: String,
         @Body requestDto: RequestRemittanceRequestDto
     ): RequestRemittanceDto
+
+    @GET("api/v1/auth/validate_app/")
+    suspend fun validateApp(@Header("Authorization") accessToken: String): ValidateAppDto
 }

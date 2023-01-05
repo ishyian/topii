@@ -3,9 +3,9 @@ package com.topiichat.app.features.splash.presentation
 import android.view.View
 import androidx.lifecycle.viewModelScope
 import com.topiichat.app.features.MainScreens
-import com.topiichat.app.features.kyc.base.domain.usecases.GetKYCStatusUseCase
 import com.topiichat.app.features.registration.domain.usecases.GetAuthDataUseCase
 import com.topiichat.app.features.registration.domain.usecases.LogOutUseCase
+import com.topiichat.app.features.splash.domain.usecases.ValidateAppUseCase
 import com.topiichat.core.domain.ResultData
 import com.topiichat.core.presentation.platform.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val getAccessToken: GetAuthDataUseCase,
-    private val getKYCStatus: GetKYCStatusUseCase,
+    private val validateApp: ValidateAppUseCase,
     private val logOut: LogOutUseCase,
     appRouter: Router
 ) : BaseViewModel(appRouter), ISplashViewModel {
@@ -43,8 +43,8 @@ class SplashViewModel @Inject constructor(
         if (result.token.isEmpty()) {
             navigate(MainScreens.Terms, true)
         } else {
-            when (val kycStatusResult = getKYCStatus(GetKYCStatusUseCase.Params())) {
-                is ResultData.Fail -> onFailKYCStatus(kycStatusResult)
+            when (val validateAppResult = validateApp(ValidateAppUseCase.Params)) {
+                is ResultData.Fail -> onFailKYCStatus(validateAppResult)
                 else -> navigate(MainScreens.Home, true)
             }
         }

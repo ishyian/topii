@@ -44,6 +44,10 @@ import com.topiichat.app.features.send_remittance.data.mapper.RemittancePurposes
 import com.topiichat.app.features.send_remittance.data.mapper.RemittanceRemoteMapper
 import com.topiichat.app.features.send_remittance.data.repo.SendRemittanceRepositoryImpl
 import com.topiichat.app.features.send_remittance.domain.repo.SendRemittanceRepository
+import com.topiichat.app.features.splash.data.datasource.ValidateAppRemoteDataSource
+import com.topiichat.app.features.splash.data.mapper.ValidateAppRemoteMapper
+import com.topiichat.app.features.splash.data.repo.ValidateAppRepositoryImpl
+import com.topiichat.app.features.splash.domain.repo.ValidateAppRepository
 import com.topiichat.app.features.valid_phone_number.data.datasource.ValidPhoneRemoteDataStore
 import com.topiichat.app.features.valid_phone_number.data.mapper.VerifyPhoneRemoteMapper
 import com.topiichat.app.features.valid_phone_number.data.repo.ValidPhoneRepositoryImpl
@@ -233,6 +237,20 @@ object RepositoryModule {
         return PersonalInfoRepositoryImpl(
             updatePersonalInfoRemoteDataSource = updatePersonalInfoRemoteDataSource,
             registerRemoteMapper = registerRemoteMapper,
+            appDispatchers = appDispatchers
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providesValidateAppRepository(
+        validateAppRemoteDataSource: ValidateAppRemoteDataSource,
+        validateAppRemoteMapper: ValidateAppRemoteMapper,
+        appDispatchers: AppDispatchers
+    ): ValidateAppRepository {
+        return ValidateAppRepositoryImpl(
+            validateAppDataStore = validateAppRemoteDataSource,
+            validateAppRemoteMapper = validateAppRemoteMapper,
             appDispatchers = appDispatchers
         )
     }
