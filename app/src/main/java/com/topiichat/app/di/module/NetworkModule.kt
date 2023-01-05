@@ -8,6 +8,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.topiichat.app.BuildConfig
 import com.topiichat.app.core.data.ApiService
+import com.topiichat.remittance.data.RemittanceApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,6 +40,22 @@ object NetworkModule {
             .client(okHttpClient)
             .build()
             .create(ApiService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun providesRemittanceApiService(
+        coroutineCallAdapterFactory: CoroutineCallAdapterFactory,
+        converterFactory: MoshiConverterFactory,
+        okHttpClient: OkHttpClient,
+    ): RemittanceApiService {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.ENDPOINT)
+            .addCallAdapterFactory(coroutineCallAdapterFactory)
+            .addConverterFactory(converterFactory)
+            .client(okHttpClient)
+            .build()
+            .create(RemittanceApiService::class.java)
     }
 
     @Singleton
