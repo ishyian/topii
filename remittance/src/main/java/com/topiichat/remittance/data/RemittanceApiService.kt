@@ -3,8 +3,10 @@ package com.topiichat.remittance.data
 import com.topiichat.remittance.features.new_beneficiary.data.model.BeneficiaryCountryDto
 import com.topiichat.remittance.features.new_beneficiary.data.model.BeneficiaryDocumentTypeDto
 import com.topiichat.remittance.features.new_beneficiary.data.model.BeneficiaryInstitutionDto
-import com.topiichat.remittance.features.new_beneficiary.data.model.BeneficiaryProductType
+import com.topiichat.remittance.features.new_beneficiary.data.model.BeneficiaryProductTypeDto
 import com.topiichat.remittance.features.new_beneficiary.data.model.BeneficiaryValidUserDto
+import com.topiichat.remittance.features.new_beneficiary.data.model.BeneficiaryValidUserRequestDto
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -23,7 +25,7 @@ interface RemittanceApiService {
     @GET("api/v1/beneficiary/list/product/type/")
     suspend fun getBeneficiaryProductTypesList(
         @Header("Authorization") accessToken: String
-    ): List<BeneficiaryProductType>
+    ): List<BeneficiaryProductTypeDto>
 
     @GET("api/v1/beneficiary/list/document/type/")
     suspend fun getBeneficiaryDocumentTypesList(
@@ -32,6 +34,7 @@ interface RemittanceApiService {
 
     @POST("api/v1/beneficiary/valid/user/")
     suspend fun validateBeneficiaryUser(
-        @Header("Authorization") accessToken: String
+        @Header("Authorization") accessToken: String,
+        @Body validateUserRequestDto: BeneficiaryValidUserRequestDto
     ): BeneficiaryValidUserDto
 }
