@@ -57,6 +57,12 @@ import com.topiichat.core.data.EmptyMapper
 import com.topiichat.core.presentation.contacts.data.datasource.ContactsCacheDataStore
 import com.topiichat.core.presentation.contacts.data.mapper.ContactsCacheMapper
 import com.topiichat.core.presentation.contacts.data.repo.ContactsRepositoryImpl
+import com.topiichat.remittance.features.new_beneficiary.data.datasource.BeneficiaryRemoteDataSource
+import com.topiichat.remittance.features.new_beneficiary.data.mapper.BeneficiaryCountriesListMapper
+import com.topiichat.remittance.features.new_beneficiary.data.mapper.BeneficiaryDocumentTypesListMapper
+import com.topiichat.remittance.features.new_beneficiary.data.mapper.BeneficiaryProductTypesListMapper
+import com.topiichat.remittance.features.new_beneficiary.data.repo.BeneficiaryRepositoryImpl
+import com.topiichat.remittance.features.new_beneficiary.domain.repo.BeneficiaryRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -251,6 +257,24 @@ object RepositoryModule {
         return ValidateAppRepositoryImpl(
             validateAppDataStore = validateAppRemoteDataSource,
             validateAppRemoteMapper = validateAppRemoteMapper,
+            appDispatchers = appDispatchers
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providesBeneficiaryRepository(
+        beneficiaryRemoteDataSource: BeneficiaryRemoteDataSource,
+        countriesTypesListMapper: BeneficiaryCountriesListMapper,
+        productTypesListMapper: BeneficiaryProductTypesListMapper,
+        documentTypesListMapper: BeneficiaryDocumentTypesListMapper,
+        appDispatchers: AppDispatchers
+    ): BeneficiaryRepository {
+        return BeneficiaryRepositoryImpl(
+            dataSource = beneficiaryRemoteDataSource,
+            countriesMapper = countriesTypesListMapper,
+            productTypesMapper = productTypesListMapper,
+            documentTypesMapper = documentTypesListMapper,
             appDispatchers = appDispatchers
         )
     }
