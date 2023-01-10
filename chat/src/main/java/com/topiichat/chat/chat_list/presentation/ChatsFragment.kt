@@ -250,16 +250,6 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
     }
 
     override fun onBackendConnected() {
-        Timber.d("OnBackendConnected")
-        if (activity != null) {
-            activatedAccounts.clear()
-            activatedAccounts.addAll(
-                AccountUtils.getEnabledAccounts(
-                    (requireActivity() as ChatsActivity).xmppConnectionService
-                )
-            )
-        }
-
         refresh()
     }
 
@@ -277,6 +267,15 @@ class ChatsFragment : BaseChatFragment<FragmentChatsBinding>(), IChatsFragment, 
         if (activity == null) {
             Timber.d("ChatsFragment.refresh() skipped updated because activity was null")
             return
+        }
+
+        if (activity != null) {
+            activatedAccounts.clear()
+            activatedAccounts.addAll(
+                AccountUtils.getEnabledAccounts(
+                    (requireActivity() as ChatsActivity).xmppConnectionService
+                )
+            )
         }
 
         (activity as ChatsActivity).xmppConnectionService.populateWithOrderedConversations(conversations)
