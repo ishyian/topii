@@ -12,7 +12,7 @@ import com.topiichat.core.extension.createGalleryIntent
 class PickImageActivityContract : ActivityResultContract<Unit, Uri?>() {
 
     @RequiresPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-    override fun createIntent(context: Context, input: Unit?): Intent {
+    override fun createIntent(context: Context, input: Unit): Intent {
         return createGalleryIntent()
     }
 

@@ -36,6 +36,6 @@ class TermsViewModel @Inject constructor(
     }
 
     override fun onClickNextScreen() {
-        navigate(MainScreens.Permission)
+        navigate(MainScreens.WelcomeConversations)
     }
 }

@@ -18,10 +18,8 @@ import com.topiichat.core.delegates.parcelableParameters
 import com.topiichat.core.extension.viewModelCreator
 import com.topiichat.core.presentation.platform.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
 
-@ExperimentalSerializationApi
 @AndroidEntryPoint
 class EnterEmailFragment : BaseFragment<FragmentEnterEmailBinding>(), IEnterEmailFragment, AliceSdkListener {
 

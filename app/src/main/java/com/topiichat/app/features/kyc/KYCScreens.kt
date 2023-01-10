@@ -9,7 +9,6 @@ import com.topiichat.app.features.kyc.email.presentation.EnterEmailParameters
 import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataFragment
 import com.topiichat.app.features.kyc.personal_data.presentation.PersonalDataParameters
 import com.topiichat.core.delegates.parcelableParametersBundleOf
-import kotlinx.serialization.ExperimentalSerializationApi
 import ru.terrakok.cicerone.android.support.FragmentParams
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
@@ -24,7 +23,6 @@ object KYCScreens {
         )
     }
 
-    @ExperimentalSerializationApi
     class EnterEmail(
         private val parameters: EnterEmailParameters
     ) : SupportAppScreen() {
